@@ -21,8 +21,8 @@ exports.validatePost = void 0;
 //   user_posting: userSchema,
 // },
 const luxon_1 = require("luxon");
-const countryList_1 = require("../miscellanea/countryList");
 const genericValidators_1 = require("./genericValidators");
+const CountiesArrays_1 = require("../miscellanea/CountiesArrays");
 function validatePost(bodyFromReq) {
     const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, user_posting, } = bodyFromReq;
     const validatedPost = {
@@ -59,9 +59,12 @@ function checkNumberOnDoc(numberOnDocFromReq) {
 }
 // Buscar forma de tener los mismos países en el front que en el back. En el front se deberían ver los nombres de los países
 function checkCountryFound(countryFromReq) {
+    if (!(0, genericValidators_1.isStringXCharsLong)(2, countryFromReq)) {
+        throw new Error(`The country must be a string 2 chars long.`);
+    }
     // CHECKEAR SI EXISTE EN EL ARREGLO DE PAÍSES...
-    for (let i = 0; i < countryList_1.countryList.length; i++) {
-        const element = countryList_1.countryList[i];
+    for (let i = 0; i < CountiesArrays_1.arrayOfCountriesTwoChars.length; i++) {
+        const element = CountiesArrays_1.arrayOfCountriesTwoChars[i];
         if (element === countryFromReq) {
             return element;
         }

@@ -18,14 +18,15 @@
 //   user_posting: userSchema,
 // },
 import { DateTime } from "luxon";
-import { countryList } from "../miscellanea/countryList";
 import { IPost } from "../mongoDB/models/Post";
 import { IUser } from "../mongoDB/models/User";
 import {
   isFalsyArgument,
   isStringBetween1AndXCharsLong,
+  isStringXCharsLong,
   stringContainsURLs,
 } from "./genericValidators";
+import { arrayOfCountriesTwoChars } from "../miscellanea/CountiesArrays";
 
 export function validatePost(bodyFromReq: any): IPost {
   const {
@@ -73,9 +74,12 @@ function checkNumberOnDoc(numberOnDocFromReq: any): string {
 
 // Buscar forma de tener los mismos países en el front que en el back. En el front se deberían ver los nombres de los países
 function checkCountryFound(countryFromReq: any): string {
+  if (!isStringXCharsLong(2, countryFromReq)) {
+    throw new Error(`The country must be a string 2 chars long.`);
+  }
   // CHECKEAR SI EXISTE EN EL ARREGLO DE PAÍSES...
-  for (let i = 0; i < countryList.length; i++) {
-    const element = countryList[i];
+  for (let i = 0; i < arrayOfCountriesTwoChars.length; i++) {
+    const element = arrayOfCountriesTwoChars[i];
     if (element === countryFromReq) {
       return element;
     }
