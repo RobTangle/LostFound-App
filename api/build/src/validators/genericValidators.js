@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
 // IS STRING:
 function isString(argumento) {
     if (typeof argumento !== "string") {
@@ -125,7 +125,7 @@ function isEmail(argumento) {
     return regex.test(argumento);
 }
 exports.isEmail = isEmail;
-// IS VALID URL:
+// IS VALID URL IMAGE :
 function isValidURLImage(argumento) {
     if (typeof argumento !== "string") {
         return false;
@@ -145,3 +145,13 @@ function stringToBoolean(argumento) {
     throw new Error(`El argumento '${argumento}' es inválido.`);
 }
 exports.stringToBoolean = stringToBoolean;
+// STRING CONTAINS URLS :
+function stringContainsURLs(argumento) {
+    if (new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(argumento)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+exports.stringContainsURLs = stringContainsURLs;

@@ -126,7 +126,7 @@ export function isEmail(argumento: any): boolean {
   return regex.test(argumento);
 }
 
-// IS VALID URL:
+// IS VALID URL IMAGE :
 export function isValidURLImage(argumento: any): boolean {
   if (typeof argumento !== "string") {
     return false;
@@ -146,4 +146,17 @@ export function stringToBoolean(argumento: any): boolean {
     return false;
   }
   throw new Error(`El argumento '${argumento}' es inválido.`);
+}
+
+// STRING CONTAINS URLS :
+export function stringContainsURLs(argumento: string): boolean {
+  if (
+    new RegExp(
+      "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?"
+    ).test(argumento)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
 }
