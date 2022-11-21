@@ -3,17 +3,18 @@ import helmet from "helmet";
 import express from "express";
 import cors from "cors";
 
-import userRouter from "./routes/user-routes";
-
+import userRouter from "./routes/user/user-routes";
+import postRouter from "./routes/post/post-routes";
 const app = express();
 
 app.use(helmet());
+app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRouter);
-
+app.use("/post", postRouter);
 // for testing:
 app.get("/ping", (req, res) => {
   return res.send("PONG!");
