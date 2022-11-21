@@ -22,5 +22,7 @@ mongoose
 //* - - - - - - - - MODELS : - - - - - - - -
 
 import { userSchema } from "./models/User";
+import { postSchema } from "./models/Post";
 
 export const User = mongoose.model("User", userSchema);
+export const Post = mongoose.model("Post", postSchema);
