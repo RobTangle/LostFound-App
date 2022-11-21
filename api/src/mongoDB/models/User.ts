@@ -1,10 +1,11 @@
 import { Schema, HydratedDocument } from "mongoose";
 
-interface IUser {
+export interface IUser {
   _id: string;
   name?: string;
   email: string;
   profile_img?: string;
+  posts: string[];
 }
 
 export const userSchema: Schema = new Schema<IUser>(
@@ -15,10 +16,9 @@ export const userSchema: Schema = new Schema<IUser>(
       type: String,
       required: true,
       lowercase: true,
-      unique: true,
-      maxlength: 100,
     },
     profile_img: { type: String, required: false },
+    posts: [{ type: String, ref: "Post" }],
   },
   { timestamps: true }
 );
