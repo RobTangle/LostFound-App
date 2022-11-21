@@ -84,6 +84,32 @@ export function isStringBetween1AndXCharsLong(
   }
 }
 
+// IS STRING BETWEEN X AND Y CHARACTERS LONG:
+export function isStringBetweenXAndYCharsLong(
+  x: number,
+  y: number,
+  argumento: any
+): boolean {
+  let error = `The argument "x" must be a positive number`;
+  if (!x || typeof x !== "number" || x < 1) {
+    throw new Error(`The argument "x" must be a positive integer number`);
+  }
+  let minCharsLong = x;
+  if (!y || typeof y !== "number" || y < 1) {
+    throw new Error(`The argument "y" must be a positive integer number.`);
+  }
+  let maxCharsLong = y;
+  if (
+    typeof argumento === "string" &&
+    argumento.length >= minCharsLong &&
+    argumento.length <= maxCharsLong
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 // IS FALSY ARGUMENT
 export function isFalsyArgument(argumento: any): boolean {
   if (!argumento) {

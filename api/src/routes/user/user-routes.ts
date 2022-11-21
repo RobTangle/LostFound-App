@@ -1,5 +1,7 @@
 import { Router, Request, Response } from "express";
 import { User } from "../../mongoDB";
+import { IUser } from "../../mongoDB/models/User";
+import { validateNewUser } from "../../validators/user-validators";
 
 const router = Router();
 
@@ -15,15 +17,10 @@ router.get("/allUsers", async (req: Request, res: Response) => {
 router.post("/newUser", async (req: Request, res: Response) => {
   try {
     console.log("REQ.BODY = ", req.body);
+    // const _id = req.auth.sub
+    const validatedNewUser: IUser = validateNewUser(req.body);
+    const newUser = await User.create(validatedNewUser);
 
-    const newUser = await User.create(req.body);
-    if (!newUser) {
-      throw new Error(
-        "Lo siendo. Hubo un error y no se creó el usuario. " +
-          " New User: " +
-          newUser
-      );
-    }
     return res.status(200).send(newUser);
   } catch (error: any) {
     console.log(`Error en POST '/newUser. ${error.message}`);
