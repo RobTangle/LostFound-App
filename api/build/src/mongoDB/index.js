@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Post = exports.User = void 0;
 const LogWithColor_1 = __importDefault(require("../miscellanea/LogWithColor"));
 //* - - - - - - - CONNECT TO MongoDB - - - - - - - -
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -20,4 +20,6 @@ mongoose_1.default
 });
 //* - - - - - - - - MODELS : - - - - - - - -
 const User_1 = require("./models/User");
+const Post_1 = require("./models/Post");
 exports.User = mongoose_1.default.model("User", User_1.userSchema);
+exports.Post = mongoose_1.default.model("Post", Post_1.postSchema);

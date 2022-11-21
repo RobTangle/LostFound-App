@@ -9,8 +9,7 @@ exports.userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
         lowercase: true,
-        unique: true,
-        maxlength: 100,
     },
     profile_img: { type: String, required: false },
+    posts: [{ type: String, ref: "Post" }],
 }, { timestamps: true });
