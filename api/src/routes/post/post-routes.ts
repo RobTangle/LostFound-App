@@ -34,6 +34,10 @@ router.post("/newPost", async (req: JWTRequest, res: Response) => {
     userInDB.posts.push(newPost._id);
     await userInDB.save();
     return res.status(200).send(newPost);
+    // NO USAR "return" al responder, y continuar haciendo la búsqueda de suscriptions que coincidan con el post recién creado. La que coincida, mandar un email al usuario avisandole.
+    // await findAndSendAlertsOfMatchingSubscriptionsOfNewPost(
+    //   newPost: IPost
+    // )
   } catch (error: any) {
     console.log(`Error en POST '/newPost. ${error.message}`);
     return res.status(400).send({ error: error.message });
@@ -45,8 +49,8 @@ router.post("/newPost", async (req: JWTRequest, res: Response) => {
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    // Agarro el req.auth.sub y busco si el usuario está verificado para autorizarlo a hacer la búsqueda:
-    // if (!req.auth?.verified) throw new Error (`The user account must be verified.`);
+    // Agarro el req.auth.email_verified y chequeo si el usuario está verificado para autorizarlo a hacer la búsqueda:
+    // if (!req.auth?.email_verified) throw new Error (`The user account must be verified.`);
     const postsFound = await searchPostsByQuery(req.query);
     return res.status(200).send(postsFound);
   } catch (error: any) {
