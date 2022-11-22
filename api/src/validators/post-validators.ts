@@ -41,8 +41,8 @@ export function validatePost(bodyFromReq: any): IPost {
   const validatedPost = {
     name_on_doc: checkNameOnDoc(name_on_doc),
     number_on_doc: checkNumberOnDoc(number_on_doc),
-    country_found: checkCountryFound(country_found),
-    date_found: checkDateFound(date_found),
+    country_found: checkCountry(country_found),
+    date_found: checkDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
     comments: checkComments(comments),
     user_posting: checkUserPosting(user_posting),
@@ -50,7 +50,7 @@ export function validatePost(bodyFromReq: any): IPost {
   return validatedPost;
 }
 
-function checkNameOnDoc(nameFromReq: any): string {
+export function checkNameOnDoc(nameFromReq: any): string {
   if (isStringBetween1AndXCharsLong(100, nameFromReq)) {
     if (stringContainsURLs(nameFromReq)) {
       throw new Error(`URLs are not allowed.`);
@@ -61,7 +61,7 @@ function checkNameOnDoc(nameFromReq: any): string {
   throw new Error(`El nombre en el documento "${nameFromReq} no es válido.`);
 }
 
-function checkNumberOnDoc(numberOnDocFromReq: any): string {
+export function checkNumberOnDoc(numberOnDocFromReq: any): string {
   if (isStringBetween1AndXCharsLong(100, numberOnDocFromReq)) {
     // estos métodos dejan afuera las letras con tíldes. Pero como debería ser un número, no deberían haber caracteres de ese tipo.
     let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
@@ -75,21 +75,21 @@ function checkNumberOnDoc(numberOnDocFromReq: any): string {
 // Buscar forma de tener los mismos países en el front que en el back. En el front se deberían ver los nombres de los países.
 // Podría ordenar el arreglo para que los países más populares estén en los primeros elementos de la lista para que encuentre el match rápidamente.
 // Crear índices en MongoDB
-function checkCountryFound(countryFromReq: any): string {
+export function checkCountry(countryFromReq: any): string {
   if (!isStringXCharsLong(2, countryFromReq)) {
     throw new Error(`The country must be a string 2 chars long.`);
   }
   // CHECKEAR SI EXISTE EN EL ARREGLO DE PAÍSES...
   for (let i = 0; i < arrayOfCountriesTwoChars.length; i++) {
     const element = arrayOfCountriesTwoChars[i];
-    if (element === countryFromReq) {
+    if (element.toUpperCase() === countryFromReq.toUpperCase()) {
       return element;
     }
   }
   throw new Error(`The country "${countryFromReq}" is invalid.`);
 }
 
-function checkDateFound(dateFromReq: any) {
+export function checkDate(dateFromReq: any) {
   try {
     let parsedDate: any = DateTime.fromFormat(dateFromReq, "yyyy-MM-dd");
     if (parsedDate.invalid) {
