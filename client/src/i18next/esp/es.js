@@ -1,3 +1,5 @@
+import { landing } from "./landing";
+
 export const esp = {
-  welcome: 'Bienvenido',
+  landing:landing,
 }

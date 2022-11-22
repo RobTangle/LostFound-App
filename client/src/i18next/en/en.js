@@ -1,6 +1,7 @@
 import { home } from "./home";
+import { landing } from "./landing";
 
 export const eng = {
-  welcome: "Welcomeeeee",
+  landing: landing,
   home: home
 }
