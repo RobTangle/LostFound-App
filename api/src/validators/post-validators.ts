@@ -72,7 +72,9 @@ function checkNumberOnDoc(numberOnDocFromReq: any): string {
   throw new Error(`The document number "${numberOnDocFromReq}" is invalid.`);
 }
 
-// Buscar forma de tener los mismos países en el front que en el back. En el front se deberían ver los nombres de los países
+// Buscar forma de tener los mismos países en el front que en el back. En el front se deberían ver los nombres de los países.
+// Podría ordenar el arreglo para que los países más populares estén en los primeros elementos de la lista para que encuentre el match rápidamente.
+// Crear índices en MongoDB
 function checkCountryFound(countryFromReq: any): string {
   if (!isStringXCharsLong(2, countryFromReq)) {
     throw new Error(`The country must be a string 2 chars long.`);
