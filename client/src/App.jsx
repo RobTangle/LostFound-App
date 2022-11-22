@@ -1,4 +1,4 @@
-import i18next from "./i18next";
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Landing } from "./views";
 

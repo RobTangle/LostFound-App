@@ -1,9 +1,18 @@
-import i18next from 'i18next';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 import { eng } from './en/en';
 import { esp } from './esp/es';
 
-i18next.init({
-  lng: 'en',
+i18n
+  // detect user language
+  // learn more: https://github.com/i18next/i18next-browser-languageDetector
+  .use(LanguageDetector)
+  // pass the i18n instance to react-i18next.
+  .use(initReactI18next)
+  .init({
+    debug: true,
+  fallbackLng: 'en',
   resources: {
     en: {
       translation:
@@ -16,4 +25,4 @@ i18next.init({
   },
 });
 
-export default i18next;
+export default i18n;
