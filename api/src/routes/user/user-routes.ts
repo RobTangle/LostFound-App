@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { Request as JWTRequest } from "express-jwt";
 import { User } from "../../mongoDB";
 import { IUser } from "../../mongoDB/models/User";
 import { validateNewUser } from "../../validators/user-validators";
@@ -14,10 +15,10 @@ router.get("/allUsers", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/newUser", async (req: Request, res: Response) => {
+router.post("/newUser", async (req: JWTRequest, res: Response) => {
   try {
     console.log("REQ.BODY = ", req.body);
-    // const _id = req.auth.sub
+    // const _id = req.auth?.sub
     const validatedNewUser: IUser = validateNewUser(req.body);
     const newUser = await User.create(validatedNewUser);
 

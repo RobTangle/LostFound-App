@@ -23,6 +23,8 @@ mongoose
 
 import { userSchema } from "./models/User";
 import { postSchema } from "./models/Post";
+import { subscriptionSchema } from "./models/Subscription";
 
 export const User = mongoose.model("User", userSchema);
 export const Post = mongoose.model("Post", postSchema);
+export const Subscription = mongoose.model("Subscription", subscriptionSchema);
