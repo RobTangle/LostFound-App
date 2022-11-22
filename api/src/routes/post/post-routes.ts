@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { Request as JWTRequest } from "express-jwt";
 import { Post, User } from "../../mongoDB";
 import { IPost } from "../../mongoDB/models/Post";
 import { validatePost } from "../../validators/post-validators";
@@ -16,7 +17,7 @@ router.get("/allPosts", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/newPost", async (req: Request, res: Response) => {
+router.post("/newPost", async (req: JWTRequest, res: Response) => {
   try {
     console.log("REQ.BODY = ", req.body);
     let userPostingId = "00000001primerUserID";
