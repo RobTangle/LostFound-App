@@ -1,6 +1,8 @@
 # LostFound
 
-Welcome to Step-by-Step Tutorial.
+Welcome to LostFound, MERN CRUD app built by @RobTangle @gonzalofara and @tamaraantonella.
+Lost your ID or passport? Found a credit card or driver license? You can now post it here.
+
 
 <!--suggest you can post id you found or find your lost id -->
 
