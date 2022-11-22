@@ -2,7 +2,7 @@ import { User } from "../../mongoDB";
 import { IUser } from "../../mongoDB/models/User";
 import { isEmail } from "../../validators/genericValidators";
 
-export async function getUserByIdOrThrowError(userId: string) {
+export async function getUserByIdOrThrowError(userId: string | undefined) {
   let userFromDB = await User.findById(userId);
   if (userFromDB !== null) {
     return userFromDB;
@@ -11,7 +11,7 @@ export async function getUserByIdOrThrowError(userId: string) {
   }
 }
 
-export async function getUserByIdLeanOrThrowError(userId: string) {
+export async function getUserByIdLeanOrThrowError(userId: string | undefined) {
   let userFromDB = await User.findById(userId).lean();
   if (userFromDB !== null) {
     return userFromDB;
