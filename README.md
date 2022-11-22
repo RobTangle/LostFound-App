@@ -1,6 +1,6 @@
 # LostFound
 
-Welcome to LostFound, MERN CRUD app built by @RobTangle @gonzalofara and @tamaraantonella.
+Welcome to LostFound, MERN CRUD app built by [@RobTangle](https://github.com/RobTangle) [@gonzalofara](https://github.com/gonzalofara) and [@tamaraantonella](https://github.com/tamaraantonella).
 Lost your ID or passport? Found a credit card or driver license? You can now post it here.
 
 
