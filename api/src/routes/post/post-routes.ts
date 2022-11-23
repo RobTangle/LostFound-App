@@ -20,7 +20,7 @@ router.get("/allPosts", async (req: Request, res: Response) => {
 router.post("/newPost", async (req: JWTRequest, res: Response) => {
   try {
     console.log("REQ.BODY = ", req.body);
-    let userPostingId = "00000001primerUserID";
+    let userPostingId = req.body._id;
     const userInDB = await getUserByIdOrThrowError(userPostingId);
 
     console.log("User In DB = ", userInDB);
