@@ -17,7 +17,7 @@ export function Landing() {
                 FOUND
               </span>
             </h1>
-            <ul className="mt-6 mb-8 text-lg sm:mb-12 list-disc">
+            <ul className="mt-6 mb-8  md:text-lg sm:mb-12 list-disc">
               <li className="md:ml-6 text-slate-600">{t("landing.list1")}</li>
               <li className="md:ml-6 text-slate-600">{t("landing.list2")}</li>
             </ul>
