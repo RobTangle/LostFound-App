@@ -1,6 +1,6 @@
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Landing , Home} from "./views";
+import { Landing , Home, Register} from "./views";
 
 function App() {
   return (
@@ -8,6 +8,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/register" element={<Register />} />
 
       </Routes>
     </BrowserRouter>

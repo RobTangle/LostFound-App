@@ -1,19 +1,14 @@
 //check if user existe en db
-import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "react-router-dom";
-import axios from 'axios'
 import { URL } from "../constants/url";
 
 
+export async function userExist(user, isAuthenticated, navigate, getAccessTokenSilently) {
 
-export async function userExist(user, isAuthenticated) {
-  const {
-    getAccessTokenSilently,
-  } = useAuth0();
+  const claims = await getAccessTokenSilently();
+  localStorage.setItem("token", claims);
   try
   {
-    const claims = await getAccessTokenSilently();
-    localStorage.setItem("tokenCattleTracker", claims);
+
     if (isAuthenticated && user)
     {
       console.log("estoypor hacer la peticion");
@@ -40,4 +35,5 @@ export async function userExist(user, isAuthenticated) {
     console.log(`Error en el Login Button`);
     console.log(error);
   }
+
 }
