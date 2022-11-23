@@ -1,4 +1,4 @@
-import { Post, Subscription } from "../../mongoDB";
+import { Post, Subscription, User } from "../../mongoDB";
 import { DateTime } from "luxon";
 import { IPost } from "../../mongoDB/models/Post";
 import { ISubscription } from "../../mongoDB/models/Subscription";
@@ -98,6 +98,107 @@ export async function findMatchingSuscriptions(newPost: IPost) {
   } catch (error: any) {
     console.log(`Error en fn findMatchingSuscriptions. ${error.message}`);
   }
+}
+
+export async function updatePostWithValidatedData(
+  post_id: string | undefined,
+  validatedData: any,
+  user_id: string | undefined
+): Promise<
+  import("mongoose").Document<unknown, any, { [x: string]: any }> & {
+    [x: string]: any;
+  } & Required<{ _id: unknown }>
+> {
+  const postInDB = await Post.findById(post_id);
+  const userInDB = await User.findById(user_id, { _id: 1 }).lean();
+
+  if (postInDB === null) {
+    throw new Error(
+      `Post con id "${post_id}" no fue encontrado en la base de datos.`
+    );
+  }
+  if (userInDB === null) {
+    throw new Error(
+      `Usuario con id "${user_id} no fue encontrado en la base de datos.`
+    );
+  }
+  if (postInDB.user_posting._id !== userInDB._id) {
+    throw new Error(
+      `El id del post no pertenece al usuario que desea modificarlo.`
+    );
+  }
+
+  let validatedDataKeys: string[] = Object.keys(validatedData);
+
+  for (let i = 0; i < validatedDataKeys.length; i++) {
+    const element: string = validatedDataKeys[i];
+    postInDB[element] = validatedData[element];
+  }
+  await postInDB.save();
+
+  return postInDB;
+}
+
+// DELETE POST :
+export async function findPostByIdAndDeleteIt(
+  post_id: string | undefined,
+  user_id: string | undefined
+): Promise<{
+  userPosts: number;
+  postDocument:
+    | (import("mongoose").Document<unknown, any, { [x: string]: any }> & {
+        [x: string]: any;
+      } & Required<{ _id: unknown }>)
+    | null;
+}> {
+  if (!post_id || !user_id) {
+    throw new Error(`El id del Post y el id del usuario deben ser válidos.`);
+  }
+  //borrar post en el user_posts y en collection Post
+  const userInDB = await User.findById(user_id);
+  const postInDB = await Post.findById(post_id);
+
+  if (userInDB === null) {
+    throw new Error(
+      `Usuario con id "${user_id}" no encontrado en la base de datos.`
+    );
+  }
+  if (postInDB === null) {
+    throw new Error(
+      `Post con id "${post_id}" no encontrado en la base de datos.`
+    );
+  }
+
+  if (postInDB.user_posting._id !== userInDB._id) {
+    throw new Error(
+      `El post que se quiere eliminar no pertenece al usuario con id "${user_id}"`
+    );
+  }
+
+  let postsDeleted: {
+    userPosts: number;
+    postDocument:
+      | null
+      | (import("mongoose").Document<unknown, any, { [x: string]: any }> & {
+          [x: string]: any;
+        } & Required<{ _id: unknown }>);
+  } = {
+    userPosts: 0,
+    postDocument: null,
+  };
+  //borrar referencia en User.posts:
+  for (let i = 0; i < userInDB.posts.length; i++) {
+    const element = userInDB.posts[i];
+    if (element == postInDB._id) {
+      userInDB.posts.splice(i, 1);
+      postsDeleted.userPosts++;
+    }
+  }
+  await userInDB.save();
+  // borrar documento en collection Post:
+  const deletedPost = await Post.findByIdAndDelete(post_id);
+  postsDeleted.postDocument = deletedPost;
+  return postsDeleted;
 }
 
 // //! EXPERIMENTAL PARA FUTURA FUNCIONALIDAD DE MANDAR EMAIL CON AVISOS :
