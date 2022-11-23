@@ -28,7 +28,45 @@ import {
 } from "./genericValidators";
 import { arrayOfCountriesTwoChars } from "../miscellanea/CountiesArrays";
 
-export function validatePost(bodyFromReq: any): IPost {
+// VALIDATE UPDATE POST DATA :
+export function validateUpdatePostData(bodyFromReq: any): {
+  name_on_doc: string;
+  number_on_doc: string;
+  country_found: string;
+  date_found: any;
+  blurred_imgs: string[];
+  comments: string | undefined;
+} {
+  const {
+    name_on_doc,
+    number_on_doc,
+    country_found,
+    date_found,
+    blurred_imgs,
+    comments,
+  } = bodyFromReq;
+
+  const validatedUpdatePostData = {
+    name_on_doc: checkNameOnDoc(name_on_doc),
+    number_on_doc: checkNumberOnDoc(number_on_doc),
+    country_found: checkCountry(country_found),
+    date_found: checkDate(date_found),
+    blurred_imgs: checkBlurredImgs(blurred_imgs),
+    comments: checkComments(comments),
+  };
+  return validatedUpdatePostData;
+}
+
+// VALIDATE NEW POST :
+export function validatePost(bodyFromReq: any): {
+  name_on_doc: string;
+  number_on_doc: string;
+  country_found: string;
+  date_found: any;
+  blurred_imgs: string[];
+  comments: string | undefined;
+  user_posting: IUser;
+} {
   const {
     name_on_doc,
     number_on_doc,
@@ -38,6 +76,7 @@ export function validatePost(bodyFromReq: any): IPost {
     comments,
     user_posting,
   } = bodyFromReq;
+
   const validatedPost = {
     name_on_doc: checkNameOnDoc(name_on_doc),
     number_on_doc: checkNumberOnDoc(number_on_doc),

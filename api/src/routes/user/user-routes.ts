@@ -40,6 +40,11 @@ router.post("/register", async (req: JWTRequest, res: Response) => {
   try {
     console.log("REQ.BODY = ", req.body);
     // const _id = req.auth?.sub
+    // CHEQUEAR SI REQ.AUTH.EMAIL_VERIFIED es true o false. Si es false, retornar con error y decir que debe verificar su email para registrarse.
+    // const email_verified = req.auth?.email_verified;
+    //  if (email_verified !== true) {
+    //   throw new Error (`El email de tu cuenta debe estar verificado para poder registrarte en LostFound.`)
+    //  }
     const validatedNewUser: IUser = validateNewUser(req.body);
     await throwErrorIfEmailExistsInDB(validatedNewUser.email);
     const newUser = await User.create(validatedNewUser);
