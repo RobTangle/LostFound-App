@@ -13,7 +13,7 @@ export async function userExist(user, isAuthenticated, navigate, getAccessTokenS
     {
       console.log("estoypor hacer la peticion");
       let existe = await fetch(
-        URL + "user/existsInDB/00000001primerUserID"
+        URL + "user/existsInDB/00000001primerpUserID"
         // {
         //   headers: {
         //     Authorization: `Bearer ${claims}`,

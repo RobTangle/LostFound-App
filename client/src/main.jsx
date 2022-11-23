@@ -8,14 +8,14 @@ import i18n from "./i18next";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-
-            <Auth0Provider
-        domain="dev-4hixku625rb7v8m8.us.auth0.com"
-        clientId="YYAxUnBGBjhdEukJB4VSRqbkNsyYRcJi"
-        redirectUri={window.location.origin}
-        audience="https://lost-found.app">
-        <App />
-      </Auth0Provider>
-
+    <Auth0Provider
+      domain="dev-4hixku625rb7v8m8.us.auth0.com"
+      clientId="YYAxUnBGBjhdEukJB4VSRqbkNsyYRcJi"
+      redirectUri={window.location.origin}
+      audience="https://lost-found.app"
+      useRefreshTokens={true}
+      cacheLocation="localstorage">
+      <App />
+    </Auth0Provider>
   </React.StrictMode>
 );
