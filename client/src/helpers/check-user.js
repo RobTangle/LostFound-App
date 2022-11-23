@@ -1,5 +1,5 @@
 //check if user existe en db
-import { URL } from "../constants/url";
+import { URL_EXISTS_IN_DB } from "../constants/url";
 
 
 export async function userExist(user, isAuthenticated, navigate, getAccessTokenSilently) {
@@ -8,12 +8,12 @@ export async function userExist(user, isAuthenticated, navigate, getAccessTokenS
   localStorage.setItem("token", claims);
   try
   {
-
+    console.log(user?.sub)
     if (isAuthenticated && user)
     {
       console.log("estoypor hacer la peticion");
       let existe = await fetch(
-        URL + "user/existsInDB/00000001primerUserID"
+        URL_EXISTS_IN_DB + user?.sub,
         // {
         //   headers: {
         //     Authorization: `Bearer ${claims}`,
