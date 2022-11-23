@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LangButton from "../components/lang-button";
 import LoginButton from "../components/login-button";
 import lostWallet from "../assets/dos.png";
 import { useTranslation } from "react-i18next";
+import { checkLogin } from "../helpers/check-login";
 
 export function Landing() {
   const { t } = useTranslation();
+  checkLogin();
+  useEffect(()=>{
+
+  },[])
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <section className="bg-gray-800 text-gray-100">

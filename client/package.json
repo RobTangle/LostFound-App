@@ -12,6 +12,7 @@
     "@auth0/auth0-react": "^1.12.0",
     "@splinetool/react-spline": "^2.2.3",
     "@splinetool/runtime": "^0.9.143",
+    "axios": "^1.2.0",
     "i18next": "^22.0.6",
     "i18next-browser-languagedetector": "^7.0.1",
     "react": "^18.2.0",
