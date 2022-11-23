@@ -67,11 +67,25 @@ export async function throwErrorIfEmailExistsInDB(
 export async function userExistsInDBBoolean(
   user_id: string | undefined
 ): Promise<boolean> {
+  if (!user_id || typeof user_id !== "string") {
+    throw new Error(`El id de usuario "${user_id}"a buscar no es válido.`);
+  }
   const userInDB = await User.findById(user_id, { _id: 1 }).lean();
   if (userInDB) {
     return true;
   } else {
     return false;
+  }
+}
+
+export async function throwErrorIfUserIsNotRegisteredOrVoid(
+  user_id: string | undefined
+) {
+  const userIsRegisteredInDBBoolean = await userExistsInDBBoolean(user_id);
+  if (userIsRegisteredInDBBoolean !== true) {
+    throw new Error(
+      `Usuario con id "${user_id}" no está registrado en la base de datos.`
+    );
   }
 }
 
