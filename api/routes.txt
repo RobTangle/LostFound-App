@@ -5,7 +5,7 @@ GET  "/existsInDB/:_id" Recibe por params un _id de user y responde {"msg": true
 
 GET  "/userinfo/:_id" Recibe por params un _id de user y responde con el Document del user.
 
-POST  "/newUser" : {_id, name, email, profile_img, posts} = req.body; Retorna el nuevo usuario creado.
+POST  "/register" : {_id, name, email, profile_img, posts} = req.body; Retorna el nuevo usuario creado.
 
 PUT  "/update": {_id, name, profile_img} = req.body;  Retorna un objeto { name: 0/1, profile_img: 0/1, userUpdated: IUser }. El 0 o 1 representa si se actualizó esa propiedad o no.
 
@@ -13,9 +13,20 @@ PUT  "/update": {_id, name, profile_img} = req.body;  Retorna un objeto { name: 
 /post :
 GET  "/allPosts" : Retorna un arreglo con todos los posts en la collection Posts;
 
-POST  "/register" : { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, _id (del usuario que postea) } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
+GET  "/:_id" Retorna un Post buscado por el req.params._id;
 
-GET  "/" : Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ;
+POST  "/newPost" : { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, _id (del usuario que postea) } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
+
+PUT  "/:id" : Recibe por body props a actualizar (   name_on_doc: string;
+  number_on_doc: string;
+  country_found: string;
+  date_found: any;
+  blurred_imgs: string[];
+  comments: string | undefined ) ;  el _id del post por req.params y el _id del usuario por body (temporalmente hasta tener jwtCheck)
+
+DELETE  "/:_id"  Borra un Post en la collection Post y en el arreglo de refs de User.posts. Recibe por req.params._id el _id del Post, y por req.body.user_id el _id del User (temporalmente hasta jwtCheck)
+
+GET  "/search" : Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ;
 
 
 /subscription :
