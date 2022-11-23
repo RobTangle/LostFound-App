@@ -1,6 +1,11 @@
 import { User } from "../../mongoDB";
 import { IUser } from "../../mongoDB/models/User";
-import { isEmail } from "../../validators/genericValidators";
+import {
+  isEmail,
+  isStringBetweenXAndYCharsLong,
+  isValidURLImage,
+  stringContainsURLs,
+} from "../../validators/genericValidators";
 
 export async function getUserByIdOrThrowError(userId: string | undefined) {
   let userFromDB = await User.findById(userId);
@@ -38,7 +43,9 @@ export async function userIsRegisteredInDB(reqAuthSub: any): Promise<boolean> {
   }
 }
 
-export async function emailExistsInDataBase(emailFromReq: any): Promise<void> {
+export async function throwErrorIfEmailExistsInDB(
+  emailFromReq: any
+): Promise<void> {
   if (!isEmail(emailFromReq)) {
     throw new Error(
       `Error al chequear si el email existe en la DataBase: el email '${emailFromReq}' no tiene un formato de email válido.`
@@ -55,4 +62,60 @@ export async function emailExistsInDataBase(emailFromReq: any): Promise<void> {
       `El email '${emailFromReq}' ya se encuentra registrado en la Data Base. Nombre del usuario al que le pertenece ese email: '${emailRegisteredAlready.name}'`
     );
   }
+}
+
+export async function userExistsInDBBoolean(
+  user_id: string | undefined
+): Promise<boolean> {
+  const userInDB = await User.findById(user_id, { _id: 1 }).lean();
+  if (userInDB) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export async function updateNameAndProfileImg(
+  name: string | undefined,
+  profile_img: string | undefined,
+  user_id: string | undefined
+) {
+  const userInDB = await getUserByIdOrThrowError(user_id);
+  let updated: {
+    userUpdated:
+      | (import("mongoose").Document<unknown, any, { [x: string]: any }> & {
+          [x: string]: any;
+        } & Required<{ _id: unknown }>)
+      | undefined;
+    name: number;
+    profile_img: number;
+  } = {
+    name: 0,
+    profile_img: 0,
+    userUpdated: undefined,
+  };
+  if (name) {
+    if (
+      isStringBetweenXAndYCharsLong(2, 50, name) &&
+      !stringContainsURLs(name)
+    ) {
+      userInDB.name = name;
+      updated.name = 1;
+    } else {
+      throw new Error(`El nombre ingresado "${name}" no es válido.`);
+    }
+  }
+  if (profile_img) {
+    if (isValidURLImage(profile_img)) {
+      userInDB.profile_img = profile_img;
+      updated.profile_img = 1;
+    } else {
+      throw new Error(
+        `La URL de imágen de perfíl ingresada "${profile_img}" no es válida.`
+      );
+    }
+  }
+  await userInDB.save();
+  updated.userUpdated = userInDB;
+  return updated;
 }
