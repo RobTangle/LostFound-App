@@ -1,20 +1,24 @@
 /user :
-GET "/allUsers" : Retorna arreglo con todos los usuarios en la DB.
+GET  "/allUsers" : Retorna arreglo con todos los usuarios en la DB.
+
+GET  "/existsInDB/:_id" Recibe por params un _id de user y responde {"msg": true / false}.
+
+GET  "/userinfo/:_id" Recibe por params un _id de user y responde con el Document del user.
 
 POST  "/newUser" : {_id, name, email, profile_img, posts} = req.body; Retorna el nuevo usuario creado.
 
-PUT "/update": {_id, name, profile_img} = req.body;  Retorna el documento del usuario actualizado (incluso si no hubo modificaciones, sin errores).
+PUT  "/update": {_id, name, profile_img} = req.body;  Retorna un objeto { name: 0/1, profile_img: 0/1, userUpdated: IUser }. El 0 o 1 representa si se actualizó esa propiedad o no.
 
 
 /post :
-GET "/allPosts" : Retorna un arreglo con todos los posts en la collection Posts;
+GET  "/allPosts" : Retorna un arreglo con todos los posts en la collection Posts;
 
-POST "/newPost" : { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, _id (del usuario que postea) } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
+POST  "/register" : { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, _id (del usuario que postea) } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
 
-GET "/" : Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ;
+GET  "/" : Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ;
 
 
 /subscription :
-GET "/findAll" : Retorna un arreglo de Documentos de Subscription ;
+GET  "/findAll" : Retorna un arreglo de Documentos de Subscription ;
 
-POST "/" : Crea un nuevo documento en la collection Subscription. {  name_on_doc, number_on_doc, country_lost, date_lost, user_subscribed: {_id, email, name}, } = req.body ; Retorna el nuevo Documento creado en Subscription.
+POST  "/" : Crea un nuevo documento en la collection Subscription. {  name_on_doc, number_on_doc, country_lost, date_lost, user_subscribed: {_id, email, name}, } = req.body ; Retorna el nuevo Documento creado en Subscription.
