@@ -16,6 +16,7 @@ GET  "/allPosts" : Retorna un arreglo con todos los posts en la collection Posts
 GET  "/:_id" Retorna un Post buscado por el req.params._id;
 
 POST  "/newPost" : { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, _id (del usuario que postea) } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
+EXTRA: Esta ruta, luego de la creación exitosa de un new Post, va a invocar a una función que chequea si alguna Subscription coincide con el nuevo Post y va a enviar emails avisando a las suscripciones que correspondan.
 
 PUT  "/:id" : Recibe por body props a actualizar (   name_on_doc: string;
   number_on_doc: string;
