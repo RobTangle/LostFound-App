@@ -1,6 +1,9 @@
 import { isValidObjectId } from "mongoose";
 import { Subscription } from "../../mongoDB";
-import { validateSubscription } from "../../validators/subscription-validators";
+import {
+  validateSubscription,
+  validateUpdateSubscriptionData,
+} from "../../validators/subscription-validators";
 import { getUserByIdOrThrowError } from "../user/user-auxiliaries";
 
 export async function handleNewSubscription(
@@ -85,4 +88,49 @@ export async function handleDeleteSubscription(
     }
     return objToReturn;
   }
+}
+
+export async function handleUpdateSubscription(
+  subscription_id: string | undefined,
+  user_id: string | undefined,
+  reqFromBody: any
+) {
+  if (!isValidObjectId(subscription_id)) {
+    throw new Error(`El id de la subscripctión no es un ObjetId válido.`);
+  }
+
+  const response = {
+    userSubscriptions: { updated: 0, msg: "" },
+    subscriptionCollection: { updated: 0, msg: "" },
+    result: 0,
+  };
+
+  const validatedData = validateUpdateSubscriptionData(reqFromBody);
+  const userFromDB = await getUserByIdOrThrowError(user_id);
+  const subscriptionFromDB = await Subscription.findOneAndUpdate(
+    { _id: subscription_id, "user_subcribed._id": userFromDB._id },
+    { validatedData }
+  );
+  if (subscriptionFromDB === null) {
+    response.subscriptionCollection.msg =
+      "No se encontró un documento en la collection Subscription que coincida con los datos recibidos.";
+  } else {
+    response.subscriptionCollection.updated++;
+    response.result++;
+  }
+  try {
+    const subscriptionToBeUpdated =
+      userFromDB.subscriptions.id(subscription_id);
+    subscriptionToBeUpdated.name_on_doc = validatedData.name_on_doc;
+    subscriptionToBeUpdated.number_on_doc = validatedData.number_on_doc;
+    subscriptionToBeUpdated.country_lost = validatedData.country_lost;
+    subscriptionToBeUpdated.date_lost = validatedData.date_lost;
+    await userFromDB.save();
+    response.userSubscriptions.updated++;
+    response.result++;
+  } catch (error: any) {
+    response.userSubscriptions.msg = error.message;
+    return response;
+  }
+  return response;
 }
