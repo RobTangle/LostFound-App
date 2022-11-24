@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+exports.checkObjectId = exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+const mongoose_1 = require("mongoose");
 // IS STRING:
 function isString(argumento) {
     if (typeof argumento !== "string") {
@@ -176,3 +177,12 @@ function stringContainsURLs(argumento) {
     }
 }
 exports.stringContainsURLs = stringContainsURLs;
+function checkObjectId(id) {
+    if ((0, mongoose_1.isValidObjectId)(id)) {
+        return id;
+    }
+    else {
+        throw new Error(`El id "${id}" no es un ObjectId válido.`);
+    }
+}
+exports.checkObjectId = checkObjectId;

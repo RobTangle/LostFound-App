@@ -49,4 +49,17 @@ router.delete("/:subscription_id", (req, res) => __awaiter(void 0, void 0, void 
         return res.status(400).send({ error: error.message });
     }
 }));
+router.patch("/:subscription_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // jwtCheck // const user_id = req.auth.sub
+        const user_id = req.body.user_id;
+        const subscription_id = req.params.subscription_id;
+        const confirmationOfUpdate = yield (0, subscription_r_auxiliary_1.handleUpdateSubscription)(subscription_id, user_id, req.body);
+        return res.status(200).send(confirmationOfUpdate);
+    }
+    catch (error) {
+        console.log(`Error en PATCH 'subscription/'. ${error.message}`);
+        return res.status(400).send({ error: error.message });
+    }
+}));
 exports.default = router;
