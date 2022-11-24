@@ -1,12 +1,12 @@
 import {
   isEmail,
   isValidString,
+  checkAndParseDate,
   stringContainsURLs,
 } from "./genericValidators";
 import { ISubscription } from "../mongoDB/models/Subscription";
 import {
   checkCountry,
-  checkDate,
   checkNameOnDoc,
   checkNumberOnDoc,
 } from "./post-validators";
@@ -24,7 +24,7 @@ export function validateUpdateSubscriptionData(bodyFromReq: any) {
     name_on_doc: checkNameOnDoc(name_on_doc),
     number_on_doc: checkNumberOnDoc(number_on_doc),
     country_lost: checkCountry(country_lost),
-    date_lost: checkDate(date_lost),
+    date_lost: checkAndParseDate(date_lost),
   };
   return validatedData;
 }
@@ -41,7 +41,7 @@ export function validateSubscription(bodyFromReq: any): ISubscription {
     name_on_doc: checkNameOnDoc(name_on_doc),
     number_on_doc: checkNumberOnDoc(number_on_doc),
     country_lost: checkCountry(country_lost),
-    date_lost: checkDate(date_lost),
+    date_lost: checkAndParseDate(date_lost),
     user_subscribed: checkUserSubscribed(user_subscribed),
   };
   return validatedSubscription;
