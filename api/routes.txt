@@ -7,7 +7,7 @@ GET  "/userinfo/:_id" Recibe por params un _id de user y responde con el Documen
 
 POST  "/register" : {_id, name, email, profile_img, posts} = req.body; Retorna el nuevo usuario creado.
 
-PUT  "/update": {_id, name, profile_img} = req.body;  Retorna un objeto { name: 0/1, profile_img: 0/1, userUpdated: IUser }. El 0 o 1 representa si se actualizó esa propiedad o no.
+PATCH  "/update": {_id, name, profile_img} = req.body;  Retorna un objeto { name: 0/1, profile_img: 0/1, userUpdated: IUser }. El 0 o 1 representa si se actualizó esa propiedad o no.
 
 
 /post :
@@ -18,7 +18,7 @@ GET  "/:_id" Retorna un Post buscado por el req.params._id;
 POST  "/newPost" : { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, _id (del usuario que postea) } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
 EXTRA: Esta ruta, luego de la creación exitosa de un new Post, va a invocar a una función que chequea si alguna Subscription coincide con el nuevo Post y va a enviar emails avisando a las suscripciones que correspondan.
 
-PUT  "/:id" : Recibe por body props a actualizar (   name_on_doc: string;
+PATCH  "/:id" : Recibe por body props a actualizar (   name_on_doc: string;
   number_on_doc: string;
   country_found: string;
   date_found: any;

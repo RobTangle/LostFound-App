@@ -70,7 +70,7 @@ router.get("/existsInDB/:_id", async (req: JWTRequest, res: Response) => {
 });
 
 // UPDATE NAME AND/OR PROFILE_IMG :
-router.put("/update", async (req: JWTRequest, res: Response) => {
+router.patch("/update", async (req: JWTRequest, res: Response) => {
   try {
     //  jwtCheck // const _id = req.auth?.sub;
     const _id = req.body._id; // TEMPORARY UNTIL JWT APPLIES
