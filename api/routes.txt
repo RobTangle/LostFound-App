@@ -34,3 +34,5 @@ GET  "/search" : Realiza una búsqueda por query usando la aux fn searchPostsByQ
 GET  "/findAll" : Retorna un arreglo de Documentos de Subscription ;
 
 POST  "/" : Crea un nuevo documento en la collection Subscription. {  name_on_doc, number_on_doc, country_lost, date_lost, user_subscribed: {_id, email, name}, } = req.body ; Retorna el nuevo Documento creado en Subscription.
+
+DELETE "/"  : Busca y borra subscriptions en el arreglo user.subscrition y en la collection Subscription. Retorna un obj con propiedades de cuántos elementos borró y mensages (msg).
