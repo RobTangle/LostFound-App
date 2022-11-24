@@ -12,7 +12,7 @@ function validateUpdateSubscriptionData(bodyFromReq) {
         name_on_doc: (0, post_validators_1.checkNameOnDoc)(name_on_doc),
         number_on_doc: (0, post_validators_1.checkNumberOnDoc)(number_on_doc),
         country_lost: (0, post_validators_1.checkCountry)(country_lost),
-        date_lost: (0, post_validators_1.checkDate)(date_lost),
+        date_lost: (0, genericValidators_1.checkAndParseDate)(date_lost),
     };
     return validatedData;
 }
@@ -23,7 +23,7 @@ function validateSubscription(bodyFromReq) {
         name_on_doc: (0, post_validators_1.checkNameOnDoc)(name_on_doc),
         number_on_doc: (0, post_validators_1.checkNumberOnDoc)(number_on_doc),
         country_lost: (0, post_validators_1.checkCountry)(country_lost),
-        date_lost: (0, post_validators_1.checkDate)(date_lost),
+        date_lost: (0, genericValidators_1.checkAndParseDate)(date_lost),
         user_subscribed: checkUserSubscribed(user_subscribed),
     };
     return validatedSubscription;
