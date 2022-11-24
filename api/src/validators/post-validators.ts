@@ -1,7 +1,6 @@
-import { DateTime } from "luxon";
-
 import { IUser } from "../mongoDB/models/User";
 import {
+  checkAndParseDate,
   isFalsyArgument,
   isStringBetween1AndXCharsLong,
   isStringXCharsLong,
@@ -31,7 +30,7 @@ export function validateUpdatePostData(bodyFromReq: any): {
     name_on_doc: checkNameOnDoc(name_on_doc),
     number_on_doc: checkNumberOnDoc(number_on_doc),
     country_found: checkCountry(country_found),
-    date_found: checkDate(date_found),
+    date_found: checkAndParseDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
     comments: checkComments(comments),
   };
@@ -62,7 +61,7 @@ export function validatePost(bodyFromReq: any): {
     name_on_doc: checkNameOnDoc(name_on_doc),
     number_on_doc: checkNumberOnDoc(number_on_doc),
     country_found: checkCountry(country_found),
-    date_found: checkDate(date_found),
+    date_found: checkAndParseDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
     comments: checkComments(comments),
     user_posting: checkUserPosting(user_posting),
@@ -109,20 +108,7 @@ export function checkCountry(countryFromReq: any): string {
   throw new Error(`The country "${countryFromReq}" is invalid.`);
 }
 
-//! Arreglar parseo para cuando me lleguen Dates que ya estén convertidas a JSDate!
-export function checkDate(dateFromReq: any) {
-  try {
-    let parsedDate: any = DateTime.fromFormat(dateFromReq, "yyyy-MM-dd");
-    if (parsedDate.invalid) {
-      throw new Error(parsedDate.invalid?.explanation);
-    }
-    return parsedDate.toJSDate();
-  } catch (error: any) {
-    console.log(`Error en parseDate. ${error.message}`);
-    throw new Error(error.message);
-  }
-}
-
+// CHECK BLURRED IMGS :
 //! parsear las imágenes que borronearlas, ya sea los números y letras con IA, o la imágen en general con el SDK de cloudinary o El otro "blur" o algo así.. :
 function checkBlurredImgs(blurredImgsFromReq: any): string[] {
   if (Array.isArray(blurredImgsFromReq)) {
