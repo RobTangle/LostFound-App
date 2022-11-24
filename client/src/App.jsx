@@ -1,6 +1,5 @@
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Landing , Home, Register} from "./views";
+import { Landing, Home, Register } from "./views";
 
 function App() {
   return (
@@ -9,7 +8,6 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
         <Route path="/register" element={<Register />} />
-
       </Routes>
     </BrowserRouter>
   );
