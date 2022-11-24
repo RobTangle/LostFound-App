@@ -46,7 +46,7 @@ function handleDeleteSubscription(subscription_id, user_id) {
         let objToReturn = {
             userSubscriptions: { deleted: 0, msg: "" },
             subscriptionCollection: { deleted: 0, msg: "" },
-            result: 0,
+            total: 0,
             msg: "",
         };
         try {
@@ -55,7 +55,7 @@ function handleDeleteSubscription(subscription_id, user_id) {
                 userInDB.subscriptions.id(subscription_id).remove();
                 yield userInDB.save();
                 objToReturn.userSubscriptions.deleted++;
-                objToReturn.result++;
+                objToReturn.total++;
             }
             else {
                 objToReturn.userSubscriptions.msg =
@@ -73,7 +73,7 @@ function handleDeleteSubscription(subscription_id, user_id) {
             });
             if (deletedSubscription) {
                 objToReturn.subscriptionCollection.deleted++;
-                objToReturn.result++;
+                objToReturn.total++;
             }
             else {
                 console.log("No se ha encontrado y borrado un que coincida en la collection Subscription.");
@@ -85,6 +85,7 @@ function handleDeleteSubscription(subscription_id, user_id) {
     });
 }
 exports.handleDeleteSubscription = handleDeleteSubscription;
+// HANDLE UPDATE SUBSCRIPTION :
 function handleUpdateSubscription(subscription_id, user_id, reqFromBody) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!(0, mongoose_1.isValidObjectId)(subscription_id)) {
@@ -93,18 +94,41 @@ function handleUpdateSubscription(subscription_id, user_id, reqFromBody) {
         const response = {
             userSubscriptions: { updated: 0, msg: "" },
             subscriptionCollection: { updated: 0, msg: "" },
-            result: 0,
+            total: 0,
         };
         const validatedData = (0, subscription_validators_1.validateUpdateSubscriptionData)(reqFromBody);
         const userFromDB = yield (0, user_auxiliaries_1.getUserByIdOrThrowError)(user_id);
-        const subscriptionFromDB = yield mongoDB_1.Subscription.findOneAndUpdate({ _id: subscription_id, "user_subcribed._id": userFromDB._id }, { validatedData });
+        //! Este método findOneAndUpdate es peligroso ya que si le ingreso un filtro incorrecto (ej, "user_fjklasd: "aslgo") es como si lo ignorase y al matchear el otro filtro.. me trae el documento a pensar de que uno de los dos filtros no fue correcto. PELIGROSÍSIMO!!!!
+        // const subscriptionFromDB = await Subscription.findOneAndUpdate(
+        //   {
+        //     $and: [
+        //       { "user_subscribed._id": userFromDB._id },
+        //       { _id: subscription_id },
+        //     ],
+        //   },
+        //   { ...validatedData }
+        // );
+        const subscriptionFromDB = yield mongoDB_1.Subscription.findOne({
+            "user_subscribed._id": userFromDB._id,
+            _id: subscription_id,
+        });
         if (subscriptionFromDB === null) {
+            console.log("No se encontró al documento en la colección Subscription.");
             response.subscriptionCollection.msg =
-                "No se encontró un documento en la collection Subscription que coincida con los datos recibidos.";
+                "No se encontró al documento en la colección Subscription.";
         }
         else {
+            if (subscriptionFromDB.user_subscribed._id !== userFromDB._id) {
+                throw new Error("Conflicto con los ids de los documentos: Parece ser que esta subscripción no le pertenece a este usuario.");
+            }
+            let propsToUpdateArray = Object.keys(validatedData);
+            for (let i = 0; i < propsToUpdateArray.length; i++) {
+                const element = propsToUpdateArray[i];
+                subscriptionFromDB[element] = validatedData[element];
+            }
+            yield subscriptionFromDB.save();
             response.subscriptionCollection.updated++;
-            response.result++;
+            response.total++;
         }
         try {
             const subscriptionToBeUpdated = userFromDB.subscriptions.id(subscription_id);
@@ -114,13 +138,13 @@ function handleUpdateSubscription(subscription_id, user_id, reqFromBody) {
             subscriptionToBeUpdated.date_lost = validatedData.date_lost;
             yield userFromDB.save();
             response.userSubscriptions.updated++;
-            response.result++;
+            response.total++;
+            return response;
         }
         catch (error) {
             response.userSubscriptions.msg = error.message;
             return response;
         }
-        return response;
     });
 }
 exports.handleUpdateSubscription = handleUpdateSubscription;

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkDate = exports.checkCountry = exports.checkNumberOnDoc = exports.checkNameOnDoc = exports.validatePost = exports.validateUpdatePostData = void 0;
-const luxon_1 = require("luxon");
+exports.checkCountry = exports.checkNumberOnDoc = exports.checkNameOnDoc = exports.validatePost = exports.validateUpdatePostData = void 0;
 const genericValidators_1 = require("./genericValidators");
 const CountiesArrays_1 = require("../miscellanea/CountiesArrays");
 // VALIDATE UPDATE POST DATA :
@@ -11,7 +10,7 @@ function validateUpdatePostData(bodyFromReq) {
         name_on_doc: checkNameOnDoc(name_on_doc),
         number_on_doc: checkNumberOnDoc(number_on_doc),
         country_found: checkCountry(country_found),
-        date_found: checkDate(date_found),
+        date_found: (0, genericValidators_1.checkAndParseDate)(date_found),
         blurred_imgs: checkBlurredImgs(blurred_imgs),
         comments: checkComments(comments),
     };
@@ -25,7 +24,7 @@ function validatePost(bodyFromReq) {
         name_on_doc: checkNameOnDoc(name_on_doc),
         number_on_doc: checkNumberOnDoc(number_on_doc),
         country_found: checkCountry(country_found),
-        date_found: checkDate(date_found),
+        date_found: (0, genericValidators_1.checkAndParseDate)(date_found),
         blurred_imgs: checkBlurredImgs(blurred_imgs),
         comments: checkComments(comments),
         user_posting: checkUserPosting(user_posting),
@@ -72,22 +71,7 @@ function checkCountry(countryFromReq) {
     throw new Error(`The country "${countryFromReq}" is invalid.`);
 }
 exports.checkCountry = checkCountry;
-//! Arreglar parseo para cuando me lleguen Dates que ya estén convertidas a JSDate!
-function checkDate(dateFromReq) {
-    var _a;
-    try {
-        let parsedDate = luxon_1.DateTime.fromFormat(dateFromReq, "yyyy-MM-dd");
-        if (parsedDate.invalid) {
-            throw new Error((_a = parsedDate.invalid) === null || _a === void 0 ? void 0 : _a.explanation);
-        }
-        return parsedDate.toJSDate();
-    }
-    catch (error) {
-        console.log(`Error en parseDate. ${error.message}`);
-        throw new Error(error.message);
-    }
-}
-exports.checkDate = checkDate;
+// CHECK BLURRED IMGS :
 //! parsear las imágenes que borronearlas, ya sea los números y letras con IA, o la imágen en general con el SDK de cloudinary o El otro "blur" o algo así.. :
 function checkBlurredImgs(blurredImgsFromReq) {
     if (Array.isArray(blurredImgsFromReq)) {
