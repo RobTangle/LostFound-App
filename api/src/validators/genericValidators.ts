@@ -1,3 +1,5 @@
+import { isValidObjectId } from "mongoose";
+
 // IS STRING:
 export function isString(argumento: any): boolean {
   if (typeof argumento !== "string") {
@@ -184,5 +186,13 @@ export function stringContainsURLs(argumento: string): boolean {
     return true;
   } else {
     return false;
+  }
+}
+
+export function checkObjectId(id: string) {
+  if (isValidObjectId(id)) {
+    return id;
+  } else {
+    throw new Error(`El id "${id}" no es un ObjectId válido.`);
   }
 }

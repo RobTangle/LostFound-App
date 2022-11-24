@@ -1,24 +1,5 @@
-// {
-//   name_on_doc: {
-//     type: String,
-//     maxlength: 100,
-//     required: true,
-//     lowercase: true,
-//   },
-//   number_on_doc: {
-//     type: String,
-//     maxlength: 100,
-//     required: true,
-//     lowercase: true,
-//   },
-//   country_found: { type: String, required: true, lowercase: true },
-//   date_found: { type: Date, required: true },
-//   blurred_imgs: [{ type: String, required: false }],
-//   comments: { type: String, maxlength: 800, required: false },
-//   user_posting: userSchema,
-// },
 import { DateTime } from "luxon";
-import { IPost } from "../mongoDB/models/Post";
+
 import { IUser } from "../mongoDB/models/User";
 import {
   isFalsyArgument,
@@ -128,6 +109,7 @@ export function checkCountry(countryFromReq: any): string {
   throw new Error(`The country "${countryFromReq}" is invalid.`);
 }
 
+//! Arreglar parseo para cuando me lleguen Dates que ya estén convertidas a JSDate!
 export function checkDate(dateFromReq: any) {
   try {
     let parsedDate: any = DateTime.fromFormat(dateFromReq, "yyyy-MM-dd");

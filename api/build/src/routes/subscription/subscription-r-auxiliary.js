@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeleteSubscription = exports.handleNewSubscription = void 0;
+exports.handleUpdateSubscription = exports.handleDeleteSubscription = exports.handleNewSubscription = void 0;
 const mongoose_1 = require("mongoose");
 const mongoDB_1 = require("../../mongoDB");
 const subscription_validators_1 = require("../../validators/subscription-validators");
@@ -85,3 +85,42 @@ function handleDeleteSubscription(subscription_id, user_id) {
     });
 }
 exports.handleDeleteSubscription = handleDeleteSubscription;
+function handleUpdateSubscription(subscription_id, user_id, reqFromBody) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!(0, mongoose_1.isValidObjectId)(subscription_id)) {
+            throw new Error(`El id de la subscripctión no es un ObjetId válido.`);
+        }
+        const response = {
+            userSubscriptions: { updated: 0, msg: "" },
+            subscriptionCollection: { updated: 0, msg: "" },
+            result: 0,
+        };
+        const validatedData = (0, subscription_validators_1.validateUpdateSubscriptionData)(reqFromBody);
+        const userFromDB = yield (0, user_auxiliaries_1.getUserByIdOrThrowError)(user_id);
+        const subscriptionFromDB = yield mongoDB_1.Subscription.findOneAndUpdate({ _id: subscription_id, "user_subcribed._id": userFromDB._id }, { validatedData });
+        if (subscriptionFromDB === null) {
+            response.subscriptionCollection.msg =
+                "No se encontró un documento en la collection Subscription que coincida con los datos recibidos.";
+        }
+        else {
+            response.subscriptionCollection.updated++;
+            response.result++;
+        }
+        try {
+            const subscriptionToBeUpdated = userFromDB.subscriptions.id(subscription_id);
+            subscriptionToBeUpdated.name_on_doc = validatedData.name_on_doc;
+            subscriptionToBeUpdated.number_on_doc = validatedData.number_on_doc;
+            subscriptionToBeUpdated.country_lost = validatedData.country_lost;
+            subscriptionToBeUpdated.date_lost = validatedData.date_lost;
+            yield userFromDB.save();
+            response.userSubscriptions.updated++;
+            response.result++;
+        }
+        catch (error) {
+            response.userSubscriptions.msg = error.message;
+            return response;
+        }
+        return response;
+    });
+}
+exports.handleUpdateSubscription = handleUpdateSubscription;
