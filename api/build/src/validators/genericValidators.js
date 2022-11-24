@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
 // IS STRING:
 function isString(argumento) {
     if (typeof argumento !== "string") {
@@ -83,6 +83,27 @@ function isStringBetween1AndXCharsLong(x, argumento) {
     }
 }
 exports.isStringBetween1AndXCharsLong = isStringBetween1AndXCharsLong;
+// IS STRING BETWEEN X AND Y CHARACTERS LONG:
+function isStringBetweenXAndYCharsLong(x, y, argumento) {
+    let error = `The argument "x" must be a positive number`;
+    if (!x || typeof x !== "number" || x < 1) {
+        throw new Error(`The argument "x" must be a positive integer number`);
+    }
+    let minCharsLong = x;
+    if (!y || typeof y !== "number" || y < 1) {
+        throw new Error(`The argument "y" must be a positive integer number.`);
+    }
+    let maxCharsLong = y;
+    if (typeof argumento === "string" &&
+        argumento.length >= minCharsLong &&
+        argumento.length <= maxCharsLong) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+exports.isStringBetweenXAndYCharsLong = isStringBetweenXAndYCharsLong;
 // IS FALSY ARGUMENT
 function isFalsyArgument(argumento) {
     if (!argumento) {
