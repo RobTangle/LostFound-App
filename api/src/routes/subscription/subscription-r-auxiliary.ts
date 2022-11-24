@@ -1,6 +1,9 @@
 import { isValidObjectId } from "mongoose";
 import { Subscription } from "../../mongoDB";
-import { validateSubscription } from "../../validators/subscription-validators";
+import {
+  validateSubscription,
+  validateUpdateSubscriptionData,
+} from "../../validators/subscription-validators";
 import { getUserByIdOrThrowError } from "../user/user-auxiliaries";
 
 export async function handleNewSubscription(
@@ -35,7 +38,7 @@ export async function handleDeleteSubscription(
 ): Promise<{
   userSubscriptions: { deleted: number; msg: string };
   subscriptionCollection: { deleted: number; msg: string };
-  result: number;
+  total: number;
   msg: string;
 }> {
   if (!isValidObjectId(subscription_id)) {
@@ -48,7 +51,7 @@ export async function handleDeleteSubscription(
   let objToReturn = {
     userSubscriptions: { deleted: 0, msg: "" },
     subscriptionCollection: { deleted: 0, msg: "" },
-    result: 0,
+    total: 0,
     msg: "",
   };
 
@@ -60,7 +63,7 @@ export async function handleDeleteSubscription(
       userInDB.subscriptions.id(subscription_id).remove();
       await userInDB.save();
       objToReturn.userSubscriptions.deleted++;
-      objToReturn.result++;
+      objToReturn.total++;
     } else {
       objToReturn.userSubscriptions.msg =
         "El user no posee subscripciones en sus propiedades.";
@@ -75,7 +78,7 @@ export async function handleDeleteSubscription(
     });
     if (deletedSubscription) {
       objToReturn.subscriptionCollection.deleted++;
-      objToReturn.result++;
+      objToReturn.total++;
     } else {
       console.log(
         "No se ha encontrado y borrado un que coincida en la collection Subscription."
@@ -84,5 +87,77 @@ export async function handleDeleteSubscription(
       objToReturn.msg += ` No se ha encontrado y borrado un documento que coincida en la collection Subscription con subscription_id "${subscription_id}" y user_id "${user_id}".`;
     }
     return objToReturn;
+  }
+}
+
+// HANDLE UPDATE SUBSCRIPTION :
+export async function handleUpdateSubscription(
+  subscription_id: string | undefined,
+  user_id: string | undefined,
+  reqFromBody: any
+) {
+  if (!isValidObjectId(subscription_id)) {
+    throw new Error(`El id de la subscripctión no es un ObjetId válido.`);
+  }
+
+  const response = {
+    userSubscriptions: { updated: 0, msg: "" },
+    subscriptionCollection: { updated: 0, msg: "" },
+    total: 0,
+  };
+
+  const validatedData: any = validateUpdateSubscriptionData(reqFromBody);
+  const userFromDB = await getUserByIdOrThrowError(user_id);
+
+  //! Este método findOneAndUpdate es peligroso ya que si le ingreso un filtro incorrecto (ej, "user_fjklasd: "aslgo") es como si lo ignorase y al matchear el otro filtro.. me trae el documento a pensar de que uno de los dos filtros no fue correcto. PELIGROSÍSIMO!!!!
+  // const subscriptionFromDB = await Subscription.findOneAndUpdate(
+  //   {
+  //     $and: [
+  //       { "user_subscribed._id": userFromDB._id },
+  //       { _id: subscription_id },
+  //     ],
+  //   },
+  //   { ...validatedData }
+  // );
+  const subscriptionFromDB = await Subscription.findOne({
+    "user_subscribed._id": userFromDB._id,
+    _id: subscription_id,
+  });
+
+  if (subscriptionFromDB === null) {
+    console.log("No se encontró al documento en la colección Subscription.");
+    response.subscriptionCollection.msg =
+      "No se encontró al documento en la colección Subscription.";
+  } else {
+    if (subscriptionFromDB.user_subscribed._id !== userFromDB._id) {
+      throw new Error(
+        "Conflicto con los ids de los documentos: Parece ser que esta subscripción no le pertenece a este usuario."
+      );
+    }
+
+    let propsToUpdateArray = Object.keys(validatedData);
+    for (let i = 0; i < propsToUpdateArray.length; i++) {
+      const element = propsToUpdateArray[i];
+      subscriptionFromDB[element] = validatedData[element];
+    }
+    await subscriptionFromDB.save();
+    response.subscriptionCollection.updated++;
+    response.total++;
+  }
+
+  try {
+    const subscriptionToBeUpdated =
+      userFromDB.subscriptions.id(subscription_id);
+    subscriptionToBeUpdated.name_on_doc = validatedData.name_on_doc;
+    subscriptionToBeUpdated.number_on_doc = validatedData.number_on_doc;
+    subscriptionToBeUpdated.country_lost = validatedData.country_lost;
+    subscriptionToBeUpdated.date_lost = validatedData.date_lost;
+    await userFromDB.save();
+    response.userSubscriptions.updated++;
+    response.total++;
+    return response;
+  } catch (error: any) {
+    response.userSubscriptions.msg = error.message;
+    return response;
   }
 }

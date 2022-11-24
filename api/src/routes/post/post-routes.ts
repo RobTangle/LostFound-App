@@ -67,7 +67,7 @@ router.get("/search", async (req: Request, res: Response) => {
 });
 
 // UPDATE POST :
-router.put("/:_id", async (req: JWTRequest, res: Response) => {
+router.patch("/:_id", async (req: JWTRequest, res: Response) => {
   try {
     // jwtCheck // const user_id = req.auth?.sub
     const user_id = req.body.user_id;

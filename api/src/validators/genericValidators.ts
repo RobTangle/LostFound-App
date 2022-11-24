@@ -1,3 +1,6 @@
+import { DateTime } from "luxon";
+import { isValidObjectId } from "mongoose";
+
 // IS STRING:
 export function isString(argumento: any): boolean {
   if (typeof argumento !== "string") {
@@ -186,3 +189,28 @@ export function stringContainsURLs(argumento: string): boolean {
     return false;
   }
 }
+
+export function checkObjectId(id: string) {
+  if (isValidObjectId(id)) {
+    return id;
+  } else {
+    throw new Error(`El id "${id}" no es un ObjectId válido.`);
+  }
+}
+
+export function checkAndParseDate(dateFromReq: string): Date {
+  try {
+    let parsedAndValidated = DateTime.fromISO(dateFromReq);
+    return parsedAndValidated.toJSDate();
+  } catch (error: any) {
+    console.log(`Error en checkAndParseDate. ${error.message}`);
+    throw new Error(error.message);
+  }
+}
+
+// let dateIsoFormat = "2022-11-11T03:00:00.000Z";
+// let dateInputFormat = "2022-11-11";
+// let parsed = DateTime.fromISO(dateIsoFormat);
+// console.log(parsed.toJSDate());
+// let fromInputSmall = DateTime.fromISO(dateInputFormat);
+// console.log(fromInputSmall.toJSDate());

@@ -1,9 +1,13 @@
 import { Router, Request, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
-import { Subscription } from "../../mongoDB";
+import { isValidObjectId } from "mongoose";
+import { Subscription, User } from "../../mongoDB";
+import { validateUpdateSubscriptionData } from "../../validators/subscription-validators";
+import { getUserByIdOrThrowError } from "../user/user-auxiliaries";
 import {
   handleDeleteSubscription,
   handleNewSubscription,
+  handleUpdateSubscription,
 } from "./subscription-r-auxiliary";
 
 const router = Router();
@@ -43,6 +47,23 @@ router.delete("/:subscription_id", async (req: JWTRequest, res: Response) => {
     return res.status(200).send(confirmationOfDeletion);
   } catch (error: any) {
     console.log(`Error en DELETE 'subscription/'. ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+router.patch("/:subscription_id", async (req: JWTRequest, res: Response) => {
+  try {
+    // jwtCheck // const user_id = req.auth.sub
+    const user_id = req.body.user_id;
+    const subscription_id = req.params.subscription_id;
+    const confirmationOfUpdate = await handleUpdateSubscription(
+      subscription_id,
+      user_id,
+      req.body
+    );
+    return res.status(200).send(confirmationOfUpdate);
+  } catch (error: any) {
+    console.log(`Error en PATCH 'subscription/'. ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 });
