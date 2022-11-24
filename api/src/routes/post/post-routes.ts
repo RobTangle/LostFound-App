@@ -6,6 +6,7 @@ import {
   validatePost,
   validateUpdatePostData,
 } from "../../validators/post-validators";
+import { handleAlertAfterNewPost } from "../subscription/nodemailer";
 import { getUserByIdOrThrowError } from "../user/user-auxiliaries";
 import {
   findPostByIdAndDeleteIt,
@@ -40,11 +41,10 @@ router.post("/newPost", async (req: JWTRequest, res: Response) => {
     const newPost = await Post.create(validatedPost);
     userInDB.posts.push(newPost._id);
     await userInDB.save();
-    return res.status(200).send(newPost);
-    // NO USAR "return" al responder, y continuar haciendo la búsqueda de suscriptions que coincidan con el post recién creado. La que coincida, mandar un email al usuario avisandole.
-    // await findAndSendAlertsOfMatchingSubscriptionsOfNewPost(
-    //   newPost: IPost
-    // )
+    res.status(200).send(newPost);
+    // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
+    let resultOfSendingAlerts = await handleAlertAfterNewPost(newPost);
+    console.log(resultOfSendingAlerts);
   } catch (error: any) {
     console.log(`Error en POST '/newPost. ${error.message}`);
     return res.status(400).send({ error: error.message });
