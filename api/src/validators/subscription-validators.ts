@@ -1,6 +1,3 @@
-import { DateTime } from "luxon";
-import { IPost } from "../mongoDB/models/Post";
-import { IUser } from "../mongoDB/models/User";
 import {
   isEmail,
   isValidString,
@@ -13,6 +10,24 @@ import {
   checkNameOnDoc,
   checkNumberOnDoc,
 } from "./post-validators";
+
+export function validateUpdateSubscriptionData(bodyFromReq: any) {
+  const {
+    // subscription_id,
+    name_on_doc,
+    number_on_doc,
+    country_lost,
+    date_lost,
+  } = bodyFromReq;
+  const validatedData = {
+    // _id: checkObjectId(subscription_id),
+    name_on_doc: checkNameOnDoc(name_on_doc),
+    number_on_doc: checkNumberOnDoc(number_on_doc),
+    country_lost: checkCountry(country_lost),
+    date_lost: checkDate(date_lost),
+  };
+  return validatedData;
+}
 
 export function validateSubscription(bodyFromReq: any): ISubscription {
   const {

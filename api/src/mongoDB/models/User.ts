@@ -1,4 +1,5 @@
 import { Schema, HydratedDocument } from "mongoose";
+import { ISubscription, subscriptionSchema } from "./Subscription";
 
 export interface IUser {
   _id: string;
@@ -6,6 +7,7 @@ export interface IUser {
   email: string;
   profile_img?: string;
   posts: string[];
+  subscriptions: [ISubscription] | [];
 }
 
 export const userSchema: Schema = new Schema<IUser>(
@@ -19,8 +21,14 @@ export const userSchema: Schema = new Schema<IUser>(
       minlength: 6,
     },
     // Suscripciones de alertas. [{query}, {query}] MAX 5.
-    profile_img: { type: String, required: false },
+    profile_img: {
+      type: String,
+      required: false,
+      default:
+        "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
+    },
     posts: [{ type: String, ref: "Post" }],
+    subscriptions: [subscriptionSchema],
   },
   { timestamps: true }
 );

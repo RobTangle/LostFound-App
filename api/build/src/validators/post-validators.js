@@ -1,25 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkDate = exports.checkCountry = exports.checkNumberOnDoc = exports.checkNameOnDoc = exports.validatePost = exports.validateUpdatePostData = void 0;
-// {
-//   name_on_doc: {
-//     type: String,
-//     maxlength: 100,
-//     required: true,
-//     lowercase: true,
-//   },
-//   number_on_doc: {
-//     type: String,
-//     maxlength: 100,
-//     required: true,
-//     lowercase: true,
-//   },
-//   country_found: { type: String, required: true, lowercase: true },
-//   date_found: { type: Date, required: true },
-//   blurred_imgs: [{ type: String, required: false }],
-//   comments: { type: String, maxlength: 800, required: false },
-//   user_posting: userSchema,
-// },
 const luxon_1 = require("luxon");
 const genericValidators_1 = require("./genericValidators");
 const CountiesArrays_1 = require("../miscellanea/CountiesArrays");
@@ -91,6 +72,7 @@ function checkCountry(countryFromReq) {
     throw new Error(`The country "${countryFromReq}" is invalid.`);
 }
 exports.checkCountry = checkCountry;
+//! Arreglar parseo para cuando me lleguen Dates que ya estén convertidas a JSDate!
 function checkDate(dateFromReq) {
     var _a;
     try {

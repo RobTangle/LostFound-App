@@ -1,8 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateSubscription = void 0;
+exports.validateSubscription = exports.validateUpdateSubscriptionData = void 0;
 const genericValidators_1 = require("./genericValidators");
 const post_validators_1 = require("./post-validators");
+function validateUpdateSubscriptionData(bodyFromReq) {
+    const { 
+    // subscription_id,
+    name_on_doc, number_on_doc, country_lost, date_lost, } = bodyFromReq;
+    const validatedData = {
+        // _id: checkObjectId(subscription_id),
+        name_on_doc: (0, post_validators_1.checkNameOnDoc)(name_on_doc),
+        number_on_doc: (0, post_validators_1.checkNumberOnDoc)(number_on_doc),
+        country_lost: (0, post_validators_1.checkCountry)(country_lost),
+        date_lost: (0, post_validators_1.checkDate)(date_lost),
+    };
+    return validatedData;
+}
+exports.validateUpdateSubscriptionData = validateUpdateSubscriptionData;
 function validateSubscription(bodyFromReq) {
     const { name_on_doc, number_on_doc, country_lost, date_lost, user_subscribed, } = bodyFromReq;
     const validatedSubscription = {

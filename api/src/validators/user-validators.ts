@@ -4,19 +4,19 @@ import {
   isFalsyArgument,
   isStringBetween1AndXCharsLong,
   isStringBetweenXAndYCharsLong,
-  isValidString,
   isValidURLImage,
   stringContainsURLs,
 } from "./genericValidators";
 
 export function validateNewUser(objFromReq: any): IUser {
-  const { _id, name, email, profile_img, posts } = objFromReq;
+  const { _id, name, email, profile_img, posts, subscriptions } = objFromReq;
   const validatedUser = {
     _id: checkUserId(_id),
     name: checkUserName(name),
     email: checkUserEmail(email),
     profile_img: checkUserProfileImg(profile_img),
     posts: checkUserPosts(posts),
+    subscriptions: checkUserSubscriptions(subscriptions),
   };
   return validatedUser;
 }
@@ -64,5 +64,10 @@ export function checkUserProfileImg(
 
 // CHECK USER POSTS :
 function checkUserPosts(postsFromReq: any): [] {
+  return [];
+}
+
+// CHECK USER POSTS :
+function checkUserSubscriptions(subscriptionsFromReq: any): [] {
   return [];
 }
