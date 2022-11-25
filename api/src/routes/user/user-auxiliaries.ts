@@ -1,4 +1,5 @@
-import { User } from "../../mongoDB";
+import { isValidObjectId } from "mongoose";
+import { Post, Subscription, User } from "../../mongoDB";
 import { IUser } from "../../mongoDB/models/User";
 import {
   isEmail,
@@ -132,4 +133,38 @@ export async function updateNameAndProfileImg(
   await userInDB.save();
   updated.userUpdated = userInDB;
   return updated;
+}
+
+// HANDLE DELETE ALL DATA FROM USER :
+export async function handleDeleteAllDataFromUser(user_id: string | undefined) {
+  let responseObj: any = {
+    status: 200,
+  };
+  if ((!isValidObjectId(user_id) && typeof user_id !== "string") || !user_id) {
+    console.log(
+      `Error en handleDeleteAllDataFromUser. El user_id "${user_id}" no es válido.`
+    );
+
+    throw new Error(`El user_id ingresado "${user_id}" no es válido.`);
+  }
+  try {
+    const userInDB = await User.findByIdAndDelete(user_id);
+    responseObj.userInDB = userInDB;
+    const postsFromUser = await Post.deleteMany({
+      "user_posting._id": user_id,
+    });
+    responseObj.postsFromUser = postsFromUser;
+    const subscriptionsFromUser = await Subscription.deleteMany({
+      "user_subscribed._id": user_id,
+    });
+    responseObj.subscriptionsFromUser = subscriptionsFromUser;
+  } catch (error: any) {
+    console.log(
+      `Error en el handleDeleteAllDataFromUser con _id "${user_id}. ${error.message}`
+    );
+    responseObj.error = error.message;
+    responseObj.status = 409;
+  } finally {
+    return responseObj;
+  }
 }
