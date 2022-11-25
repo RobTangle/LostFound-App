@@ -1,4 +1,4 @@
-export const countryListEN = [
+const countryListEN = [
   "Afghanistan",
   "Albania",
   "Algeria",
@@ -250,7 +250,7 @@ export const countryListEN = [
   "Åland Islands",
 ];
 
-export const countryListENAlpha2 = {
+const countryListENAlpha2 = {
   AF: "Afghanistan",
   AL: "Albania",
   DZ: "Algeria",
@@ -754,7 +754,10 @@ export const countryListESAlpha2 = {
   AX: "Islas Åland",
 };
 
-export const arrayOfCountriesTwoChars = [
+export const arrayOfArraysKeyValuesES = Object.entries(countryListESAlpha2);
+export const arrayOfArraysKeyValuesEN = Object.entries(countryListENAlpha2);
+
+const arrayOfCountriesTwoChars = [
   "AD",
   "AE",
   "AF",
