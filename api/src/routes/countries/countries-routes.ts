@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import {
-  countryListESAlpha2,
-  countryListENAlpha2,
+  arrayOfArraysKeyValuesEN,
+  arrayOfArraysKeyValuesES,
 } from "../../miscellanea/CountiesArrays";
 const router = Router();
 
@@ -10,10 +10,10 @@ router.get("/", (req: Request, res: Response) => {
   try {
     let lang = req.query.lang;
     if (lang === "en") {
-      return res.status(200).send(countryListENAlpha2);
+      return res.status(200).send(arrayOfArraysKeyValuesEN);
     }
     if (lang === "es") {
-      return res.status(200).send(countryListESAlpha2);
+      return res.status(200).send(arrayOfArraysKeyValuesES);
     }
   } catch (error: any) {
     console.log(`Error en "/countries". ${error.message}`);
