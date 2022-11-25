@@ -15,7 +15,7 @@ const user_validators_1 = require("../../validators/user-validators");
 const user_auxiliaries_1 = require("./user-auxiliaries");
 const router = (0, express_1.Router)();
 // GET ALL USERS :
-router.get("/allUsers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/findAll", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let allUsersFromDB = yield mongoDB_1.User.find();
         return res.status(200).send(allUsersFromDB);

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUpdateSubscription = exports.handleDeleteSubscription = exports.handleNewSubscription = void 0;
+exports.handleGetUserSubscriptions = exports.handleUpdateSubscription = exports.handleDeleteSubscription = exports.handleNewSubscription = void 0;
 const mongoose_1 = require("mongoose");
 const mongoDB_1 = require("../../mongoDB");
 const subscription_validators_1 = require("../../validators/subscription-validators");
@@ -39,7 +39,7 @@ function handleDeleteSubscription(subscription_id, user_id) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!(0, mongoose_1.isValidObjectId)(subscription_id)) {
             console.log("El subscription_id enviado por params no es ObjectId válido.");
-            throw new Error("El al validar el _id de la subscripción a borrar.");
+            throw new Error("Error al validar el _id de la subscripción a borrar: No es un ObjectId válido.");
         }
         // Borrar la Subscription de la collection Subscription y del arreglo user.subscriptions.
         const userInDB = yield (0, user_auxiliaries_1.getUserByIdOrThrowError)(user_id);
@@ -52,10 +52,14 @@ function handleDeleteSubscription(subscription_id, user_id) {
         try {
             if (!Array.isArray(userInDB === null || userInDB === void 0 ? void 0 : userInDB.subscriptions) == false &&
                 (userInDB === null || userInDB === void 0 ? void 0 : userInDB.subscriptions.length) > 0) {
-                userInDB.subscriptions.id(subscription_id).remove();
-                yield userInDB.save();
-                objToReturn.userSubscriptions.deleted++;
-                objToReturn.total++;
+                const doc = userInDB.subscriptions.id(subscription_id);
+                if (doc !== null) {
+                    doc.remove();
+                    // userInDB.subscriptions.id(subscription_id).remove();
+                    yield userInDB.save();
+                    objToReturn.userSubscriptions.deleted++;
+                    objToReturn.total++;
+                }
             }
             else {
                 objToReturn.userSubscriptions.msg =
@@ -121,24 +125,30 @@ function handleUpdateSubscription(subscription_id, user_id, reqFromBody) {
             if (subscriptionFromDB.user_subscribed._id !== userFromDB._id) {
                 throw new Error("Conflicto con los ids de los documentos: Parece ser que esta subscripción no le pertenece a este usuario.");
             }
-            let propsToUpdateArray = Object.keys(validatedData);
-            for (let i = 0; i < propsToUpdateArray.length; i++) {
-                const element = propsToUpdateArray[i];
-                subscriptionFromDB[element] = validatedData[element];
-            }
+            // let propsToUpdateArray = Object.keys(validatedData);
+            // for (let i = 0; i < propsToUpdateArray.length; i++) {
+            //   const element = propsToUpdateArray[i];
+            //   subscriptionFromDB[element] = validatedData[element];
+            // }
+            subscriptionFromDB.name_on_doc = validatedData.name_on_doc;
+            subscriptionFromDB.number_on_doc = validatedData.number_on_doc;
+            subscriptionFromDB.country_lost = validatedData.country_lost;
+            subscriptionFromDB.date_lost = validatedData.date_lost;
             yield subscriptionFromDB.save();
             response.subscriptionCollection.updated++;
             response.total++;
         }
         try {
             const subscriptionToBeUpdated = userFromDB.subscriptions.id(subscription_id);
-            subscriptionToBeUpdated.name_on_doc = validatedData.name_on_doc;
-            subscriptionToBeUpdated.number_on_doc = validatedData.number_on_doc;
-            subscriptionToBeUpdated.country_lost = validatedData.country_lost;
-            subscriptionToBeUpdated.date_lost = validatedData.date_lost;
-            yield userFromDB.save();
-            response.userSubscriptions.updated++;
-            response.total++;
+            if (subscriptionToBeUpdated !== null) {
+                subscriptionToBeUpdated.name_on_doc = validatedData.name_on_doc;
+                subscriptionToBeUpdated.number_on_doc = validatedData.number_on_doc;
+                subscriptionToBeUpdated.country_lost = validatedData.country_lost;
+                subscriptionToBeUpdated.date_lost = validatedData.date_lost;
+                yield userFromDB.save();
+                response.userSubscriptions.updated++;
+                response.total++;
+            }
             return response;
         }
         catch (error) {
@@ -148,3 +158,15 @@ function handleUpdateSubscription(subscription_id, user_id, reqFromBody) {
     });
 }
 exports.handleUpdateSubscription = handleUpdateSubscription;
+function handleGetUserSubscriptions(user_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!user_id) {
+            console.log(`El user id "${user_id}" no es válido.`);
+            throw new Error(`El user id "${user_id}" no es válido.`);
+        }
+        const userInDB = yield (0, user_auxiliaries_1.getUserByIdOrThrowError)(user_id);
+        const userSubscriptions = userInDB.subscriptions;
+        return userSubscriptions;
+    });
+}
+exports.handleGetUserSubscriptions = handleGetUserSubscriptions;

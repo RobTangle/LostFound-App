@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findPostByIdAndDeleteIt = exports.updatePostWithValidatedData = exports.findMatchingSuscriptions = exports.searchPostsByQuery = void 0;
+exports.findPostByIdAndDeleteIt = exports.handleUpdatePost = exports.findMatchingSuscriptions = exports.searchPostsByQuery = void 0;
 const mongoDB_1 = require("../../mongoDB");
 const luxon_1 = require("luxon");
+const post_validators_1 = require("../../validators/post-validators");
 function searchPostsByQuery(queryFromReq) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -99,8 +100,9 @@ function findMatchingSuscriptions(newPost) {
     });
 }
 exports.findMatchingSuscriptions = findMatchingSuscriptions;
-function updatePostWithValidatedData(post_id, validatedData, user_id) {
+function handleUpdatePost(post_id, reqFromBody, user_id) {
     return __awaiter(this, void 0, void 0, function* () {
+        const validatedData = (0, post_validators_1.validateUpdatePostData)(reqFromBody);
         const postInDB = yield mongoDB_1.Post.findById(post_id);
         const userInDB = yield mongoDB_1.User.findById(user_id, { _id: 1 }).lean();
         if (postInDB === null) {
@@ -112,16 +114,22 @@ function updatePostWithValidatedData(post_id, validatedData, user_id) {
         if (postInDB.user_posting._id !== userInDB._id) {
             throw new Error(`El id del post no pertenece al usuario que desea modificarlo.`);
         }
-        let validatedDataKeys = Object.keys(validatedData);
-        for (let i = 0; i < validatedDataKeys.length; i++) {
-            const element = validatedDataKeys[i];
-            postInDB[element] = validatedData[element];
-        }
+        // let validatedDataKeys: string[] = Object.keys(validatedData);
+        // for (let i = 0; i < validatedDataKeys.length; i++) {
+        //   const element = validatedDataKeys[i];
+        //   postInDB[element] = validatedData[element];
+        // }
+        postInDB.name_on_doc = validatedData.name_on_doc;
+        postInDB.number_on_doc = validatedData.number_on_doc;
+        postInDB.country_found = validatedData.country_found;
+        postInDB.date_found = validatedData.date_found;
+        postInDB.blurred_imgs = validatedData.blurred_imgs;
+        postInDB.comments = validatedData.comments;
         yield postInDB.save();
         return postInDB;
     });
 }
-exports.updatePostWithValidatedData = updatePostWithValidatedData;
+exports.handleUpdatePost = handleUpdatePost;
 // DELETE POST :
 function findPostByIdAndDeleteIt(post_id, user_id) {
     return __awaiter(this, void 0, void 0, function* () {
