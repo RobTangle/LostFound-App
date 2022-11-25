@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.arrayOfCountriesTwoChars = exports.countryListESAlpha2 = exports.countryListENAlpha2 = exports.countryListEN = void 0;
+exports.arrayOfCountriesTwoChars = exports.arrayOfArraysKeyValuesEN = exports.arrayOfArraysKeyValuesES = exports.countryListESAlpha2 = exports.countryListENAlpha2 = exports.countryListEN = void 0;
 exports.countryListEN = [
     "Afghanistan",
     "Albania",
@@ -754,6 +754,8 @@ exports.countryListESAlpha2 = {
     ZW: "Zimbabue",
     AX: "Islas Åland",
 };
+exports.arrayOfArraysKeyValuesES = Object.entries(exports.countryListESAlpha2);
+exports.arrayOfArraysKeyValuesEN = Object.entries(exports.countryListENAlpha2);
 exports.arrayOfCountriesTwoChars = [
     "AD",
     "AE",
