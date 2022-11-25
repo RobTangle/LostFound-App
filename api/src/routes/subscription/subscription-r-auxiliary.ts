@@ -43,7 +43,9 @@ export async function handleDeleteSubscription(
 }> {
   if (!isValidObjectId(subscription_id)) {
     console.log("El subscription_id enviado por params no es ObjectId válido.");
-    throw new Error("El al validar el _id de la subscripción a borrar.");
+    throw new Error(
+      "Error al validar el _id de la subscripción a borrar: No es un ObjectId válido."
+    );
   }
   // Borrar la Subscription de la collection Subscription y del arreglo user.subscriptions.
   const userInDB = await getUserByIdOrThrowError(user_id);
@@ -60,10 +62,15 @@ export async function handleDeleteSubscription(
       !Array.isArray(userInDB?.subscriptions) == false &&
       userInDB?.subscriptions.length > 0
     ) {
-      userInDB.subscriptions.id(subscription_id).remove();
-      await userInDB.save();
-      objToReturn.userSubscriptions.deleted++;
-      objToReturn.total++;
+      const doc = userInDB.subscriptions.id(subscription_id);
+      if (doc !== null) {
+        doc.remove();
+        // userInDB.subscriptions.id(subscription_id).remove();
+        await userInDB.save();
+
+        objToReturn.userSubscriptions.deleted++;
+        objToReturn.total++;
+      }
     } else {
       objToReturn.userSubscriptions.msg =
         "El user no posee subscripciones en sus propiedades.";
@@ -106,7 +113,7 @@ export async function handleUpdateSubscription(
     total: 0,
   };
 
-  const validatedData: any = validateUpdateSubscriptionData(reqFromBody);
+  const validatedData = validateUpdateSubscriptionData(reqFromBody);
   const userFromDB = await getUserByIdOrThrowError(user_id);
 
   //! Este método findOneAndUpdate es peligroso ya que si le ingreso un filtro incorrecto (ej, "user_fjklasd: "aslgo") es como si lo ignorase y al matchear el otro filtro.. me trae el documento a pensar de que uno de los dos filtros no fue correcto. PELIGROSÍSIMO!!!!
@@ -135,12 +142,17 @@ export async function handleUpdateSubscription(
       );
     }
 
-    let propsToUpdateArray = Object.keys(validatedData);
-    for (let i = 0; i < propsToUpdateArray.length; i++) {
-      const element = propsToUpdateArray[i];
-      subscriptionFromDB[element] = validatedData[element];
-    }
+    // let propsToUpdateArray = Object.keys(validatedData);
+    // for (let i = 0; i < propsToUpdateArray.length; i++) {
+    //   const element = propsToUpdateArray[i];
+    //   subscriptionFromDB[element] = validatedData[element];
+    // }
+    subscriptionFromDB.name_on_doc = validatedData.name_on_doc;
+    subscriptionFromDB.number_on_doc = validatedData.number_on_doc;
+    subscriptionFromDB.country_lost = validatedData.country_lost;
+    subscriptionFromDB.date_lost = validatedData.date_lost;
     await subscriptionFromDB.save();
+
     response.subscriptionCollection.updated++;
     response.total++;
   }
@@ -148,13 +160,15 @@ export async function handleUpdateSubscription(
   try {
     const subscriptionToBeUpdated =
       userFromDB.subscriptions.id(subscription_id);
-    subscriptionToBeUpdated.name_on_doc = validatedData.name_on_doc;
-    subscriptionToBeUpdated.number_on_doc = validatedData.number_on_doc;
-    subscriptionToBeUpdated.country_lost = validatedData.country_lost;
-    subscriptionToBeUpdated.date_lost = validatedData.date_lost;
-    await userFromDB.save();
-    response.userSubscriptions.updated++;
-    response.total++;
+    if (subscriptionToBeUpdated !== null) {
+      subscriptionToBeUpdated.name_on_doc = validatedData.name_on_doc;
+      subscriptionToBeUpdated.number_on_doc = validatedData.number_on_doc;
+      subscriptionToBeUpdated.country_lost = validatedData.country_lost;
+      subscriptionToBeUpdated.date_lost = validatedData.date_lost;
+      await userFromDB.save();
+      response.userSubscriptions.updated++;
+      response.total++;
+    }
     return response;
   } catch (error: any) {
     response.userSubscriptions.msg = error.message;
