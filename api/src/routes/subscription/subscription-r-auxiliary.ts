@@ -161,3 +161,13 @@ export async function handleUpdateSubscription(
     return response;
   }
 }
+
+export async function handleGetUserSubscriptions(user_id: string | undefined) {
+  if (!user_id) {
+    console.log(`El user id "${user_id}" no es válido.`);
+    throw new Error(`El user id "${user_id}" no es válido.`);
+  }
+  const userInDB = await getUserByIdOrThrowError(user_id);
+  const userSubscriptions = userInDB.subscriptions;
+  return userSubscriptions;
+}
