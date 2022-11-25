@@ -1,5 +1,5 @@
 /user :
-GET  "/allUsers" : Retorna arreglo con todos los usuarios en la DB.
+GET  "/findAll" : Retorna arreglo con todos los usuarios en la DB.
 
 GET  "/existsInDB/:_id" Recibe por params un _id de user y responde {"msg": true / false}.
 
@@ -13,7 +13,7 @@ DELETE "/destroyAll/:_id" Borra toda la data asociada a un user _id en la collec
 
 
 /post :
-GET  "/allPosts" : Retorna un arreglo con todos los posts en la collection Posts;
+GET  "/findAll" : Retorna un arreglo con todos los posts en la collection Posts;
 
 GET  "/:_id" Retorna un Post buscado por el req.params._id;
 
@@ -29,7 +29,7 @@ PATCH  "/:id" : Recibe por body props a actualizar (   name_on_doc: string;
 
 DELETE  "/:_id"  Borra un Post en la collection Post y en el arreglo de refs de User.posts. Recibe por req.params._id el _id del Post, y por req.body.user_id el _id del User (temporalmente hasta jwtCheck)
 
-GET  "/search" : Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ;
+GET  "/search/" : Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ;
 
 
 /subscription :
@@ -40,3 +40,5 @@ POST  "/" : Crea un nuevo documento en la collection Subscription. {  name_on_do
 DELETE "/"  : Busca y borra subscriptions en el arreglo user.subscrition y en la collection Subscription. Retorna un obj con propiedades de cuántos elementos borró y mensages (msg).
 
 PATCH "/:_id" Hace un update de una Subscription en la collection Subscription y en el array  user.subscriptions
+
+GET  "/userSubs"  Retorna un arreglo con las subscripciones del User
