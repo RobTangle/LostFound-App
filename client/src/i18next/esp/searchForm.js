@@ -5,7 +5,7 @@ export const searchForm = {
   numberPlaceholder: "Solo números son permitidos",
 
   countryLabel: "País donde los perdiste",
-  dateLabel: "Fecha en que los perdiste",
+  dateLabel: "Fecha en que lo extravió",
   title: "Perdiste documentos importantes?",
   subtitle: "Completa los campos a continuación para encontrarlos",
   submitButton: "Buscar",

@@ -1,12 +1,9 @@
 export const URL = "http://localhost:3001/";
 
 //users
-<<<<<<< HEAD
 export const URL_EXISTS_IN_DB = URL + "user/existsInDB/";
 export const URL_ALL_USERS = URL + "user/allUsers";
 export const URL_ALL_COUNTRIES = URL + "countries";
-export const URL_SEARCH = URL + "post/search";
-=======
 export const URL_U_G_ALL_USERS = URL + "user/findAll";
 export const URL_U_G_EXISTS_IN_DB = URL + "user/existsInDB/";
 export const URL_U_PO_REGISTER_NEW_USER = URL + "user/register";
@@ -17,7 +14,7 @@ export const URL_U_D_DESTROY_ALL_USER = URL + "user/destroyAll/";
 //posts
 export const URL_P_G_FINDALL_POSTS = URL + "post/findAll";
 export const URL_P_PO_NEW_POST = URL + "post/newPost";
-export const URL_P_G_SEARCH_BY_QUERY = URL + "post/search/";
+export const URL_P_G_SEARCH_BY_QUERY = URL + "post/search";
 export const URL_P_PA_UPDATE_POST = URL + "post/";
 export const URL_P_G_POST_INFO = URL + "post/";
 export const URL_P_D_DELETE_POST = URL + "post/";
@@ -28,4 +25,3 @@ export const URL_S_PO_NEW_SUB = URL + "subscription";
 export const URL_S_D_DELETE_SUB = URL + "subscription/";
 export const URL_S_PA_UPDATE_SUB = URL + "subscription/";
 export const URL_S_G_USER_SUBS = URL + "subscription/userSubs";
->>>>>>> 7a4d0afff39016050ba4e9f2eb01ea93564e6bcf

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
+import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
-import i18next from "i18next";
+import { searchPost } from "../../redux/features/post/postThunk";
+import { formValidator } from "../../helpers/form-validation";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
+  const results = useSelector((state) => state.post.searchResults);
   const dispatch = useDispatch();
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
@@ -26,6 +29,8 @@ const SearchForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validation = formValidator(search);
+    validation && dispatch(searchPost(search));
   };
 
   useEffect(() => {
@@ -137,7 +142,7 @@ const SearchForm = () => {
             />
           </div>
         </div>
-        <button className="w-full md:w-1/2 bg-gray-200 border border-emerald-300 rounded py-3 px-4 text-slate-500">
+        <button className="w-full block md:w-1/2 bg-gray-200 hover:bg-emerald-300 hover:text-white border border-emerald-300 rounded py-3 px-4 text-slate-500 md:px-0">
           {t("searchForm.submitButton")}
         </button>
       </form>
