@@ -71,7 +71,7 @@ router.get("/existsInDB/:_id", (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 }));
 // UPDATE NAME AND/OR PROFILE_IMG :
-router.put("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //  jwtCheck // const _id = req.auth?.sub;
         const _id = req.body._id; // TEMPORARY UNTIL JWT APPLIES
@@ -81,6 +81,20 @@ router.put("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (error) {
         console.log(`Error en PUT 'user/update'. ${error.message}`);
+        return res.status(400).send({ error: error.message });
+    }
+}));
+// DELETE USER AND ALL IT'S RELATED DATA :
+router.delete("/destroyAll/:_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // jwtCheck // const user_id = req.auth?.sub
+        const user_id = req.params._id;
+        const response = yield (0, user_auxiliaries_1.handleDeleteAllDataFromUser)(user_id);
+        let responseStatus = response.status;
+        return res.status(responseStatus).send(response);
+    }
+    catch (error) {
+        console.log(`Error en DELETE 'user/destroyAll'. ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
 }));
