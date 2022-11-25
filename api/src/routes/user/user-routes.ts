@@ -5,6 +5,7 @@ import { IUser } from "../../mongoDB/models/User";
 import { validateNewUser } from "../../validators/user-validators";
 import {
   getUserByIdLeanOrThrowError,
+  handleDeleteAllDataFromUser,
   throwErrorIfEmailExistsInDB,
   updateNameAndProfileImg,
   userExistsInDBBoolean,
@@ -80,6 +81,20 @@ router.patch("/update", async (req: JWTRequest, res: Response) => {
     return res.status(200).send(updatedObj);
   } catch (error: any) {
     console.log(`Error en PUT 'user/update'. ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+// DELETE USER AND ALL IT'S RELATED DATA :
+router.delete("/destroyAll/:_id", async (req: JWTRequest, res: Response) => {
+  try {
+    // jwtCheck // const user_id = req.auth?.sub
+    const user_id = req.params._id;
+    const response = await handleDeleteAllDataFromUser(user_id);
+    let responseStatus = response.status;
+    return res.status(responseStatus).send(response);
+  } catch (error: any) {
+    console.log(`Error en DELETE 'user/destroyAll'. ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 });

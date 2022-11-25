@@ -61,7 +61,7 @@ router.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 // UPDATE POST :
-router.put("/:_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch("/:_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // jwtCheck // const user_id = req.auth?.sub
         const user_id = req.body.user_id;

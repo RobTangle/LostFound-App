@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateNameAndProfileImg = exports.throwErrorIfUserIsNotRegisteredOrVoid = exports.userExistsInDBBoolean = exports.throwErrorIfEmailExistsInDB = exports.userIsRegisteredInDB = exports.getUserByIdLeanOrThrowError = exports.getUserByIdOrThrowError = void 0;
+exports.handleDeleteAllDataFromUser = exports.updateNameAndProfileImg = exports.throwErrorIfUserIsNotRegisteredOrVoid = exports.userExistsInDBBoolean = exports.throwErrorIfEmailExistsInDB = exports.userIsRegisteredInDB = exports.getUserByIdLeanOrThrowError = exports.getUserByIdOrThrowError = void 0;
+const mongoose_1 = require("mongoose");
 const mongoDB_1 = require("../../mongoDB");
 const genericValidators_1 = require("../../validators/genericValidators");
 function getUserByIdOrThrowError(userId) {
@@ -128,3 +129,36 @@ function updateNameAndProfileImg(name, profile_img, user_id) {
     });
 }
 exports.updateNameAndProfileImg = updateNameAndProfileImg;
+// HANDLE DELETE ALL DATA FROM USER :
+function handleDeleteAllDataFromUser(user_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let responseObj = {
+            status: 200,
+        };
+        if ((!(0, mongoose_1.isValidObjectId)(user_id) && typeof user_id !== "string") || !user_id) {
+            console.log(`Error en handleDeleteAllDataFromUser. El user_id "${user_id}" no es válido.`);
+            throw new Error(`El user_id ingresado "${user_id}" no es válido.`);
+        }
+        try {
+            const userInDB = yield mongoDB_1.User.findByIdAndDelete(user_id);
+            responseObj.userInDB = userInDB;
+            const postsFromUser = yield mongoDB_1.Post.deleteMany({
+                "user_posting._id": user_id,
+            });
+            responseObj.postsFromUser = postsFromUser;
+            const subscriptionsFromUser = yield mongoDB_1.Subscription.deleteMany({
+                "user_subscribed._id": user_id,
+            });
+            responseObj.subscriptionsFromUser = subscriptionsFromUser;
+        }
+        catch (error) {
+            console.log(`Error en el handleDeleteAllDataFromUser con _id "${user_id}. ${error.message}`);
+            responseObj.error = error.message;
+            responseObj.status = 409;
+        }
+        finally {
+            return responseObj;
+        }
+    });
+}
+exports.handleDeleteAllDataFromUser = handleDeleteAllDataFromUser;
