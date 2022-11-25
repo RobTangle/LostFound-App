@@ -14,7 +14,7 @@ import {
 const router = Router();
 
 // GET ALL USERS :
-router.get("/allUsers", async (req: Request, res: Response) => {
+router.get("/findAll", async (req: Request, res: Response) => {
   try {
     let allUsersFromDB = await User.find();
     return res.status(200).send(allUsersFromDB);
