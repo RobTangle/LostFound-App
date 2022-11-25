@@ -17,7 +17,7 @@ export const userSlice = createSlice({
       state.allUsers = action.payload;
     },
     setCountries: (state, action) => {
-      state.countries = Object.entries(action.payload);
+      state.countries = action.payload;
     },
   },
 });
