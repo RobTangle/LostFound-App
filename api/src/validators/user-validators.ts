@@ -1,4 +1,4 @@
-import { IUser } from "../mongoDB/models/User";
+import { INewUser } from "../mongoDB/models/User";
 import {
   isEmail,
   isFalsyArgument,
@@ -8,7 +8,7 @@ import {
   stringContainsURLs,
 } from "./genericValidators";
 
-export function validateNewUser(objFromReq: any): IUser {
+export function validateNewUser(objFromReq: any): INewUser {
   const { _id, name, email, profile_img, posts, subscriptions } = objFromReq;
   const validatedUser = {
     _id: checkUserId(_id),
@@ -16,7 +16,7 @@ export function validateNewUser(objFromReq: any): IUser {
     email: checkUserEmail(email),
     profile_img: checkUserProfileImg(profile_img),
     posts: checkUserPosts(posts),
-    subscriptions: checkUserSubscriptions(subscriptions),
+    // subscriptions: checkUserSubscriptions(subscriptions),
   };
   return validatedUser;
 }
@@ -68,6 +68,6 @@ function checkUserPosts(postsFromReq: any): [] {
 }
 
 // CHECK USER POSTS :
-function checkUserSubscriptions(subscriptionsFromReq: any): [] {
-  return [];
-}
+// function checkUserSubscriptions(subscriptionsFromReq: any) {
+//   return []
+// }

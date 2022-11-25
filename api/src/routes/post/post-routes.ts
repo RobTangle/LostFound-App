@@ -10,13 +10,13 @@ import { handleAlertAfterNewPost } from "../subscription/nodemailer";
 import { getUserByIdOrThrowError } from "../user/user-auxiliaries";
 import {
   findPostByIdAndDeleteIt,
+  handleUpdatePost,
   searchPostsByQuery,
-  updatePostWithValidatedData,
 } from "./post-r-auxiliary";
 
 const router = Router();
 
-router.get("/allPosts", async (req: Request, res: Response) => {
+router.get("/findAll", async (req: Request, res: Response) => {
   try {
     const allPostsFromDB = await Post.find().lean();
     return res.status(200).send(allPostsFromDB);
@@ -54,7 +54,7 @@ router.post("/newPost", async (req: JWTRequest, res: Response) => {
 // En el formulario del front, que hagan un chequeo de que las letras del nombre sean [a-zA-z-0-9-áéíóúÁÉÍÓÚÜüçÇñÑ] y que no se equivoquen de tilde con la invertida. Tenemos que pedir que el nombre sea idéntico a como figura en el documento.
 // Ya que descartamos la importancia de las tarjetas de crédito y le damos más importanci a pasaportes y DNI, el nombres siempre va a figurar completo. Y las tarjetas de crédito, la persona debería denunciarlas inmediatamente.
 
-router.get("/search", async (req: Request, res: Response) => {
+router.get("/search/", async (req: Request, res: Response) => {
   try {
     //jwtCheck // const user_id = req.auth?.sub;
     // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
@@ -73,17 +73,12 @@ router.patch("/:_id", async (req: JWTRequest, res: Response) => {
     const user_id = req.body.user_id;
     const post_id = req.params._id;
     // validar req.body con los datos del post:
-    const validatedPostData = validateUpdatePostData(req.body);
 
     // const updatedDocument = await Post.findByIdAndUpdate(
     //   post_id,
     //   validatedPostData
     // );
-    const updatedDocument = await updatePostWithValidatedData(
-      post_id,
-      validatedPostData,
-      user_id
-    );
+    const updatedDocument = await handleUpdatePost(post_id, req.body, user_id);
 
     return res.status(200).send(updatedDocument);
   } catch (error: any) {
@@ -119,7 +114,7 @@ router.delete("/:_id", async (req: JWTRequest, res: Response) => {
     const deleteResults = await findPostByIdAndDeleteIt(post_id, user_id);
     return res.status(200).send(deleteResults);
   } catch (error: any) {
-    console.log(`Error en ruta DELETE "post/:_id. ${error.message}`);
+    console.log(`Error en ruta DELETE "post/:_id". ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 });

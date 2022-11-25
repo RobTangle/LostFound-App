@@ -1,8 +1,7 @@
 import { Post, Subscription, User } from "../../mongoDB";
 import { DateTime } from "luxon";
 import { IPost } from "../../mongoDB/models/Post";
-import { ISubscription } from "../../mongoDB/models/Subscription";
-import { LeanDocument } from "mongoose";
+import { validateUpdatePostData } from "../../validators/post-validators";
 
 export async function searchPostsByQuery(
   queryFromReq: any
@@ -100,18 +99,18 @@ export async function findMatchingSuscriptions(newPost: IPost) {
   }
 }
 
-export async function updatePostWithValidatedData(
+export async function handleUpdatePost(
   post_id: string | undefined,
-  validatedData: any,
+  reqFromBody: any,
   user_id: string | undefined
 ): Promise<
   import("mongoose").Document<unknown, any, { [x: string]: any }> & {
     [x: string]: any;
   } & Required<{ _id: unknown }>
 > {
+  const validatedData = validateUpdatePostData(reqFromBody);
   const postInDB = await Post.findById(post_id);
   const userInDB = await User.findById(user_id, { _id: 1 }).lean();
-
   if (postInDB === null) {
     throw new Error(
       `Post con id "${post_id}" no fue encontrado en la base de datos.`
@@ -128,12 +127,17 @@ export async function updatePostWithValidatedData(
     );
   }
 
-  let validatedDataKeys: string[] = Object.keys(validatedData);
-
-  for (let i = 0; i < validatedDataKeys.length; i++) {
-    const element: string = validatedDataKeys[i];
-    postInDB[element] = validatedData[element];
-  }
+  // let validatedDataKeys: string[] = Object.keys(validatedData);
+  // for (let i = 0; i < validatedDataKeys.length; i++) {
+  //   const element = validatedDataKeys[i];
+  //   postInDB[element] = validatedData[element];
+  // }
+  postInDB.name_on_doc = validatedData.name_on_doc;
+  postInDB.number_on_doc = validatedData.number_on_doc;
+  postInDB.country_found = validatedData.country_found;
+  postInDB.date_found = validatedData.date_found;
+  postInDB.blurred_imgs = validatedData.blurred_imgs;
+  postInDB.comments = validatedData.comments;
   await postInDB.save();
 
   return postInDB;

@@ -1,11 +1,9 @@
 import { Router, Request, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
-import { isValidObjectId } from "mongoose";
-import { Subscription, User } from "../../mongoDB";
-import { validateUpdateSubscriptionData } from "../../validators/subscription-validators";
-import { getUserByIdOrThrowError } from "../user/user-auxiliaries";
+import { Subscription } from "../../mongoDB";
 import {
   handleDeleteSubscription,
+  handleGetUserSubscriptions,
   handleNewSubscription,
   handleUpdateSubscription,
 } from "./subscription-r-auxiliary";
@@ -64,6 +62,18 @@ router.patch("/:subscription_id", async (req: JWTRequest, res: Response) => {
     return res.status(200).send(confirmationOfUpdate);
   } catch (error: any) {
     console.log(`Error en PATCH 'subscription/'. ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+router.get("/userSubs", async (req: JWTRequest, res: Response) => {
+  try {
+    // jwtCheck // const user_id = req.auth?.sub
+    const user_id = req.body.user_id;
+    const userSubscriptions = await handleGetUserSubscriptions(user_id);
+    return res.status(200).send(userSubscriptions);
+  } catch (error: any) {
+    console.log(`Error en GET 'subscription/userSubs'. ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 });

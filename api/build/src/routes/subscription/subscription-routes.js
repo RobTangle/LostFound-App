@@ -62,4 +62,16 @@ router.patch("/:subscription_id", (req, res) => __awaiter(void 0, void 0, void 0
         return res.status(400).send({ error: error.message });
     }
 }));
+router.get("/userSubs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // jwtCheck // const user_id = req.auth?.sub
+        const user_id = req.body.user_id;
+        const userSubscriptions = yield (0, subscription_r_auxiliary_1.handleGetUserSubscriptions)(user_id);
+        return res.status(200).send(userSubscriptions);
+    }
+    catch (error) {
+        console.log(`Error en GET 'subscription/userSubs'. ${error.message}`);
+        return res.status(400).send({ error: error.message });
+    }
+}));
 exports.default = router;

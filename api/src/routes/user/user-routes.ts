@@ -1,10 +1,11 @@
 import { Router, Request, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
 import { User } from "../../mongoDB";
-import { IUser } from "../../mongoDB/models/User";
+import { INewUser } from "../../mongoDB/models/User";
 import { validateNewUser } from "../../validators/user-validators";
 import {
   getUserByIdLeanOrThrowError,
+  handleDeleteAllDataFromUser,
   throwErrorIfEmailExistsInDB,
   updateNameAndProfileImg,
   userExistsInDBBoolean,
@@ -13,7 +14,7 @@ import {
 const router = Router();
 
 // GET ALL USERS :
-router.get("/allUsers", async (req: Request, res: Response) => {
+router.get("/findAll", async (req: Request, res: Response) => {
   try {
     let allUsersFromDB = await User.find();
     return res.status(200).send(allUsersFromDB);
@@ -45,7 +46,7 @@ router.post("/register", async (req: JWTRequest, res: Response) => {
     //  if (email_verified !== true) {
     //   throw new Error (`El email de tu cuenta debe estar verificado para poder registrarte en LostFound.`)
     //  }
-    const validatedNewUser: IUser = validateNewUser(req.body);
+    const validatedNewUser: INewUser = validateNewUser(req.body);
     await throwErrorIfEmailExistsInDB(validatedNewUser.email);
     const newUser = await User.create(validatedNewUser);
 
@@ -80,6 +81,20 @@ router.patch("/update", async (req: JWTRequest, res: Response) => {
     return res.status(200).send(updatedObj);
   } catch (error: any) {
     console.log(`Error en PUT 'user/update'. ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+});
+
+// DELETE USER AND ALL IT'S RELATED DATA :
+router.delete("/destroyAll/:_id", async (req: JWTRequest, res: Response) => {
+  try {
+    // jwtCheck // const user_id = req.auth?.sub
+    const user_id = req.params._id;
+    const response = await handleDeleteAllDataFromUser(user_id);
+    let responseStatus = response.status;
+    return res.status(responseStatus).send(response);
+  } catch (error: any) {
+    console.log(`Error en DELETE 'user/destroyAll'. ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 });

@@ -754,6 +754,9 @@ export const countryListESAlpha2 = {
   AX: "Islas Åland",
 };
 
+export const arrayOfArraysKeyValuesES = Object.entries(countryListESAlpha2);
+export const arrayOfArraysKeyValuesEN = Object.entries(countryListENAlpha2);
+
 export const arrayOfCountriesTwoChars = [
   "AD",
   "AE",
