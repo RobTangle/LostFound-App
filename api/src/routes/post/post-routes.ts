@@ -10,8 +10,8 @@ import { handleAlertAfterNewPost } from "../subscription/nodemailer";
 import { getUserByIdOrThrowError } from "../user/user-auxiliaries";
 import {
   findPostByIdAndDeleteIt,
+  handleUpdatePost,
   searchPostsByQuery,
-  updatePostWithValidatedData,
 } from "./post-r-auxiliary";
 
 const router = Router();
@@ -73,17 +73,12 @@ router.patch("/:_id", async (req: JWTRequest, res: Response) => {
     const user_id = req.body.user_id;
     const post_id = req.params._id;
     // validar req.body con los datos del post:
-    const validatedPostData = validateUpdatePostData(req.body);
 
     // const updatedDocument = await Post.findByIdAndUpdate(
     //   post_id,
     //   validatedPostData
     // );
-    const updatedDocument = await updatePostWithValidatedData(
-      post_id,
-      validatedPostData,
-      user_id
-    );
+    const updatedDocument = await handleUpdatePost(post_id, req.body, user_id);
 
     return res.status(200).send(updatedDocument);
   } catch (error: any) {
