@@ -12,12 +12,12 @@ exports.userSchema = new mongoose_1.Schema({
         lowercase: true,
         minlength: 6,
     },
-    // Suscripciones de alertas. [{query}, {query}] MAX 5.
     profile_img: {
         type: String,
         required: false,
         default: "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
     },
     posts: [{ type: String, ref: "Post" }],
+    // Suscripciones de alertas. [{query}, {query}] MAX 5.
     subscriptions: [Subscription_1.subscriptionSchema],
 }, { timestamps: true });

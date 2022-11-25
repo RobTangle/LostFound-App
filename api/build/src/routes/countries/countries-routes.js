@@ -8,10 +8,10 @@ router.get("/", (req, res) => {
     try {
         let lang = req.query.lang;
         if (lang === "en") {
-            return res.status(200).send(CountiesArrays_1.countryListENAlpha2);
+            return res.status(200).send(CountiesArrays_1.arrayOfArraysKeyValuesEN);
         }
         if (lang === "es") {
-            return res.status(200).send(CountiesArrays_1.countryListESAlpha2);
+            return res.status(200).send(CountiesArrays_1.arrayOfArraysKeyValuesES);
         }
     }
     catch (error) {
