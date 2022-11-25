@@ -16,7 +16,7 @@ const nodemailer_1 = require("../subscription/nodemailer");
 const user_auxiliaries_1 = require("../user/user-auxiliaries");
 const post_r_auxiliary_1 = require("./post-r-auxiliary");
 const router = (0, express_1.Router)();
-router.get("/allPosts", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/findAll", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const allPostsFromDB = yield mongoDB_1.Post.find().lean();
         return res.status(200).send(allPostsFromDB);
@@ -48,7 +48,7 @@ router.post("/newPost", (req, res) => __awaiter(void 0, void 0, void 0, function
 }));
 // En el formulario del front, que hagan un chequeo de que las letras del nombre sean [a-zA-z-0-9-áéíóúÁÉÍÓÚÜüçÇñÑ] y que no se equivoquen de tilde con la invertida. Tenemos que pedir que el nombre sea idéntico a como figura en el documento.
 // Ya que descartamos la importancia de las tarjetas de crédito y le damos más importanci a pasaportes y DNI, el nombres siempre va a figurar completo. Y las tarjetas de crédito, la persona debería denunciarlas inmediatamente.
-router.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/search/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //jwtCheck // const user_id = req.auth?.sub;
         // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
@@ -67,12 +67,11 @@ router.patch("/:_id", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const user_id = req.body.user_id;
         const post_id = req.params._id;
         // validar req.body con los datos del post:
-        const validatedPostData = (0, post_validators_1.validateUpdatePostData)(req.body);
         // const updatedDocument = await Post.findByIdAndUpdate(
         //   post_id,
         //   validatedPostData
         // );
-        const updatedDocument = yield (0, post_r_auxiliary_1.updatePostWithValidatedData)(post_id, validatedPostData, user_id);
+        const updatedDocument = yield (0, post_r_auxiliary_1.handleUpdatePost)(post_id, req.body, user_id);
         return res.status(200).send(updatedDocument);
     }
     catch (error) {
@@ -108,7 +107,7 @@ router.delete("/:_id", (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(200).send(deleteResults);
     }
     catch (error) {
-        console.log(`Error en ruta DELETE "post/:_id. ${error.message}`);
+        console.log(`Error en ruta DELETE "post/:_id". ${error.message}`);
         return res.status(400).send({ error: error.message });
     }
 }));

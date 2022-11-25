@@ -10,7 +10,7 @@ function validateNewUser(objFromReq) {
         email: checkUserEmail(email),
         profile_img: checkUserProfileImg(profile_img),
         posts: checkUserPosts(posts),
-        subscriptions: checkUserSubscriptions(subscriptions),
+        // subscriptions: checkUserSubscriptions(subscriptions),
     };
     return validatedUser;
 }
@@ -57,6 +57,6 @@ function checkUserPosts(postsFromReq) {
     return [];
 }
 // CHECK USER POSTS :
-function checkUserSubscriptions(subscriptionsFromReq) {
-    return [];
-}
+// function checkUserSubscriptions(subscriptionsFromReq: any) {
+//   return []
+// }

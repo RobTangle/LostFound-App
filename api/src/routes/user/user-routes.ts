@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
 import { User } from "../../mongoDB";
-import { IUser } from "../../mongoDB/models/User";
+import { INewUser } from "../../mongoDB/models/User";
 import { validateNewUser } from "../../validators/user-validators";
 import {
   getUserByIdLeanOrThrowError,
@@ -46,7 +46,7 @@ router.post("/register", async (req: JWTRequest, res: Response) => {
     //  if (email_verified !== true) {
     //   throw new Error (`El email de tu cuenta debe estar verificado para poder registrarte en LostFound.`)
     //  }
-    const validatedNewUser: IUser = validateNewUser(req.body);
+    const validatedNewUser: INewUser = validateNewUser(req.body);
     await throwErrorIfEmailExistsInDB(validatedNewUser.email);
     const newUser = await User.create(validatedNewUser);
 
