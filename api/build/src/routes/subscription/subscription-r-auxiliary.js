@@ -74,7 +74,7 @@ function handleDeleteSubscription(subscription_id, user_id) {
             const deletedSubscription = yield mongoDB_1.Subscription.findOneAndDelete({
                 _id: subscription_id,
                 "user_subscribed._id": user_id,
-            });
+            }).exec();
             if (deletedSubscription) {
                 objToReturn.subscriptionCollection.deleted++;
                 objToReturn.total++;
@@ -115,7 +115,7 @@ function handleUpdateSubscription(subscription_id, user_id, reqFromBody) {
         const subscriptionFromDB = yield mongoDB_1.Subscription.findOne({
             "user_subscribed._id": userFromDB._id,
             _id: subscription_id,
-        });
+        }).exec();
         if (subscriptionFromDB === null) {
             console.log("No se encontró al documento en la colección Subscription.");
             response.subscriptionCollection.msg =

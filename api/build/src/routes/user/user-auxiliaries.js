@@ -15,7 +15,7 @@ const mongoDB_1 = require("../../mongoDB");
 const genericValidators_1 = require("../../validators/genericValidators");
 function getUserByIdOrThrowError(userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let userFromDB = yield mongoDB_1.User.findById(userId);
+        let userFromDB = yield mongoDB_1.User.findById(userId).exec();
         if (userFromDB !== null) {
             return userFromDB;
         }
@@ -27,7 +27,7 @@ function getUserByIdOrThrowError(userId) {
 exports.getUserByIdOrThrowError = getUserByIdOrThrowError;
 function getUserByIdLeanOrThrowError(userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let userFromDB = yield mongoDB_1.User.findById(userId).lean();
+        let userFromDB = yield mongoDB_1.User.findById(userId).lean().exec();
         if (userFromDB !== null) {
             return userFromDB;
         }
@@ -48,7 +48,9 @@ function userIsRegisteredInDB(reqAuthSub) {
         const foundUserInDB = yield mongoDB_1.User.findById(reqAuthSub, {
             _id: 1,
             email: 1,
-        }).lean();
+        })
+            .lean()
+            .exec();
         if (foundUserInDB) {
             return true;
         }
@@ -65,7 +67,9 @@ function throwErrorIfEmailExistsInDB(emailFromReq) {
         }
         let emailRegisteredAlready = yield mongoDB_1.User.findOne({
             email: emailFromReq,
-        }, { _id: 1 }).lean();
+        }, { _id: 1 })
+            .lean()
+            .exec();
         if (emailRegisteredAlready) {
             throw new Error(`El email '${emailFromReq}' ya se encuentra registrado en la Data Base. Nombre del usuario al que le pertenece ese email: '${emailRegisteredAlready.name}'`);
         }
@@ -77,7 +81,7 @@ function userExistsInDBBoolean(user_id) {
         if (!user_id || typeof user_id !== "string") {
             throw new Error(`El id de usuario "${user_id}"a buscar no es válido.`);
         }
-        const userInDB = yield mongoDB_1.User.findById(user_id, { _id: 1 }).lean();
+        const userInDB = yield mongoDB_1.User.findById(user_id, { _id: 1 }).lean().exec();
         if (userInDB) {
             return true;
         }
@@ -140,15 +144,15 @@ function handleDeleteAllDataFromUser(user_id) {
             throw new Error(`El user_id ingresado "${user_id}" no es válido.`);
         }
         try {
-            const userInDB = yield mongoDB_1.User.findByIdAndDelete(user_id);
+            const userInDB = yield mongoDB_1.User.findByIdAndDelete(user_id).exec();
             responseObj.userInDB = userInDB;
             const postsFromUser = yield mongoDB_1.Post.deleteMany({
                 "user_posting._id": user_id,
-            });
+            }).exec();
             responseObj.postsFromUser = postsFromUser;
             const subscriptionsFromUser = yield mongoDB_1.Subscription.deleteMany({
                 "user_subscribed._id": user_id,
-            });
+            }).exec();
             responseObj.subscriptionsFromUser = subscriptionsFromUser;
         }
         catch (error) {
