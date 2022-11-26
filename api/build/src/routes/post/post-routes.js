@@ -5,7 +5,7 @@ const post_middlewares_1 = require("./post-middlewares");
 const router = (0, express_1.Router)();
 router.get("/findAll", post_middlewares_1.findAllPostsResponse);
 router.post("/newPost", post_middlewares_1.handleNewPostRequest);
-router.get("/search/", post_middlewares_1.handleSearchByQueryRequest);
+router.get("/search", post_middlewares_1.handleSearchByQueryRequest);
 router.patch("/:_id", post_middlewares_1.handleUpdateRequest);
 router.get("/:_id", post_middlewares_1.handleGetPostByIdRequest);
 router.delete("/:_id", post_middlewares_1.handleDeletePostRequest);
