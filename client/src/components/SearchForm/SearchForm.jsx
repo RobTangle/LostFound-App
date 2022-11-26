@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
 import { searchPost } from "../../redux/features/post/postThunk";
 import { formValidator } from "../../helpers/form-validation";
+import { parseDateToSetMaxDate } from "../../constants/dateParsers";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -19,6 +20,8 @@ const SearchForm = () => {
     country: "",
     date_lost: "",
   });
+
+  const maxDateAllowed = parseDateToSetMaxDate();
 
   const handleChange = (e) => {
     setSearch({
@@ -136,7 +139,9 @@ const SearchForm = () => {
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="grid-zip"
               type="date"
-              placeholder="90210"
+              required
+              min="1971-01-01"
+              max={maxDateAllowed}
               name="date_lost"
               onChange={handleChange}
             />
