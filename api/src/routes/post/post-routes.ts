@@ -12,7 +12,7 @@ const router = Router();
 
 router.get("/findAll", findAllPostsResponse);
 router.post("/newPost", handleNewPostRequest);
-router.get("/search/", handleSearchByQueryRequest);
+router.get("/search", handleSearchByQueryRequest);
 router.patch("/:_id", handleUpdateRequest);
 router.get("/:_id", handleGetPostByIdRequest);
 router.delete("/:_id", handleDeletePostRequest);
