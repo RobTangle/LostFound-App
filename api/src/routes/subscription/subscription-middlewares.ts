@@ -13,7 +13,7 @@ export async function handleFindAllSubscriptionsRequest(
   res: Response
 ) {
   try {
-    const allSubscriptionsFromDB = await Subscription.find();
+    const allSubscriptionsFromDB = await Subscription.find().exec();
     return res.status(200).send(allSubscriptionsFromDB);
   } catch (error: any) {
     console.log(`Error en 'subscription/findAll'. ${error.message}`);

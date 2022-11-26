@@ -9,7 +9,7 @@ import {
 } from "../../validators/genericValidators";
 
 export async function getUserByIdOrThrowError(userId: string | undefined) {
-  let userFromDB = await User.findById(userId);
+  let userFromDB = await User.findById(userId).exec();
   if (userFromDB !== null) {
     return userFromDB;
   } else {
@@ -18,7 +18,7 @@ export async function getUserByIdOrThrowError(userId: string | undefined) {
 }
 
 export async function getUserByIdLeanOrThrowError(userId: string | undefined) {
-  let userFromDB = await User.findById(userId).lean();
+  let userFromDB = await User.findById(userId).lean().exec();
   if (userFromDB !== null) {
     return userFromDB;
   } else {
@@ -36,7 +36,9 @@ export async function userIsRegisteredInDB(reqAuthSub: any): Promise<boolean> {
   const foundUserInDB = await User.findById(reqAuthSub, {
     _id: 1,
     email: 1,
-  }).lean();
+  })
+    .lean()
+    .exec();
   if (foundUserInDB) {
     return true;
   } else {
@@ -52,12 +54,14 @@ export async function throwErrorIfEmailExistsInDB(
       `Error al chequear si el email existe en la DataBase: el email '${emailFromReq}' no tiene un formato de email válido.`
     );
   }
-  let emailRegisteredAlready: IUser | null = await User.findOne(
+  let emailRegisteredAlready = await User.findOne(
     {
       email: emailFromReq,
     },
     { _id: 1 }
-  ).lean();
+  )
+    .lean()
+    .exec();
   if (emailRegisteredAlready) {
     throw new Error(
       `El email '${emailFromReq}' ya se encuentra registrado en la Data Base. Nombre del usuario al que le pertenece ese email: '${emailRegisteredAlready.name}'`
@@ -71,7 +75,7 @@ export async function userExistsInDBBoolean(
   if (!user_id || typeof user_id !== "string") {
     throw new Error(`El id de usuario "${user_id}"a buscar no es válido.`);
   }
-  const userInDB = await User.findById(user_id, { _id: 1 }).lean();
+  const userInDB = await User.findById(user_id, { _id: 1 }).lean().exec();
   if (userInDB) {
     return true;
   } else {
@@ -148,15 +152,15 @@ export async function handleDeleteAllDataFromUser(user_id: string | undefined) {
     throw new Error(`El user_id ingresado "${user_id}" no es válido.`);
   }
   try {
-    const userInDB = await User.findByIdAndDelete(user_id);
+    const userInDB = await User.findByIdAndDelete(user_id).exec();
     responseObj.userInDB = userInDB;
     const postsFromUser = await Post.deleteMany({
       "user_posting._id": user_id,
-    });
+    }).exec();
     responseObj.postsFromUser = postsFromUser;
     const subscriptionsFromUser = await Subscription.deleteMany({
       "user_subscribed._id": user_id,
-    });
+    }).exec();
     responseObj.subscriptionsFromUser = subscriptionsFromUser;
   } catch (error: any) {
     console.log(

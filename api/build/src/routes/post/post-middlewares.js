@@ -18,7 +18,7 @@ const post_r_auxiliary_1 = require("./post-r-auxiliary");
 function findAllPostsResponse(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const allPostsFromDB = yield mongoDB_1.Post.find().lean();
+            const allPostsFromDB = yield mongoDB_1.Post.find().lean().exec();
             return res.status(200).send(allPostsFromDB);
         }
         catch (error) {
@@ -90,7 +90,7 @@ function handleGetPostByIdRequest(req, res) {
             //jwtCheck // const user_id = req.auth?.sub;
             // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
             const post_id = req.params._id;
-            const postFoundById = yield mongoDB_1.Post.findById(post_id).lean();
+            const postFoundById = yield mongoDB_1.Post.findById(post_id).lean().exec();
             if (postFoundById === null) {
                 return res
                     .status(404)
