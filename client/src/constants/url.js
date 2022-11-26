@@ -20,7 +20,7 @@ export const URL_P_G_POST_INFO = URL + "post/";
 export const URL_P_D_DELETE_POST = URL + "post/";
 
 //subscriptions
-export const URL_P_G_FINDALL_SUBS = URL + "subscription/findAll";
+export const URL_S_G_FINDALL_SUBS = URL + "subscription/findAll";
 export const URL_S_PO_NEW_SUB = URL + "subscription";
 export const URL_S_D_DELETE_SUB = URL + "subscription/";
 export const URL_S_PA_UPDATE_SUB = URL + "subscription/";
