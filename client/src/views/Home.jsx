@@ -20,7 +20,7 @@ export function Home() {
           <div className="grid grid-cols-1 gap-8 mt-8 md:mt-16 md:grid-cols-2">
             <div className="lg:flex lg:border-2 border-emerald-600 lg:rounded-lg items-center">
               <img
-                className="object-cover w-full h-56 rounded-lg lg:w-64"
+                className="object-cover w-full h-56 rounded-lg lg:w-60 lg:h-full"
                 src="https://res.cloudinary.com/dyzge4vha/image/upload/v1669272574/Lost-or-stolen-wallet-or-purse_x0vtwq.png"
                 alt=""
               />
@@ -37,7 +37,7 @@ export function Home() {
 
             <div className="lg:flex lg:border-2 border-indigo-500 lg:rounded-lg items-center">
               <img
-                className="object-cover w-full h-56 rounded-lg lg:w-64"
+                className="object-cover w-full h-56 rounded-lg lg:w-60 lg:h-full"
                 src="https://res.cloudinary.com/dyzge4vha/image/upload/v1669272573/lost-wallet-e1496852942717_fxgvyo.jpg"
                 alt=""
               />
