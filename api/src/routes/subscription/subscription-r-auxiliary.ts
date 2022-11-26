@@ -82,7 +82,7 @@ export async function handleDeleteSubscription(
     const deletedSubscription = await Subscription.findOneAndDelete({
       _id: subscription_id,
       "user_subscribed._id": user_id,
-    });
+    }).exec();
     if (deletedSubscription) {
       objToReturn.subscriptionCollection.deleted++;
       objToReturn.total++;
@@ -129,7 +129,7 @@ export async function handleUpdateSubscription(
   const subscriptionFromDB = await Subscription.findOne({
     "user_subscribed._id": userFromDB._id,
     _id: subscription_id,
-  });
+  }).exec();
 
   if (subscriptionFromDB === null) {
     console.log("No se encontró al documento en la colección Subscription.");

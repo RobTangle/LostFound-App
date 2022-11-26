@@ -16,7 +16,7 @@ const user_auxiliaries_1 = require("./user-auxiliaries");
 function handleFindAllUsersRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let allUsersFromDB = yield mongoDB_1.User.find();
+            let allUsersFromDB = yield mongoDB_1.User.find().exec();
             return res.status(200).send(allUsersFromDB);
         }
         catch (error) {

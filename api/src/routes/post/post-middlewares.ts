@@ -13,7 +13,7 @@ import {
 
 export async function findAllPostsResponse(req: JWTRequest, res: Response) {
   try {
-    const allPostsFromDB = await Post.find().lean();
+    const allPostsFromDB = await Post.find().lean().exec();
     return res.status(200).send(allPostsFromDB);
   } catch (error: any) {
     console.log(`Error en ruta /allPosts. ${error.message}`);
@@ -84,7 +84,7 @@ export async function handleGetPostByIdRequest(req: JWTRequest, res: Response) {
     //jwtCheck // const user_id = req.auth?.sub;
     // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
     const post_id = req.params._id;
-    const postFoundById = await Post.findById(post_id).lean();
+    const postFoundById = await Post.findById(post_id).lean().exec();
     if (postFoundById === null) {
       return res
         .status(404)

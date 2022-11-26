@@ -50,7 +50,7 @@ export async function searchPostsByQuery(
         "user_posting.createdAt": 0,
         "user_posting.updatedAt": 0,
       }
-    ).lean();
+    ).lean().exec();
     return postsFound;
   } catch (error: any) {
     console.log(`Error en fn aux search Posts By Query`);
@@ -85,7 +85,7 @@ export async function findMatchingSuscriptions(newPost: IPost) {
         "user_subscribed.name": 1,
         "user_subscribed.email": 1,
       }
-    ).lean();
+    ).lean().exec();
     // Agregar en el email un link al detalle del post nuevo que coincide con su subscription. Para eso voy a necesitar el _id del nuevo post, y meterlo en el params de la url de nuestra página para que vea el detalle de la publicación. Por ejemplo :
     // www.lostfound.app/found/${_id}
     // let messageInEmail = "Hello, ${subscription.user_subscribed.name}! We've got great news!!! It seems that somebody found something that matches your subscription alert criteria. Go and check it out to see if this is your lucky day!
@@ -109,8 +109,8 @@ export async function handleUpdatePost(
   } & Required<{ _id: unknown }>
 > {
   const validatedData = validateUpdatePostData(reqFromBody);
-  const postInDB = await Post.findById(post_id);
-  const userInDB = await User.findById(user_id, { _id: 1 }).lean();
+  const postInDB = await Post.findById(post_id).exec();
+  const userInDB = await User.findById(user_id, { _id: 1 }).lean().exec();
   if (postInDB === null) {
     throw new Error(
       `Post con id "${post_id}" no fue encontrado en la base de datos.`
@@ -159,8 +159,8 @@ export async function findPostByIdAndDeleteIt(
     throw new Error(`El id del Post y el id del usuario deben ser válidos.`);
   }
   //borrar post en el user_posts y en collection Post
-  const userInDB = await User.findById(user_id);
-  const postInDB = await Post.findById(post_id);
+  const userInDB = await User.findById(user_id).exec();
+  const postInDB = await Post.findById(post_id).exec();
 
   if (userInDB === null) {
     throw new Error(
@@ -200,59 +200,7 @@ export async function findPostByIdAndDeleteIt(
   }
   await userInDB.save();
   // borrar documento en collection Post:
-  const deletedPost = await Post.findByIdAndDelete(post_id);
+  const deletedPost = await Post.findByIdAndDelete(post_id).exec();
   postsDeleted.postDocument = deletedPost;
   return postsDeleted;
 }
-
-// //! EXPERIMENTAL PARA FUTURA FUNCIONALIDAD DE MANDAR EMAIL CON AVISOS :
-// export async function alertMatchingSubscriptions(
-//   arrayOfMatchingSubcriptions:
-//     | LeanDocument<
-//         {
-//           [x: string]: any;
-//         } & Required<{
-//           _id: unknown;
-//         }>
-//       >[]
-//     | undefined
-// ) {
-//   try {
-//     // Hacer un Set del arreglo para sacar elementos repetidos y no mandar varios emails a el mismo usuario?
-
-//     // FORMA 1 :
-//     arrayOfMatchingSubcriptions.forEach((subscription) => {
-//       sendEmail(
-//         subscription.user_subscribed.email,
-//         messageInEmailOrSomethingElse
-//       );
-//     });
-//     // FORMA 2 :
-//     let arrayOfPromises = arrayOfMatchingSubcriptions.map((el) => {
-//       sendEmail(
-//         subscription.user_subscribed.email,
-//         messageInEmailOrSomethingElse
-//       );
-//     });
-//     const promisesFullfilled = Promise.all(arrayOfPromises);
-//     // FORMA 3 :
-//     for (let i = 0; i < arrayOfMatchingSubscriptions.length; i++) {
-//       const element = arrayOfMatchingSubscriptions[i];
-//       await sendEmail(element.user_subscribed.email, "mensaje u algo");
-//     }
-//   } catch (error: any) {
-//     console.log(`Error en fn alertMatchingSubscriptions`);
-//   }
-// }
-
-// async function findAndSendAlertsOfMatchingSubscriptionsOfNewPost(
-//   newPost: IPost
-// ) {
-//   try {
-//     const matchingSubscriptions = await findMatchingSuscriptions(newPost);
-//     const alertsSent = await alertMatchingSubscriptions(matchingSubscriptions);
-//     console.log(alertsSent);
-//   } catch (error: any) {
-//     console.log(error.message);
-//   }
-// }

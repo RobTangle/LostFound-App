@@ -15,7 +15,7 @@ const subscription_r_auxiliary_1 = require("./subscription-r-auxiliary");
 function handleFindAllSubscriptionsRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const allSubscriptionsFromDB = yield mongoDB_1.Subscription.find();
+            const allSubscriptionsFromDB = yield mongoDB_1.Subscription.find().exec();
             return res.status(200).send(allSubscriptionsFromDB);
         }
         catch (error) {

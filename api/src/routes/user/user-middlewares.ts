@@ -16,7 +16,7 @@ export async function handleFindAllUsersRequest(
   res: Response
 ) {
   try {
-    let allUsersFromDB = await User.find();
+    let allUsersFromDB = await User.find().exec();
     return res.status(200).send(allUsersFromDB);
   } catch (error: any) {
     return res.status(400).send({ error: error.message });
