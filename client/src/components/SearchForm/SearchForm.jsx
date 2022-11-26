@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
 import { searchPost } from "../../redux/features/post/postThunk";
 import { formValidator } from "../../helpers/form-validation";
-import { parseDateToSetMaxDate } from "../../constants/dateParsers";
+import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
