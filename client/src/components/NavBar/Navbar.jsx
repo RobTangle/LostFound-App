@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Navbar = () => {
+  const [hidden, setHidden] = useState(true);
+  const handleBurger = () => {
+    setHidden(!hidden);
+  };
   return (
     <nav className="flex justify-between text-slate-500 w-screen">
       <div className="px-5 xl:px-12 py-6 flex w-full items-center">
@@ -13,7 +17,7 @@ const Navbar = () => {
             FOUND
           </span>
         </a>
-        <ul className="hidden md:flex mx-auto space-x-12 text-xs uppercase">
+        <ul className="hidden sm:flex mx-auto space-x-12 text-xs uppercase">
           <li>
             <a className="hover:text-indigo-700" href="#">
               About
@@ -35,7 +39,7 @@ const Navbar = () => {
             </a>
           </li>
         </ul>
-        <div className="hidden xl:flex items-center space-x-5 items-center">
+        <div className="hidden sm:flex items-center space-x-5 items-center">
           <a className="flex items-center hover:text-indigo-700" href="#">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +59,10 @@ const Navbar = () => {
         </div>
       </div>
 
-      <a className="navbar-burger self-center mr-12 xl:hidden" href="#">
+      <div
+        className="navbar-burger self-center mr-4 sm:hidden"
+        onClick={handleBurger}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6 hover:text-indigo-700"
@@ -70,7 +77,15 @@ const Navbar = () => {
             d="M4 6h16M4 12h16M4 18h16"
           />
         </svg>
-      </a>
+      </div>
+      <ul
+        hidden={hidden}
+        className="absolute bg-white z-10 w-full top-14 right-0 p-2 rounded shadow-xl"
+      >
+        <li>nav</li>
+        <li>nav</li>
+        <li>nav</li>
+      </ul>
     </nav>
   );
 };
