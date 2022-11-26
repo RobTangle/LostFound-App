@@ -27,7 +27,7 @@ export const subscriptionSchema: Schema = new Schema<ISubscription>({
     required: true,
     lowercase: true,
   },
-  country_lost: { type: String, required: true, lowercase: true },
+  country_lost: { type: String, required: true, uppercase: true },
   date_lost: { type: Date, required: true },
   user_subscribed: { type: Object, required: true },
 });
