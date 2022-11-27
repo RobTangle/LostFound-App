@@ -13,7 +13,7 @@ export function Search() {
   return (
     <div>
       <NavBar />
-      <div className="mx-auto">
+      <div className="mx-auto relative">
         <SearchForm />
       </div>
       <Footer />

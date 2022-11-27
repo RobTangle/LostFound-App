@@ -55,7 +55,7 @@ const SearchForm = () => {
         className="w-full mx-auto md:m-8 p-4 sm:p-6 md:p-0"
         onSubmit={handleSubmit}
       >
-        <div className="flex flex-wrap -mx-3 mb-2 gap-2">
+        <div className="flex flex-wrap mb-2 gap-2">
           <div className="w-full md:w-1/2 px-3">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -91,7 +91,7 @@ const SearchForm = () => {
             />
           </div>
         </div>
-        <div className="flex flex-wrap -mx-3 mb-2">
+        <div className="flex flex-wrap mb-2">
           <div className="w-full sm:w-1/2 md:w-1/4 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -107,7 +107,7 @@ const SearchForm = () => {
                 required
                 onChange={handleChange}
               >
-                <option defaultValue=""></option>
+                <option disabled defaultValue=""></option>
                 {countries.length &&
                   countries.map((c) => (
                     <option value={c[0]} key={c[0]}>
@@ -148,9 +148,11 @@ const SearchForm = () => {
             />
           </div>
         </div>
-        <button className="w-full block md:w-1/2 bg-gray-200 hover:bg-emerald-300 hover:text-white border border-emerald-300 rounded py-3 px-4 text-slate-500 md:px-0">
-          {t("searchForm.submitButton")}
-        </button>
+        <div className="w-full md:w-1/2 px-3">
+          <button className="w-full bg-gray-200 hover:bg-emerald-300 hover:text-white border border-emerald-300 rounded py-3 text-slate-500">
+            {t("searchForm.submitButton")}
+          </button>
+        </div>
       </form>
     </div>
   );
