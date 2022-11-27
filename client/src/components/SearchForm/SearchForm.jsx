@@ -107,7 +107,7 @@ const SearchForm = () => {
                 required
                 onChange={handleChange}
               >
-                <option disabled defaultValue=""></option>
+                <option value="">Select a country</option>
                 {countries.length &&
                   countries.map((c) => (
                     <option value={c[0]} key={c[0]}>
