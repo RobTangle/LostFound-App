@@ -7,6 +7,8 @@ export const postForm = {
   dateLabel: "Fecha en que lo encontró",
   selectCountry: "Seleccion un país",
   title: "Encontraste documentos?",
+  commentsLabel: "Comentarios",
+  commentsPlaceHolder: "Comentarios relevantes",
   subtitle: "Completá el formulario para publicar un aviso",
   submitButton: "Crear aviso",
 };

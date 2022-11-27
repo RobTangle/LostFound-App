@@ -7,6 +7,8 @@ export const postForm = {
   numberLabel: "ID / Card number",
   selectCountry: "Select a country",
   title: "Found some documents?",
+  commentsPlaceHolder: "Insert any relevant comments here",
+  commentsLabel: "Comments",
   subtitle: "Complete the fields to create an announcement",
   submitButton: "Submit",
 };
