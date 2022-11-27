@@ -11,4 +11,17 @@ export const postForm = {
   commentsLabel: "Comments",
   subtitle: "Complete the fields to create an announcement",
   submitButton: "Submit",
+  // errors:
+  errorNameAndNumberFalsy:
+    "You must enter the full name on the document and/or the number on the document.",
+  errorNameLength:
+    "The name on the document is too long. Enter a maximum of 60 characters.",
+  errorNumberLength:
+    "The number on the document is too long. Enter a maximum of 50 characters.",
+  errorStringContainsURLs: "URLs are not allowed",
+  errorCountryInvalid: "The country entered is invalid.",
+  errorCountryLength: "You must enter a valid country.",
+  errorDateFalsy: "You must enter a valid date.",
+  errorCommentsLength:
+    "The comments is too long. Maximum 800 characters allowed.",
 };
