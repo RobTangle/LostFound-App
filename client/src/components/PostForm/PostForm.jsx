@@ -18,6 +18,7 @@ const PostForm = () => {
     number_on_doc: "",
     country_found: "",
     date_found: "",
+    comments: "",
   });
 
   const maxDateAllowed = parseDateToSetMaxDate();
@@ -143,6 +144,25 @@ const PostForm = () => {
               onChange={handleChange}
             />
           </div>
+        </div>
+        <div className="w-full md:w-1/2 px-3">
+          <label
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            htmlFor="comments"
+          >
+            {t("postForm.commentsLabel")}
+          </label>
+          <textarea
+            name="comments"
+            id="comments"
+            placeholder={t("postForm.commentsPlaceHolder")}
+            cols="30"
+            rows="10"
+            value={post.comments}
+            onChange={handleChange}
+            maxLength="800"
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"
+          ></textarea>
         </div>
         <div className="w-full md:w-1/2 px-3">
           <button className="w-full bg-gray-200 hover:bg-emerald-300 hover:text-white border border-emerald-300 rounded py-3 text-slate-500">
