@@ -3,7 +3,10 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
-import { postFormValidator } from "../../helpers/post-form-validator";
+import {
+  postFormValidator,
+  validAttr,
+} from "../../helpers/post-form-validator";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 
 const PostForm = () => {
@@ -23,6 +26,8 @@ const PostForm = () => {
 
   const maxDateAllowed = parseDateToSetMaxDate();
 
+  // MENSAJE DE ERROR AL SUBMITEAR :
+  let errorMessage = "";
   const handleChange = (e) => {
     setPost({
       ...post,
@@ -32,15 +37,22 @@ const PostForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validation = postFormValidator(post);
-    validation && dispatch(createPost(search));
+    const validation = postFormValidator(post, t);
+    if (validation.error) {
+      console.log(`Error en la validación: ${validation.error}`);
+      errorMessage = validation.error;
+    }
+    if (validation === true) {
+      console.log("Despachando createPost !", post);
+      // dispatch(createPost(post));
+    }
   };
 
   useEffect(() => {
     !countries.lenght && dispatch(getCountries(currentLang));
   }, [dispatch]);
 
-  console.log("ACAAA", countries);
+  // console.log("ACAAA", countries);
   return (
     <div className="grid md:flex">
       <div className="grid">
@@ -68,6 +80,7 @@ const PostForm = () => {
               id="grid-last-name"
               name="name_on_doc"
               value={post.name_on_doc}
+              maxLength={validAttr.name_on_doc.maxLength}
               type="text"
               placeholder={t("postForm.namePlaceholder")}
               onChange={handleChange}
@@ -85,6 +98,7 @@ const PostForm = () => {
               id="grid-last-name"
               type="text"
               name="number_on_doc"
+              maxLength={validAttr.number_on_doc.maxLength}
               value={post.number_on_doc}
               placeholder="10.111.213 | 4544-2222-2222-2222"
               onChange={handleChange}
@@ -160,7 +174,7 @@ const PostForm = () => {
             rows="10"
             value={post.comments}
             onChange={handleChange}
-            maxLength="800"
+            maxLength={validAttr.comments.maxLength}
             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"
           ></textarea>
         </div>
