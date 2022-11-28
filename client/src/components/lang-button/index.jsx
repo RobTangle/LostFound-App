@@ -6,8 +6,8 @@ import en from "../../assets/en.svg";
 
 export default function LangButton() {
   const { i18n } = useTranslation();
-  const [selected, setSelected] = useState("en");
   const languageDetector = localStorage.getItem("i18nextLng");
+  const [selected, setSelected] = useState(languageDetector);
   function handleClickLanguage(lang) {
     i18n.changeLanguage(lang);
     localStorage.setItem("i18nextLng", lang);

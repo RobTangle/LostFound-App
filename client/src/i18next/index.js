@@ -14,7 +14,7 @@ i18n
   .use(initReactI18next)
   .init({
     debug: true,
-    lng: "en",
+    lng: localStorage.getItem('i18nextLng'),
     resources: {
       en: {
         translation:
