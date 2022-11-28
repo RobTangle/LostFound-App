@@ -3,10 +3,8 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
-import {
-  postFormValidator,
-  validAttr,
-} from "../../helpers/post-form-validator";
+import { postFormValidator } from "../../helpers/post-form-validator";
+import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 
 const PostForm = () => {
