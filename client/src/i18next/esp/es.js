@@ -3,6 +3,7 @@ import { searchForm } from "./searchForm";
 import { home } from "./home";
 import { postForm } from "./postForm";
 import { registerForm } from "../esp/registerForm";
+import { subscriptionForm } from "./subscriptionForm";
 
 export const esp = {
   home: home,
@@ -10,4 +11,5 @@ export const esp = {
   searchForm: searchForm,
   postForm: postForm,
   registerForm: registerForm,
+  subscriptionForm: subscriptionForm,
 };

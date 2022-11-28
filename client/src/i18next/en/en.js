@@ -2,7 +2,8 @@ import { postForm } from "./postForm";
 import { home } from "./home";
 import { landing } from "./landing";
 import { searchForm } from "./searchForm";
-import { registerForm } from "../en/registerForm";
+import { registerForm } from "./registerForm";
+import { subscriptionForm } from "./subscriptionForm";
 
 export const eng = {
   landing: landing,
@@ -10,4 +11,5 @@ export const eng = {
   searchForm: searchForm,
   postForm: postForm,
   registerForm: registerForm,
+  subscriptionForm: subscriptionForm,
 };
