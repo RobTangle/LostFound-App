@@ -1,12 +1,15 @@
 import morgan from "morgan";
 import helmet from "helmet";
-import express from "express";
+import express, { Request, Response } from "express";
+import { Request as JWTRequest } from "express-jwt";
+
 import cors from "cors";
 
 import userRouter from "./routes/user/user-routes";
 import postRouter from "./routes/post/post-routes";
 import countriesRouter from "./routes/countries/countries-routes";
 import subscriptionRouter from "./routes/subscription/subscription-routes";
+import jwtCheck from "./config/jwtMiddleware";
 const app = express();
 
 app.use(helmet());
@@ -20,8 +23,13 @@ app.use("/post", postRouter);
 app.use("/countries", countriesRouter);
 app.use("/subscription", subscriptionRouter);
 // for testing:
-app.get("/ping", (req, res) => {
+app.get("/ping", (req: Request, res: Response) => {
   return res.send("PONG!");
+});
+
+app.get("/auth", jwtCheck, (req: JWTRequest, res: Response) => {
+  console.log(req.auth);
+  return res.status(200).send(req.auth);
 });
 
 export default app;
