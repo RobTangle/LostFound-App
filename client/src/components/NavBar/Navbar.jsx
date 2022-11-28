@@ -39,7 +39,7 @@ const Navbar = () => {
             </a>
           </li>
         </ul>
-        <div className="hidden sm:flex items-center space-x-5 items-center">
+        <div className="hidden sm:flex items-center space-x-5 ">
           <a className="flex items-center hover:text-blue duration-300 transition-all" href="#">
             <svg
               xmlns="http://www.w3.org/2000/svg"

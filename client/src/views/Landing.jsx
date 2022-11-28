@@ -32,7 +32,7 @@ export function Landing() {
                 <li className="md:ml-6 text-slate-600">{t("landing.list2")}</li>
               </ul>
 
-              <div className="flex flex-col space-y-4 gap-2 items-center justify-center md:flex-row space-y-0 md:justify-start">
+              <div className="flex flex-col space-y-4 gap-2 items-center justify-center md:flex-row  md:justify-start">
                 <LangButton />
                 <LoginButton />
               </div>
