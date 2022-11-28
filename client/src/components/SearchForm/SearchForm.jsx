@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
 import { searchPost } from "../../redux/features/post/postThunk";
-import { formValidator } from "../../helpers/form-validation";
+import { searchFormValidator } from "../../helpers/search-form-validation";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 
 const SearchForm = () => {
@@ -32,8 +32,15 @@ const SearchForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validation = formValidator(search);
-    validation && dispatch(searchPost(search));
+    const validation = searchFormValidator(search, t);
+    if (validation.error) {
+      // RENDER ERROR MESSAGE
+      console.log("ERROR AL VALIDAR SEARCH = ", validation);
+    } else {
+      if (validation === true) {
+        dispatch(searchPost(search));
+      }
+    }
   };
 
   useEffect(() => {
