@@ -19,9 +19,8 @@ export default function LangButton() {
         src={es}
         alt="ES"
         className={
-          (selected !== "es" &&
-          "grayscale  ") +
-            " w-[40px]  h-[40px] hover:scale-[1.1]  cursor-pointer  transition-all duration-100"
+          (selected !== "es" && "grayscale  ") +
+          " w-[40px]  h-[40px]  cursor-pointer rounded-lg overflow-hidden transition-all duration-100"
         }
         onClick={() => handleClickLanguage("es")}
       />
@@ -29,8 +28,9 @@ export default function LangButton() {
         src={en}
         alt="EN"
         className={
-          (selected !== "en" &&
-          "grayscale  ")  + " w-[40px]  transition-all duration-100 h-[40px] hover:scale-[1.1] cursor-pointer  "}
+          (selected !== "en" && "grayscale  ") +
+          " w-[40px]  transition-all  duration-100 h-[40px] cursor-pointer rounded-lg overflow-hidden "
+        }
         onClick={() => handleClickLanguage("en")}
       />{" "}
     </div>
