@@ -54,9 +54,13 @@ export async function handleSearchByQueryRequest(
   res: Response
 ) {
   try {
+    console.log("REQ.QUERY = ", req.query);
+
     //jwtCheck // const user_id = req.auth?.sub;
     // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
     const postsFound = await searchPostsByQuery(req.query);
+    console.log("postsFound.length = ", postsFound.length);
+
     return res.status(200).send(postsFound);
   } catch (error: any) {
     console.log(`Error en GET "/". ${error.message}`);
