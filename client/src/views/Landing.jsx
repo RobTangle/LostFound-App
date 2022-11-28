@@ -66,8 +66,7 @@ export function Landing() {
                 className="mt-6 mb-8  md:text-lg sm:mb-12 "
                 variants={textVariants}
                 initial="hidden"
-                animate="visible"
-              >
+                animate="visible">
                 <li className=" text-slate-600  ">{t("landing.list1")}</li>
                 <li className="text-slate-600">{t("landing.list2")}</li>
               </motion.ul>

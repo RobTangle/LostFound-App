@@ -16,35 +16,15 @@ export default function LangButton() {
       <img
         src={es}
         alt="ES"
-        className="w-[40px] h-[40px] hover:scale-150 cursor-pointer rounded-full"
+        className="w-[40px]  h-[40px] hover:scale-[1.2]  cursor-pointer rounded-full transition-all duration-300"
         onClick={() => handleClickLanguage("es")}
       />
-      {/* <button
-          onClick={() => handleClickLanguage("es")}
-          className={
-            (selected === "es"
-              ? `bg-color_primary text-color_bg_variant`
-              : `bg-transparent`) + `px-3 rounded-md py-1 text-sm h-fit`
-          }
-        >
-          ES
-        </button> */}
       <img
         src={en}
         alt="EN"
-        className="w-[40px] h-[40px] hover:scale-150 cursor-pointer rounded-full"
+        className="w-[40px]  transition-all duration-300 h-[40px] hover:scale-[1.2] cursor-pointer rounded-full "
         onClick={() => handleClickLanguage("en")}
       />{" "}
-      {/* <button
-        className={
-          (selected === "en"
-            ? `bg-color_primary text-color_bg_variant bg-en)`
-            : `bg-transparent`) + `px-3 rounded-md py-1 text-sm h-fit`
-        }
-        onClick={() => handleClickLanguage("en")}
-      >
-        EN
-      </button> */}
     </div>
   );
 }
