@@ -1,20 +1,26 @@
 import React from "react";
 
-const Footer = () => {
+const Footer = ({ fixed}) => {
   return (
-    <div className="flex flex-col text-xs fixed bottom-0 w-full">
+    <div
+      className={
+        (fixed
+          ? "fixed bottom-0 "
+          : "flex flex-col text-xs  w-full max-w-[1200px]") +
+            " w-full max-w-[1200px]"
+      }>
       <div className="flex mt-24 mb-4 flex-row justify-between">
         <div className=""></div>
-        <a className="hidden md:block cursor-pointer text-slate-600 hover:text-indigo-700 uppercase">
+        <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
           About
         </a>
-        <a className="hidden md:block cursor-pointer text-slate-600 hover:text-indigo-700 uppercase">
+        <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
           Services
         </a>
-        <a className="hidden md:block cursor-pointer text-slate-600 hover:text-indigo-700 uppercase">
+        <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
           Why us
         </a>
-        <a className="hidden md:block cursor-pointer text-slate-600 hover:text-indigo-700 uppercase">
+        <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
           Contact
         </a>
         <div className="flex flex-row space-x-8 items-center justify-between">
@@ -24,8 +30,7 @@ const Footer = () => {
               height="12"
               viewBox="0 0 6 12"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M3.89782 12V6.53514H5.67481L5.93895 4.39547H3.89782V3.03259C3.89782 2.41516 4.06363 1.99243 4.91774 1.99243H6V0.0847928C5.47342 0.0262443 4.94412 -0.00202566 4.41453 0.000112795C2.84383 0.000112795 1.76542 0.994936 1.76542 2.82122V4.39147H0V6.53114H1.76928V12H3.89782Z"
                 fill="white"
@@ -38,8 +43,7 @@ const Footer = () => {
               height="13"
               viewBox="0 0 12 13"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M5.99536 2.91345C5.17815 2.91345 4.39441 3.23809 3.81655 3.81594C3.2387 4.3938 2.91406 5.17754 2.91406 5.99475C2.91406 6.81196 3.2387 7.5957 3.81655 8.17356C4.39441 8.75141 5.17815 9.07605 5.99536 9.07605C6.81257 9.07605 7.59631 8.75141 8.17417 8.17356C8.75202 7.5957 9.07666 6.81196 9.07666 5.99475C9.07666 5.17754 8.75202 4.3938 8.17417 3.81594C7.59631 3.23809 6.81257 2.91345 5.99536 2.91345ZM5.99536 7.99586C5.46446 7.99586 4.9553 7.78496 4.57989 7.40955C4.20448 7.03415 3.99358 6.52499 3.99358 5.99408C3.99358 5.46318 4.20448 4.95402 4.57989 4.57861C4.9553 4.20321 5.46446 3.99231 5.99536 3.99231C6.52626 3.99231 7.03542 4.20321 7.41083 4.57861C7.78624 4.95402 7.99714 5.46318 7.99714 5.99408C7.99714 6.52499 7.78624 7.03415 7.41083 7.40955C7.03542 7.78496 6.52626 7.99586 5.99536 7.99586Z"
                 fill="white"
@@ -60,8 +64,7 @@ const Footer = () => {
               height="9"
               viewBox="0 0 13 9"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M12.7355 1.415C12.6616 1.14357 12.517 0.896024 12.3162 0.697014C12.1154 0.498004 11.8654 0.354468 11.5911 0.280692C10.5739 0.00450089 6.5045 4.87928e-06 6.5045 4.87928e-06C6.5045 4.87928e-06 2.43578 -0.00449139 1.41795 0.259496C1.14379 0.336667 0.894302 0.482233 0.693428 0.68222C0.492554 0.882207 0.347041 1.1299 0.270859 1.40152C0.00259923 2.40737 9.51671e-07 4.49358 9.51671e-07 4.49358C9.51671e-07 4.49358 -0.0025972 6.59006 0.263714 7.58564C0.413109 8.13609 0.851549 8.57094 1.40885 8.71931C2.43643 8.9955 6.49476 9 6.49476 9C6.49476 9 10.5641 9.00449 11.5813 8.74115C11.8557 8.6675 12.106 8.52429 12.3073 8.32569C12.5086 8.12709 12.6539 7.87996 12.729 7.60876C12.998 6.60355 12.9999 4.51798 12.9999 4.51798C12.9999 4.51798 13.0129 2.42086 12.7355 1.415ZM5.20282 6.42628L5.20607 2.57244L8.58823 4.50257L5.20282 6.42628Z"
                 fill="white"
