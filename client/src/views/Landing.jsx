@@ -13,6 +13,7 @@ export function Landing() {
   const navigate = useNavigate();
   const { user, isLoading, isAuthenticated, getAccessTokenSilently } =
     useAuth0();
+
   const landingVariant = {
     hidden: {
       opacity: 0,
