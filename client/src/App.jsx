@@ -10,6 +10,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/search" element={<Search />} />
         <Route path="/found" element={<Found />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );
