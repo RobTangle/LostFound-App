@@ -22,7 +22,7 @@ export function Home() {
   return (
     <div>
       <NavBar />
-      <div className="hidden sm:block sm:mx-auto sm:h-[400px]">
+      <div className="hidden sm:block sm:mx-auto sm:h-[550px]">
         <Wallet3d />
       </div>
       <div className="block grid mx-auto text-center mx-12 rounded-xl border-2 border-slate-200 sm:hidden">
