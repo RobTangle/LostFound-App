@@ -10,7 +10,7 @@ export function Register() {
       <div className="max-auto relative">
         <RegisterForm />
       </div>
-      <Footer />
+      <Footer fixed={true} />
     </div>
   );
 }
