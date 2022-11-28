@@ -8,8 +8,11 @@ import {
   stringContainsURLs,
 } from "./genericValidators";
 
-export function validateNewUser(objFromReq: any): INewUser {
-  const { _id, name, email, profile_img, posts, subscriptions } = objFromReq;
+export function validateNewUser(
+  objFromReq: any,
+  _id: string | undefined
+): INewUser {
+  const { name, email, profile_img, posts } = objFromReq;
   const validatedUser = {
     _id: checkUserId(_id),
     name: checkUserName(name),
@@ -22,7 +25,10 @@ export function validateNewUser(objFromReq: any): INewUser {
 }
 
 // CHECK USER ID :
-function checkUserId(userId: string): string {
+function checkUserId(userId: string | undefined): string {
+  if (!userId) {
+    throw new Error("User id es falso");
+  }
   if (isStringBetween1AndXCharsLong(50, userId)) {
     if (!stringContainsURLs(userId)) {
       return userId;
@@ -56,7 +62,10 @@ export function checkUserProfileImg(
   if (isFalsyArgument(profileImgFromReq)) {
     return undefined;
   }
-  if (isValidURLImage(profileImgFromReq)) {
+  if (
+    isValidURLImage(profileImgFromReq) ||
+    stringContainsURLs(profileImgFromReq)
+  ) {
     return profileImgFromReq;
   }
   throw new Error(`Error al validar profile image.`);

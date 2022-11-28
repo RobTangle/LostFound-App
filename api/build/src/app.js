@@ -11,6 +11,7 @@ const user_routes_1 = __importDefault(require("./routes/user/user-routes"));
 const post_routes_1 = __importDefault(require("./routes/post/post-routes"));
 const countries_routes_1 = __importDefault(require("./routes/countries/countries-routes"));
 const subscription_routes_1 = __importDefault(require("./routes/subscription/subscription-routes"));
+const jwtMiddleware_1 = __importDefault(require("./config/jwtMiddleware"));
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
 app.use(express_1.default.json());
@@ -24,6 +25,10 @@ app.use("/subscription", subscription_routes_1.default);
 // for testing:
 app.get("/ping", (req, res) => {
     return res.send("PONG!");
+});
+app.get("/auth", jwtMiddleware_1.default, (req, res) => {
+    console.log(req.auth);
+    return res.status(200).send(req.auth);
 });
 exports.default = app;
 //! este archivo está siendo importado en index.ts de la raíz
