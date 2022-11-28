@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkUserProfileImg = exports.checkUserEmail = exports.validateNewUser = void 0;
 const genericValidators_1 = require("./genericValidators");
-function validateNewUser(objFromReq) {
-    const { _id, name, email, profile_img, posts, subscriptions } = objFromReq;
+function validateNewUser(objFromReq, _id) {
+    const { name, email, profile_img, posts } = objFromReq;
     const validatedUser = {
         _id: checkUserId(_id),
         name: checkUserName(name),
@@ -17,6 +17,9 @@ function validateNewUser(objFromReq) {
 exports.validateNewUser = validateNewUser;
 // CHECK USER ID :
 function checkUserId(userId) {
+    if (!userId) {
+        throw new Error("User id es falso");
+    }
     if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(50, userId)) {
         if (!(0, genericValidators_1.stringContainsURLs)(userId)) {
             return userId;
@@ -46,7 +49,8 @@ function checkUserProfileImg(profileImgFromReq) {
     if ((0, genericValidators_1.isFalsyArgument)(profileImgFromReq)) {
         return undefined;
     }
-    if ((0, genericValidators_1.isValidURLImage)(profileImgFromReq)) {
+    if ((0, genericValidators_1.isValidURLImage)(profileImgFromReq) ||
+        (0, genericValidators_1.stringContainsURLs)(profileImgFromReq)) {
         return profileImgFromReq;
     }
     throw new Error(`Error al validar profile image.`);

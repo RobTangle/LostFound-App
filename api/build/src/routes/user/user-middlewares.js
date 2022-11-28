@@ -41,19 +41,22 @@ function handleGetUserInfoByIdRequest(req, res) {
 }
 exports.handleGetUserInfoByIdRequest = handleGetUserInfoByIdRequest;
 function handleRegisterNewUserRequest(req, res) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             console.log("REQ.BODY = ", req.body);
-            // const _id = req.auth?.sub
+            console.log(req.auth);
+            const _id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
             // CHEQUEAR SI REQ.AUTH.EMAIL_VERIFIED es true o false. Si es false, retornar con error y decir que debe verificar su email para registrarse.
-            // const email_verified = req.auth?.email_verified;
-            //  if (email_verified !== true) {
-            //   throw new Error (`El email de tu cuenta debe estar verificado para poder registrarte en LostFound.`)
-            //  }
-            const validatedNewUser = (0, user_validators_1.validateNewUser)(req.body);
+            const email_verified = (_b = req.auth) === null || _b === void 0 ? void 0 : _b.email_verified;
+            if (email_verified !== true) {
+                console.log("Error: Email de usuario no verificado.");
+                throw new Error(`El email de tu cuenta debe estar verificado para poder registrarte en LostFound.`);
+            }
+            const validatedNewUser = (0, user_validators_1.validateNewUser)(req.body, _id);
             yield (0, user_auxiliaries_1.throwErrorIfEmailExistsInDB)(validatedNewUser.email);
             const newUser = yield mongoDB_1.User.create(validatedNewUser);
-            return res.status(200).send(newUser);
+            return res.status(201).send(newUser);
         }
         catch (error) {
             console.log(`Error en POST '/newUser. ${error.message}`);
@@ -63,10 +66,11 @@ function handleRegisterNewUserRequest(req, res) {
 }
 exports.handleRegisterNewUserRequest = handleRegisterNewUserRequest;
 function handleUserExistsInDBRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // jwtCheck, // const userId = req.auth?.sub;
-            const userId = req.params._id;
+            const userId = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
             let existsBoolean = yield (0, user_auxiliaries_1.userExistsInDBBoolean)(userId);
             return res.status(200).send({ msg: existsBoolean });
         }
