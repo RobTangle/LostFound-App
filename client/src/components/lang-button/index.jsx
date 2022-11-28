@@ -7,8 +7,10 @@ import en from "../../assets/en.svg";
 export default function LangButton() {
   const { i18n } = useTranslation();
   const [selected, setSelected] = useState("en");
+  const languageDetector = localStorage.getItem("i18nextLng");
   function handleClickLanguage(lang) {
     i18n.changeLanguage(lang);
+    localStorage.setItem("i18nextLng", lang);
     setSelected(lang);
   }
   return (
@@ -16,13 +18,19 @@ export default function LangButton() {
       <img
         src={es}
         alt="ES"
-        className="w-[40px]  h-[40px] hover:scale-[1.2]  cursor-pointer rounded-full transition-all duration-300"
+        className={
+          (selected !== "es" &&
+          "grayscale  ") +
+            " w-[40px]  h-[40px] hover:scale-[1.1]  cursor-pointer  transition-all duration-100"
+        }
         onClick={() => handleClickLanguage("es")}
       />
       <img
         src={en}
         alt="EN"
-        className="w-[40px]  transition-all duration-300 h-[40px] hover:scale-[1.2] cursor-pointer rounded-full "
+        className={
+          (selected !== "en" &&
+          "grayscale  ")  + " w-[40px]  transition-all duration-100 h-[40px] hover:scale-[1.1] cursor-pointer  "}
         onClick={() => handleClickLanguage("en")}
       />{" "}
     </div>
