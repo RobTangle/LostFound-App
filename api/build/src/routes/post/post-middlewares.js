@@ -56,9 +56,11 @@ exports.handleNewPostRequest = handleNewPostRequest;
 function handleSearchByQueryRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log("REQ.QUERY = ", req.query);
             //jwtCheck // const user_id = req.auth?.sub;
             // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
             const postsFound = yield (0, post_r_auxiliary_1.searchPostsByQuery)(req.query);
+            console.log("postsFound.length = ", postsFound.length);
             return res.status(200).send(postsFound);
         }
         catch (error) {

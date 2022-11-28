@@ -67,7 +67,7 @@ function throwErrorIfEmailExistsInDB(emailFromReq) {
         }
         let emailRegisteredAlready = yield mongoDB_1.User.findOne({
             email: emailFromReq,
-        }, { _id: 1 })
+        }, { _id: 1, name: 1 })
             .lean()
             .exec();
         if (emailRegisteredAlready) {
