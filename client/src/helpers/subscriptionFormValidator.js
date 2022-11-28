@@ -20,26 +20,26 @@ export function subscriptionFormValidator(suscription, t) {
         number_on_doc
       )
     ) {
-      throw new Error(t("suscriptionForm.errorNameAndNumberFalsy"));
+      throw new Error(t("subscriptionForm.errorNameAndNumberFalsy"));
     }
     if (name_on_doc.length > validAttr.name_on_doc.maxLength) {
-      throw new Error(t("suscriptionForm.errorNameLength"));
+      throw new Error(t("subscriptionForm.errorNameLength"));
     }
     if (number_on_doc.length > validAttr.number_on_doc.maxLength) {
-      throw new Error(t("suscriptionForm.errorNumberLength"));
+      throw new Error(t("subscriptionForm.errorNumberLength"));
     }
     if (stringContainsURLs(name_on_doc) || stringContainsURLs(number_on_doc)) {
-      throw new Error(t("suscriptionForm.errorStringContainsURLs"));
+      throw new Error(t("subscriptionForm.errorStringContainsURLs"));
     }
 
     if (country_lost.length !== 2) {
-      throw new Error(t("suscriptionForm.errorCountryInvalid"));
+      throw new Error(t("subscriptionForm.errorCountryInvalid"));
     }
     if (!date_lost) {
-      throw new Error(t("suscriptionForm.errorDateFalsy"));
+      throw new Error(t("subscriptionForm.errorDateFalsy"));
     }
     if (!isValidDateBoolean(date_lost)) {
-      throw new Error(t("suscriptionForm.errorDateInvalid"));
+      throw new Error(t("subscriptionForm.errorDateInvalid"));
     }
     return true;
   } catch (error) {
