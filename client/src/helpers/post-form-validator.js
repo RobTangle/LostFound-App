@@ -1,6 +1,7 @@
 import { stringContainsURLs } from "./generic-validators";
 import { isStringBetweenXAndYCharsLong } from "./generic-validators";
 import { isValidDateBoolean } from "./generic-validators";
+import { validAttr } from "./validAttributesObj";
 
 //* -------- POST FORM VALIDATOR :  ---------- --------------------------
 
