@@ -11,4 +11,7 @@ export const registerForm = {
   userNamePlaceholder: "Escriba acá su nombre de usuario",
   emailLabel: "Email ",
   submitButton: "Registrarse",
+  errorTitle: "Error",
+  errorSubtitle: "Usted no se encuentra logueado, por favor inicie sesión.",
+  errorButton: "Ok",
 };

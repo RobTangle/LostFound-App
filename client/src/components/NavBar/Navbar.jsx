@@ -19,31 +19,31 @@ const Navbar = () => {
         </a>
         <ul className="hidden sm:flex mx-auto space-x-12 text-xs uppercase">
           <li>
-            <a className="hover:text-indigo-700" href="#">
+            <a className="hover:text-blue duration-300 transition-all" href="#">
               About
             </a>
           </li>
           <li>
-            <a className="hover:text-indigo-700" href="#">
+            <a className="hover:text-blue duration-300 transition-all" href="#">
               Services
             </a>
           </li>
           <li>
-            <a className="hover:text-indigo-700" href="#">
+            <a className="hover:text-blue duration-300 transition-all" href="#">
               Why Us
             </a>
           </li>
           <li>
-            <a className="hover:text-indigo-700" href="#">
+            <a className="hover:text-blue duration-300 transition-all" href="#">
               Contact
             </a>
           </li>
         </ul>
-        <div className="hidden sm:flex items-center space-x-5 items-center">
-          <a className="flex items-center hover:text-indigo-700" href="#">
+        <div className="hidden sm:flex items-center space-x-5 ">
+          <a className="flex items-center hover:text-blue duration-300 transition-all" href="#">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 hover:text-indigo-700"
+              className="h-6 w-6 hover duration-300 transition-all:text-blue"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -65,7 +65,7 @@ const Navbar = () => {
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 hover:text-indigo-700"
+          className="h-6 w-6 hover duration-300 transition-all:text-blue"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
