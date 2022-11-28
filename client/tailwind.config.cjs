@@ -9,7 +9,7 @@ module.exports = {
         green: "#27995a ",
         dark: "#202424 ",
         light: "#fcf7f6",
-        gray: "#f2f2f2",
+        gray: "#53595D",
       },
       backgroundImage: {
         landing: "url('URLDEIMAGEN')",

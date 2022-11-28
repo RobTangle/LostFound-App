@@ -9,26 +9,29 @@ export async function userExist(
 ) {
   const claims = await getAccessTokenSilently();
   localStorage.setItem("token", claims);
-  try {
-    console.log(user?.sub);
-    if (isAuthenticated && user) {
-      console.log("estoypor hacer la peticion");
-      let existe = await fetch(
-        URL_EXISTS_IN_DB, //! cambiar esto ya que cambié la ruta. El user_id va por Token:
+  try
+  {
+    if (isAuthenticated && user)
+    {
+      let exist = await fetch(
+        URL_EXISTS_IN_DB, // El user_id va por Token:
         {
           headers: {
             Authorization: `Bearer ${claims}`,
           },
         }
       ).then((response) => response.json());
-      if (existe.msg) {
+      if (exist.msg)
+      {
         navigate("/home");
       }
-      if (existe.msg === false) {
+      if (exist.msg === false)
+      {
         navigate("/register");
       }
     }
-  } catch (error) {
+  } catch (error)
+  {
     console.log(`Error en el Login Button`);
     console.log(error);
   }
