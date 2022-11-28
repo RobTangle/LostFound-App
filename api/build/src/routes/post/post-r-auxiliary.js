@@ -11,10 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findPostByIdAndDeleteIt = exports.handleUpdatePost = exports.findMatchingSuscriptions = exports.searchPostsByQuery = void 0;
 const mongoDB_1 = require("../../mongoDB");
-const luxon_1 = require("luxon");
 const post_validators_1 = require("../../validators/post-validators");
+const genericValidators_1 = require("../../validators/genericValidators");
 function searchPostsByQuery(queryFromReq) {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { name, number, country, date_lost } = queryFromReq;
@@ -25,17 +24,7 @@ function searchPostsByQuery(queryFromReq) {
             }
             // date_lost tiene que ser menor o igual que date_found para que matchee.
             // La parseo con DateTime para chequear si es una fecha válida y que salte un error si no lo es:
-            let parsedToDateCorrectly;
-            if (typeof date_lost === "string") {
-                let dateLostParsed = luxon_1.DateTime.fromFormat(date_lost, "yyyy-MM-dd");
-                if (dateLostParsed.invalid) {
-                    throw new Error((_a = dateLostParsed.invalid) === null || _a === void 0 ? void 0 : _a.explanation);
-                }
-                parsedToDateCorrectly = dateLostParsed.toJSDate();
-            }
-            else {
-                throw new Error(`The date found must be a valid date string yyyy-MM-dd. Example: 2022-10-23`);
-            }
+            let verifiedDate = (0, genericValidators_1.checkAndParseDate)(date_lost);
             // mongoose automáticamente compara la fecha yyyy-MM-dd correctamente contra la ISO de la DB. Pero igualmente intento parsearla con Luxon para que chequee si es una fecha válida o no. Si no lo es, tirará error. Si lo es, aprovecho y la uso para la query, pero es lo mismo que usar la date yyyy-MM-dd que viene por query.
             // El name se compara automáticamente con un "iLike". No hace falta pasarla a minúscula.
             const postsFound = yield mongoDB_1.Post.find({
@@ -44,14 +33,16 @@ function searchPostsByQuery(queryFromReq) {
                         $or: [{ name_on_doc: name }, { number_on_doc: numberOnDocParsed }],
                     },
                     { country_found: country },
-                    { date_found: { $gte: parsedToDateCorrectly } },
+                    { date_found: { $gte: verifiedDate } },
                 ],
             }, {
                 _id: 1,
                 "user_posting.posts": 0,
                 "user_posting.createdAt": 0,
                 "user_posting.updatedAt": 0,
-            }).lean().exec();
+            })
+                .lean()
+                .exec();
             return postsFound;
         }
         catch (error) {
@@ -84,7 +75,9 @@ function findMatchingSuscriptions(newPost) {
                 "user_subscribed._id": 1,
                 "user_subscribed.name": 1,
                 "user_subscribed.email": 1,
-            }).lean().exec();
+            })
+                .lean()
+                .exec();
             // Agregar en el email un link al detalle del post nuevo que coincide con su subscription. Para eso voy a necesitar el _id del nuevo post, y meterlo en el params de la url de nuestra página para que vea el detalle de la publicación. Por ejemplo :
             // www.lostfound.app/found/${_id}
             // let messageInEmail = "Hello, ${subscription.user_subscribed.name}! We've got great news!!! It seems that somebody found something that matches your subscription alert criteria. Go and check it out to see if this is your lucky day!
