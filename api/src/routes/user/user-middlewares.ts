@@ -44,17 +44,22 @@ export async function handleRegisterNewUserRequest(
 ) {
   try {
     console.log("REQ.BODY = ", req.body);
-    // const _id = req.auth?.sub
+    console.log(req.auth);
+
+    const _id = req.auth?.sub;
     // CHEQUEAR SI REQ.AUTH.EMAIL_VERIFIED es true o false. Si es false, retornar con error y decir que debe verificar su email para registrarse.
-    // const email_verified = req.auth?.email_verified;
-    //  if (email_verified !== true) {
-    //   throw new Error (`El email de tu cuenta debe estar verificado para poder registrarte en LostFound.`)
-    //  }
-    const validatedNewUser: INewUser = validateNewUser(req.body);
+    const email_verified = req.auth?.email_verified;
+    if (email_verified !== true) {
+      console.log("Error: Email de usuario no verificado.");
+      throw new Error(
+        `El email de tu cuenta debe estar verificado para poder registrarte en LostFound.`
+      );
+    }
+    const validatedNewUser: INewUser = validateNewUser(req.body, _id);
     await throwErrorIfEmailExistsInDB(validatedNewUser.email);
     const newUser = await User.create(validatedNewUser);
 
-    return res.status(200).send(newUser);
+    return res.status(201).send(newUser);
   } catch (error: any) {
     console.log(`Error en POST '/newUser. ${error.message}`);
     return res.status(400).send({ error: error.message });
@@ -67,7 +72,7 @@ export async function handleUserExistsInDBRequest(
 ) {
   try {
     // jwtCheck, // const userId = req.auth?.sub;
-    const userId = req.params._id;
+    const userId = req.auth?.sub;
     let existsBoolean = await userExistsInDBBoolean(userId);
     return res.status(200).send({ msg: existsBoolean });
   } catch (error: any) {
