@@ -37,10 +37,28 @@ DELETE  "/:_id" : JWT;  Borra un Post en la Collection Post y en el arreglo de U
 /subscription :
 GET  "/findAll" : Retorna un arreglo de Documentos de Subscription ;
 
-POST  "/" : Crea un nuevo documento en la collection Subscription. {  name_on_doc, number_on_doc, country_lost, date_lost, user_subscribed: {_id, email, name}, } = req.body ; Retorna el nuevo Documento creado en Subscription.
+POST  "/" : JWT; Crea un nuevo documento en la collection Subscription. {  name_on_doc, number_on_doc, country_lost, date_lost } = req.body ; Retorna el nuevo Documento creado en Subscription.
 
-DELETE "/"  : Busca y borra subscriptions en el arreglo user.subscrition y en la collection Subscription. Retorna un obj con propiedades de cuántos elementos borró y mensages (msg).
+DELETE "/" : JWT;  Busca y borra subscriptions en el arreglo user.subscrition y en la collection Subscription. Retorna un obj con propiedades de cuántos elementos borró y mensajes (msg). 
+    objToReturn = {
+    userSubscriptions: { deleted: 0, msg: "" },
+    subscriptionCollection: { deleted: 0, msg: "" },
+    total: 0,
+    msg: "",
+  };
 
-PATCH "/:_id" Hace un update de una Subscription en la collection Subscription y en el array  user.subscriptions
+PATCH "/:subscription_id" : JWT;  {subscription_id} = req.params; Hace un update de una Subscription en la collection Subscription y en el array  user.subscriptions 
+Retorna un obj: 
+confirmationOfUpdate: {
+    userSubscriptions: {
+        updated: number;
+        msg: string;
+    };
+    subscriptionCollection: {
+        updated: number;
+        msg: string;
+    };
+    total: number;
+}
 
-GET  "/userSubs"  Retorna un arreglo con las subscripciones del User
+GET  "/userSubs" : JWT;  Retorna un arreglo con las Subscriptions del User
