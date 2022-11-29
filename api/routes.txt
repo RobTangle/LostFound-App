@@ -1,35 +1,37 @@
 /user :
 GET  "/findAll" : Retorna arreglo con todos los usuarios en la DB.
 
-GET  "/existsInDB/:_id" Recibe por params un _id de user y responde {"msg": true / false}.
 
-GET  "/userinfo/:_id" Recibe por params un _id de user y responde con el Document del user.
+GET  "/userinfo" : JWT; Agarra el _id del usuario por medio del JWT y responde con el Document del user.
 
-POST  "/register" : {_id, name, email, profile_img, posts} = req.body; Retorna el nuevo usuario creado.
+POST  "/register" : JWT; {name, email, profile_img } = req.body; Retorna el nuevo usuario creado en la DB.
 
-PATCH  "/update": {_id, name, profile_img} = req.body;  Retorna un objeto { name: 0/1, profile_img: 0/1, userUpdated: IUser }. El 0 o 1 representa si se actualizó esa propiedad o no.
+GET  "/existsInDB" : JWT; Agarra el req.auth.sub del JWT, busca ese _id en la DB y responde {"msg": true / false} dependiendo si ese User _id ya existe o no en la DB.
 
-DELETE "/destroyAll/:_id" Borra toda la data asociada a un user _id en la collection User, Subscription y Post.
+PATCH  "/update": JWT; { name, profile_img } = req.body;  Retorna un objeto { name: 0/1, profile_img: 0/1, userUpdated: IUser }. El 0 o 1 representa si se actualizó esa propiedad o no.
+
+DELETE "/destroyAll/:_id" : JWT; Borra toda la data asociada a un user _id en la collection User, Subscription y Post.
 
 
 /post :
 GET  "/findAll" : Retorna un arreglo con todos los posts en la collection Posts;
 
-GET  "/:_id" Retorna un Post buscado por el req.params._id;
-
-POST  "/newPost" : { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, _id (del usuario que postea) } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
+POST  "/newPost" : { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
 EXTRA: Esta ruta, luego de la creación exitosa de un new Post, va a invocar a una función que chequea si alguna Subscription coincide con el nuevo Post y va a enviar emails avisando a las suscripciones que correspondan.
 
-PATCH  "/:id" : Recibe por body props a actualizar (   name_on_doc: string;
+GET  "/search" : JWT; Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ; { name, number, country, date_lost } = req.query;
+
+PATCH  "/:id" : JWT; Recibe por body props a actualizar (   name_on_doc: string;
   number_on_doc: string;
   country_found: string;
   date_found: any;
   blurred_imgs: string[];
-  comments: string | undefined ) ;  el _id del post por req.params y el _id del usuario por body (temporalmente hasta tener jwtCheck)
+  comments: string | undefined ) ; 
+   el _id del post por req.params
 
-DELETE  "/:_id"  Borra un Post en la collection Post y en el arreglo de refs de User.posts. Recibe por req.params._id el _id del Post, y por req.body.user_id el _id del User (temporalmente hasta jwtCheck)
+GET  "/:_id" : JWT; Retorna un Post buscado por el req.params._id;
 
-GET  "/search" : Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ;
+DELETE  "/:_id" : JWT;  Borra un Post en la Collection Post y en el arreglo de User.posts. Recibe por req.params._id el _id del Post.
 
 
 /subscription :
