@@ -9,6 +9,9 @@ import {
 } from "../../validators/genericValidators";
 
 export async function getUserByIdOrThrowError(userId: string | undefined) {
+  if (!userId) {
+    throw new Error(`El user id '${userId}' no es válido.`);
+  }
   let userFromDB = await User.findById(userId).exec();
   if (userFromDB !== null) {
     return userFromDB;
@@ -18,6 +21,9 @@ export async function getUserByIdOrThrowError(userId: string | undefined) {
 }
 
 export async function getUserByIdLeanOrThrowError(userId: string | undefined) {
+  if (!userId) {
+    throw new Error(`El user id '${userId}' no es válido.`);
+  }
   let userFromDB = await User.findById(userId).lean().exec();
   if (userFromDB !== null) {
     return userFromDB;
@@ -86,6 +92,9 @@ export async function userExistsInDBBoolean(
 export async function throwErrorIfUserIsNotRegisteredOrVoid(
   user_id: string | undefined
 ) {
+  if (!user_id || typeof user_id !== "string") {
+    throw new Error(`El id de usuario "${user_id}"a buscar no es válido.`);
+  }
   const userIsRegisteredInDBBoolean = await userExistsInDBBoolean(user_id);
   if (userIsRegisteredInDBBoolean !== true) {
     throw new Error(
