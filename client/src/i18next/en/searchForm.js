@@ -1,5 +1,5 @@
 export const searchForm = {
-  countryLabel: "Country where you lost them",
+  countryLabel: "Country you lost them",
   dateLabel: "Date you lost them",
   nameLabel: "Complete Name",
   namePlaceholder: "John Adam Williams",
