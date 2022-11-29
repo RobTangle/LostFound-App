@@ -27,8 +27,10 @@ export async function handleCreateNewSubscriptionRequest(
 ) {
   try {
     console.log(req.body);
-    //  jwtCheck    // const user_id = req.auth?.sub
-    const user_id = req.body.user_subscribed._id;
+    const user_id = req.auth?.sub;
+    if (!user_id) {
+      throw new Error(`El user id '${user_id}' es inválido.`);
+    }
     const objToReturn = await handleNewSubscription(req.body, user_id);
     return res.status(200).send(objToReturn);
   } catch (error: any) {
@@ -42,8 +44,10 @@ export async function handleDeleteSubscriptionByIdRequest(
   res: Response
 ) {
   try {
-    //  jwtCheck    // const user_id = req.auth?.sub
-    const user_id = req.body.user_id;
+    const user_id = req.auth?.sub;
+    if (!user_id) {
+      throw new Error(`El user id '${user_id}' es inválido.`);
+    }
     const subscription_id = req.params.subscription_id;
     const confirmationOfDeletion = await handleDeleteSubscription(
       subscription_id,
@@ -61,9 +65,13 @@ export async function handleUpdateSubscriptionByIdRequest(
   res: Response
 ) {
   try {
-    // jwtCheck // const user_id = req.auth.sub
-    const user_id = req.body.user_id;
+    const user_id = req.auth?.sub;
     const subscription_id = req.params.subscription_id;
+    if (!user_id || !subscription_id) {
+      throw new Error(
+        `El user id '${user_id}' y/o la subscription id '${subscription_id} es inválido.`
+      );
+    }
     const confirmationOfUpdate = await handleUpdateSubscription(
       subscription_id,
       user_id,
@@ -81,8 +89,10 @@ export async function handleGetUserSubscriptionsRequest(
   res: Response
 ) {
   try {
-    // jwtCheck // const user_id = req.auth?.sub
-    const user_id = req.body.user_id;
+    const user_id = req.auth?.sub;
+    if (!user_id) {
+      throw new Error(`El user id '${user_id}' es inválido.`);
+    }
     const userSubscriptions = await handleGetUserSubscriptions(user_id);
     return res.status(200).send(userSubscriptions);
   } catch (error: any) {
