@@ -12,13 +12,13 @@ export function validateNewUser(
   objFromReq: any,
   _id: string | undefined
 ): INewUser {
-  const { name, email, profile_img, posts } = objFromReq;
+  const { name, email, profile_img } = objFromReq;
   const validatedUser = {
     _id: checkUserId(_id),
     name: checkUserName(name),
     email: checkUserEmail(email),
     profile_img: checkUserProfileImg(profile_img),
-    posts: checkUserPosts(posts),
+    // posts: checkUserPosts(posts),
     // subscriptions: checkUserSubscriptions(subscriptions),
   };
   return validatedUser;
@@ -72,9 +72,9 @@ export function checkUserProfileImg(
 }
 
 // CHECK USER POSTS :
-function checkUserPosts(postsFromReq: any): [] {
-  return [];
-}
+// function checkUserPosts(postsFromReq: any): [] {
+//   return [];
+// }
 
 // CHECK USER POSTS :
 // function checkUserSubscriptions(subscriptionsFromReq: any) {
