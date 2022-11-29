@@ -11,6 +11,7 @@ import {
   handleDeleteAllDataFromUser,
 } from "./user-auxiliaries";
 
+// GET ALL USERS FROM DB (JUST FOR TESTING. NOT FOR PRODUCTION) :
 export async function handleFindAllUsersRequest(
   req: JWTRequest,
   res: Response
@@ -23,13 +24,10 @@ export async function handleFindAllUsersRequest(
   }
 }
 
-export async function handleGetUserInfoByIdRequest(
-  req: JWTRequest,
-  res: Response
-) {
+// GET USER INFO :
+export async function handleGetUserInfoRequest(req: JWTRequest, res: Response) {
   try {
-    // jwtCheck // const user_id = req.auth?.sub
-    const user_id = req.params._id;
+    const user_id = req.auth?.sub;
     const userFoundById = await getUserByIdLeanOrThrowError(user_id);
     return res.status(200).send(userFoundById);
   } catch (error: any) {
@@ -38,6 +36,7 @@ export async function handleGetUserInfoByIdRequest(
   }
 }
 
+// CREATE/REGISTER NEW USER :
 export async function handleRegisterNewUserRequest(
   req: JWTRequest,
   res: Response
@@ -45,9 +44,8 @@ export async function handleRegisterNewUserRequest(
   try {
     console.log("REQ.BODY = ", req.body);
     console.log(req.auth);
-
     const _id = req.auth?.sub;
-    // CHEQUEAR SI REQ.AUTH.EMAIL_VERIFIED es true o false. Si es false, retornar con error y decir que debe verificar su email para registrarse.
+
     const email_verified = req.auth?.email_verified;
     if (email_verified !== true) {
       console.log("Error: Email de usuario no verificado.");
@@ -66,6 +64,7 @@ export async function handleRegisterNewUserRequest(
   }
 }
 
+// USER EXSITS IN DB. res = {msg: true / false} :
 export async function handleUserExistsInDBRequest(
   req: JWTRequest,
   res: Response
@@ -81,11 +80,14 @@ export async function handleUserExistsInDBRequest(
   }
 }
 
+// UPDATE USER INFO :
 export async function handleUpdateUserRequest(req: JWTRequest, res: Response) {
   try {
-    //  jwtCheck // const _id = req.auth?.sub;
-    const _id = req.body._id; // TEMPORARY UNTIL JWT APPLIES
+    const _id = req.auth?.sub;
     const { name, profile_img } = req.body;
+    if (!_id) {
+      throw new Error(`El user id '${_id}' no es válido.`);
+    }
     const updatedObj = await updateNameAndProfileImg(name, profile_img, _id);
 
     return res.status(200).send(updatedObj);
@@ -95,13 +97,19 @@ export async function handleUpdateUserRequest(req: JWTRequest, res: Response) {
   }
 }
 
+// DELETE ALL USER DATA FROM DB :
 export async function handleDeleteAllUserDataRequest(
   req: JWTRequest,
   res: Response
 ) {
   try {
-    // jwtCheck // const user_id = req.auth?.sub
-    const user_id = req.params._id;
+    const user_id = req.auth?.sub;
+    const user_id_params = req.params._id;
+    if (user_id !== user_id_params) {
+      throw new Error(
+        `El id del token del usuario no coincide con el id enviado por params.`
+      );
+    }
     const response = await handleDeleteAllDataFromUser(user_id);
     let responseStatus = response.status;
     return res.status(responseStatus).send(response);

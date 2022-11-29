@@ -15,6 +15,9 @@ const mongoDB_1 = require("../../mongoDB");
 const genericValidators_1 = require("../../validators/genericValidators");
 function getUserByIdOrThrowError(userId) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!userId) {
+            throw new Error(`El user id '${userId}' no es válido.`);
+        }
         let userFromDB = yield mongoDB_1.User.findById(userId).exec();
         if (userFromDB !== null) {
             return userFromDB;
@@ -27,6 +30,9 @@ function getUserByIdOrThrowError(userId) {
 exports.getUserByIdOrThrowError = getUserByIdOrThrowError;
 function getUserByIdLeanOrThrowError(userId) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!userId) {
+            throw new Error(`El user id '${userId}' no es válido.`);
+        }
         let userFromDB = yield mongoDB_1.User.findById(userId).lean().exec();
         if (userFromDB !== null) {
             return userFromDB;
@@ -93,6 +99,9 @@ function userExistsInDBBoolean(user_id) {
 exports.userExistsInDBBoolean = userExistsInDBBoolean;
 function throwErrorIfUserIsNotRegisteredOrVoid(user_id) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!user_id || typeof user_id !== "string") {
+            throw new Error(`El id de usuario "${user_id}"a buscar no es válido.`);
+        }
         const userIsRegisteredInDBBoolean = yield userExistsInDBBoolean(user_id);
         if (userIsRegisteredInDBBoolean !== true) {
             throw new Error(`Usuario con id "${user_id}" no está registrado en la base de datos.`);

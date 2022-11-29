@@ -27,11 +27,13 @@ function findAllPostsResponse(req, res) {
     });
 }
 exports.findAllPostsResponse = findAllPostsResponse;
+// CREATE A NEW POST :
 function handleNewPostRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             console.log("REQ.BODY = ", req.body);
-            let userPostingId = req.body._id;
+            let userPostingId = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
             const userInDB = yield (0, user_auxiliaries_1.getUserByIdOrThrowError)(userPostingId);
             console.log("User In DB = ", userInDB);
             const newPostToValidate = Object.assign(Object.assign({}, req.body), { user_posting: userInDB });
@@ -53,12 +55,14 @@ function handleNewPostRequest(req, res) {
 exports.handleNewPostRequest = handleNewPostRequest;
 // En el formulario del front, que hagan un chequeo de que las letras del nombre sean [a-zA-z-0-9-áéíóúÁÉÍÓÚÜüçÇñÑ] y que no se equivoquen de tilde con la invertida. Tenemos que pedir que el nombre sea idéntico a como figura en el documento.
 // Ya que descartamos la importancia de las tarjetas de crédito y le damos más importanci a pasaportes y DNI, el nombres siempre va a figurar completo. Y las tarjetas de crédito, la persona debería denunciarlas inmediatamente.
+// SEARCH POSTS BY QUERY :
 function handleSearchByQueryRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             console.log("REQ.QUERY = ", req.query);
-            //jwtCheck // const user_id = req.auth?.sub;
-            // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
+            yield (0, user_auxiliaries_1.throwErrorIfUserIsNotRegisteredOrVoid)(user_id);
             const postsFound = yield (0, post_r_auxiliary_1.searchPostsByQuery)(req.query);
             console.log("postsFound.length = ", postsFound.length);
             return res.status(200).send(postsFound);
@@ -70,12 +74,16 @@ function handleSearchByQueryRequest(req, res) {
     });
 }
 exports.handleSearchByQueryRequest = handleSearchByQueryRequest;
+// UPDATE A POST :
 function handleUpdateRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // jwtCheck // const user_id = req.auth?.sub
-            const user_id = req.body.user_id;
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
             const post_id = req.params._id;
+            if (!post_id || !user_id) {
+                throw new Error(`El id de la publicación y el id del usuario deben ser válidos.`);
+            }
             const updatedDocument = yield (0, post_r_auxiliary_1.handleUpdatePost)(post_id, req.body, user_id);
             return res.status(200).send(updatedDocument);
         }
@@ -86,11 +94,13 @@ function handleUpdateRequest(req, res) {
     });
 }
 exports.handleUpdateRequest = handleUpdateRequest;
+// GET POST BY POST_ID IN PARAMS :
 function handleGetPostByIdRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            //jwtCheck // const user_id = req.auth?.sub;
-            // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
+            yield (0, user_auxiliaries_1.throwErrorIfUserIsNotRegisteredOrVoid)(user_id);
             const post_id = req.params._id;
             const postFoundById = yield mongoDB_1.Post.findById(post_id).lean().exec();
             if (postFoundById === null) {
@@ -107,12 +117,16 @@ function handleGetPostByIdRequest(req, res) {
     });
 }
 exports.handleGetPostByIdRequest = handleGetPostByIdRequest;
+// DELETE POST BY POST_ID IN PARAMS :
 function handleDeletePostRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            //jwtCheck // const user_id = req.auth?.sub;
-            const user_id = req.body.user_id; // temporal hasta jwtCheck
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
             const post_id = req.params._id;
+            if (!post_id || !user_id) {
+                throw new Error(`El id de la publicación y el id del usuario deben ser válidos.`);
+            }
             const deleteResults = yield (0, post_r_auxiliary_1.findPostByIdAndDeleteIt)(post_id, user_id);
             return res.status(200).send(deleteResults);
         }

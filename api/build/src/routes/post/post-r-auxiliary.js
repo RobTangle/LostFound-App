@@ -93,8 +93,12 @@ function findMatchingSuscriptions(newPost) {
     });
 }
 exports.findMatchingSuscriptions = findMatchingSuscriptions;
+// UPDATE A POST :
 function handleUpdatePost(post_id, reqFromBody, user_id) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!post_id || !user_id) {
+            throw new Error(`El id de la publicación y el id del usuario deben ser válidos.`);
+        }
         const validatedData = (0, post_validators_1.validateUpdatePostData)(reqFromBody);
         const postInDB = yield mongoDB_1.Post.findById(post_id).exec();
         const userInDB = yield mongoDB_1.User.findById(user_id, { _id: 1 }).lean().exec();

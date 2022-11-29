@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeleteAllUserDataRequest = exports.handleUpdateUserRequest = exports.handleUserExistsInDBRequest = exports.handleRegisterNewUserRequest = exports.handleGetUserInfoByIdRequest = exports.handleFindAllUsersRequest = void 0;
+exports.handleDeleteAllUserDataRequest = exports.handleUpdateUserRequest = exports.handleUserExistsInDBRequest = exports.handleRegisterNewUserRequest = exports.handleGetUserInfoRequest = exports.handleFindAllUsersRequest = void 0;
 const mongoDB_1 = require("../../mongoDB");
 const user_validators_1 = require("../../validators/user-validators");
 const user_auxiliaries_1 = require("./user-auxiliaries");
+// GET ALL USERS FROM DB (JUST FOR TESTING. NOT FOR PRODUCTION) :
 function handleFindAllUsersRequest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -25,11 +26,12 @@ function handleFindAllUsersRequest(req, res) {
     });
 }
 exports.handleFindAllUsersRequest = handleFindAllUsersRequest;
-function handleGetUserInfoByIdRequest(req, res) {
+// GET USER INFO :
+function handleGetUserInfoRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // jwtCheck // const user_id = req.auth?.sub
-            const user_id = req.params._id;
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
             const userFoundById = yield (0, user_auxiliaries_1.getUserByIdLeanOrThrowError)(user_id);
             return res.status(200).send(userFoundById);
         }
@@ -39,7 +41,8 @@ function handleGetUserInfoByIdRequest(req, res) {
         }
     });
 }
-exports.handleGetUserInfoByIdRequest = handleGetUserInfoByIdRequest;
+exports.handleGetUserInfoRequest = handleGetUserInfoRequest;
+// CREATE/REGISTER NEW USER :
 function handleRegisterNewUserRequest(req, res) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
@@ -47,7 +50,6 @@ function handleRegisterNewUserRequest(req, res) {
             console.log("REQ.BODY = ", req.body);
             console.log(req.auth);
             const _id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            // CHEQUEAR SI REQ.AUTH.EMAIL_VERIFIED es true o false. Si es false, retornar con error y decir que debe verificar su email para registrarse.
             const email_verified = (_b = req.auth) === null || _b === void 0 ? void 0 : _b.email_verified;
             if (email_verified !== true) {
                 console.log("Error: Email de usuario no verificado.");
@@ -65,6 +67,7 @@ function handleRegisterNewUserRequest(req, res) {
     });
 }
 exports.handleRegisterNewUserRequest = handleRegisterNewUserRequest;
+// USER EXSITS IN DB. res = {msg: true / false} :
 function handleUserExistsInDBRequest(req, res) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -81,12 +84,16 @@ function handleUserExistsInDBRequest(req, res) {
     });
 }
 exports.handleUserExistsInDBRequest = handleUserExistsInDBRequest;
+// UPDATE USER INFO :
 function handleUpdateUserRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            //  jwtCheck // const _id = req.auth?.sub;
-            const _id = req.body._id; // TEMPORARY UNTIL JWT APPLIES
+            const _id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
             const { name, profile_img } = req.body;
+            if (!_id) {
+                throw new Error(`El user id '${_id}' no es válido.`);
+            }
             const updatedObj = yield (0, user_auxiliaries_1.updateNameAndProfileImg)(name, profile_img, _id);
             return res.status(200).send(updatedObj);
         }
@@ -97,11 +104,16 @@ function handleUpdateUserRequest(req, res) {
     });
 }
 exports.handleUpdateUserRequest = handleUpdateUserRequest;
+// DELETE ALL USER DATA FROM DB :
 function handleDeleteAllUserDataRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // jwtCheck // const user_id = req.auth?.sub
-            const user_id = req.params._id;
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
+            const user_id_params = req.params._id;
+            if (user_id !== user_id_params) {
+                throw new Error(`El id del token del usuario no coincide con el id enviado por params.`);
+            }
             const response = yield (0, user_auxiliaries_1.handleDeleteAllDataFromUser)(user_id);
             let responseStatus = response.status;
             return res.status(responseStatus).send(response);

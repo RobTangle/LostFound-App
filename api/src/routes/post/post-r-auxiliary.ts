@@ -94,6 +94,7 @@ export async function findMatchingSuscriptions(newPost: IPost) {
   }
 }
 
+// UPDATE A POST :
 export async function handleUpdatePost(
   post_id: string | undefined,
   reqFromBody: any,
@@ -103,6 +104,11 @@ export async function handleUpdatePost(
     [x: string]: any;
   } & Required<{ _id: unknown }>
 > {
+  if (!post_id || !user_id) {
+    throw new Error(
+      `El id de la publicación y el id del usuario deben ser válidos.`
+    );
+  }
   const validatedData = validateUpdatePostData(reqFromBody);
   const postInDB = await Post.findById(post_id).exec();
   const userInDB = await User.findById(user_id, { _id: 1 }).lean().exec();
