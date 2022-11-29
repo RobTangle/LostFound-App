@@ -7,10 +7,16 @@ const express_1 = require("express");
 const jwtMiddleware_1 = __importDefault(require("../../config/jwtMiddleware"));
 const user_middlewares_1 = require("./user-middlewares");
 const router = (0, express_1.Router)();
+// FIND ALL USERS (JUST FOR TESTING. NOT FOR PRODUCTION) :
 router.get("/findAll", user_middlewares_1.handleFindAllUsersRequest);
-router.get("/userInfo/:_id", user_middlewares_1.handleGetUserInfoByIdRequest);
+// GET USER INFO :
+router.get("/userInfo", jwtMiddleware_1.default, user_middlewares_1.handleGetUserInfoRequest);
+// CREATE/REGISTER NEW USER :
 router.post("/register", jwtMiddleware_1.default, user_middlewares_1.handleRegisterNewUserRequest);
+// USER EXSITS IN DB. res = {msg: true / false}
 router.get("/existsInDB", jwtMiddleware_1.default, user_middlewares_1.handleUserExistsInDBRequest);
-router.patch("/update", user_middlewares_1.handleUpdateUserRequest);
-router.delete("/destroyAll/:_id", user_middlewares_1.handleDeleteAllUserDataRequest);
+// UPDATE USER INFO :
+router.patch("/update", jwtMiddleware_1.default, user_middlewares_1.handleUpdateUserRequest);
+// DELETE ALL USER DATA FROM DB :
+router.delete("/destroyAll/:_id", jwtMiddleware_1.default, user_middlewares_1.handleDeleteAllUserDataRequest);
 exports.default = router;
