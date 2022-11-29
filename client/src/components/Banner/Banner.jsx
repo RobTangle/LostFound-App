@@ -30,14 +30,8 @@ export default function Banner({ leftSrc, leftImage, containerStyle }) {
       <div className={"h-full w-1/2 " + (leftImage && "max-w-[300px]")}>
         {leftImage && <img className=" h-full object-contain " src={leftSrc} />}
       </div>
-      <div className="flex flex-col justify-center items-start  text-gray">
-        <h2 className="text-4xl font-bold text-gray-800 mb-2">
-          {t("home.welcome")}
-        </h2>
-        <p className="text-gray-600 text-center text-xl">
-          {t("home.subtitle")}
-        </p>
-        <p className="text-gray-600 text-center text-xl">
+      <div className="flex flex-col justify-center items-start max-w-[700px] text-gray">
+        <p className="text-gray-600 leading-relaxed text-xl">
           {t("home.welcomeText")}
         </p>
       </div>
