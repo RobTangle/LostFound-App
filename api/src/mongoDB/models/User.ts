@@ -15,7 +15,7 @@ export interface INewUser {
   name: string;
   email: string;
   profile_img?: string;
-  posts: string[];
+  // posts: string[];
 }
 
 export const userSchema: Schema = new Schema<IUser>(

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import jwtCheck from "../../config/jwtMiddleware";
 import {
   handleFindAllSubscriptionsRequest,
   handleCreateNewSubscriptionRequest,
@@ -10,9 +11,21 @@ import {
 const router = Router();
 
 router.get("/findAll", handleFindAllSubscriptionsRequest);
-router.post("/", handleCreateNewSubscriptionRequest);
-router.delete("/:subscription_id", handleDeleteSubscriptionByIdRequest);
-router.patch("/:subscription_id", handleUpdateSubscriptionByIdRequest);
-router.get("/userSubs", handleGetUserSubscriptionsRequest);
+// CREATE NEW SUBSCRIPTION :
+router.post("/", jwtCheck, handleCreateNewSubscriptionRequest);
+// DELETE SUBSCRIPTION :
+router.delete(
+  "/:subscription_id",
+  jwtCheck,
+  handleDeleteSubscriptionByIdRequest
+);
+// UPDATE SUBSCRIPTION :
+router.patch(
+  "/:subscription_id",
+  jwtCheck,
+  handleUpdateSubscriptionByIdRequest
+);
+// GET ALL USER SUBSCRIPTIONS :
+router.get("/userSubs", jwtCheck, handleGetUserSubscriptionsRequest);
 
 export default router;
