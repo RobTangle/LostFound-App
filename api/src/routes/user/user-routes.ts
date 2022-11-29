@@ -2,20 +2,31 @@ import { Router } from "express";
 import jwtCheck from "../../config/jwtMiddleware";
 import {
   handleFindAllUsersRequest,
-  handleGetUserInfoByIdRequest,
   handleRegisterNewUserRequest,
   handleUserExistsInDBRequest,
   handleUpdateUserRequest,
   handleDeleteAllUserDataRequest,
+  handleGetUserInfoRequest,
 } from "./user-middlewares";
 
 const router = Router();
 
+// FIND ALL USERS (JUST FOR TESTING. NOT FOR PRODUCTION) :
 router.get("/findAll", handleFindAllUsersRequest);
-router.get("/userInfo/:_id", handleGetUserInfoByIdRequest);
+
+// GET USER INFO :
+router.get("/userInfo", jwtCheck, handleGetUserInfoRequest);
+
+// CREATE/REGISTER NEW USER :
 router.post("/register", jwtCheck, handleRegisterNewUserRequest);
+
+// USER EXSITS IN DB. res = {msg: true / false}
 router.get("/existsInDB", jwtCheck, handleUserExistsInDBRequest);
-router.patch("/update", handleUpdateUserRequest);
-router.delete("/destroyAll/:_id", handleDeleteAllUserDataRequest);
+
+// UPDATE USER INFO :
+router.patch("/update", jwtCheck, handleUpdateUserRequest);
+
+// DELETE ALL USER DATA FROM DB :
+router.delete("/destroyAll/:_id", jwtCheck, handleDeleteAllUserDataRequest);
 
 export default router;

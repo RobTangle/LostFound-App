@@ -4,7 +4,10 @@ import { Post } from "../../mongoDB";
 import { IPost } from "../../mongoDB/models/Post";
 import { validatePost } from "../../validators/post-validators";
 import { handleAlertAfterNewPost } from "../subscription/nodemailer";
-import { getUserByIdOrThrowError } from "../user/user-auxiliaries";
+import {
+  getUserByIdOrThrowError,
+  throwErrorIfUserIsNotRegisteredOrVoid,
+} from "../user/user-auxiliaries";
 import {
   searchPostsByQuery,
   handleUpdatePost,
@@ -20,10 +23,11 @@ export async function findAllPostsResponse(req: JWTRequest, res: Response) {
   }
 }
 
+// CREATE A NEW POST :
 export async function handleNewPostRequest(req: JWTRequest, res: Response) {
   try {
     console.log("REQ.BODY = ", req.body);
-    let userPostingId = req.body._id;
+    let userPostingId = req.auth?.sub;
     const userInDB = await getUserByIdOrThrowError(userPostingId);
 
     console.log("User In DB = ", userInDB);
@@ -49,6 +53,7 @@ export async function handleNewPostRequest(req: JWTRequest, res: Response) {
 // En el formulario del front, que hagan un chequeo de que las letras del nombre sean [a-zA-z-0-9-áéíóúÁÉÍÓÚÜüçÇñÑ] y que no se equivoquen de tilde con la invertida. Tenemos que pedir que el nombre sea idéntico a como figura en el documento.
 // Ya que descartamos la importancia de las tarjetas de crédito y le damos más importanci a pasaportes y DNI, el nombres siempre va a figurar completo. Y las tarjetas de crédito, la persona debería denunciarlas inmediatamente.
 
+// SEARCH POSTS BY QUERY :
 export async function handleSearchByQueryRequest(
   req: JWTRequest,
   res: Response
@@ -56,8 +61,8 @@ export async function handleSearchByQueryRequest(
   try {
     console.log("REQ.QUERY = ", req.query);
 
-    //jwtCheck // const user_id = req.auth?.sub;
-    // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
+    const user_id = req.auth?.sub;
+    await throwErrorIfUserIsNotRegisteredOrVoid(user_id);
     const postsFound = await searchPostsByQuery(req.query);
     console.log("postsFound.length = ", postsFound.length);
 
@@ -68,12 +73,16 @@ export async function handleSearchByQueryRequest(
   }
 }
 
+// UPDATE A POST :
 export async function handleUpdateRequest(req: JWTRequest, res: Response) {
   try {
-    // jwtCheck // const user_id = req.auth?.sub
-    const user_id = req.body.user_id;
+    const user_id = req.auth?.sub;
     const post_id = req.params._id;
-
+    if (!post_id || !user_id) {
+      throw new Error(
+        `El id de la publicación y el id del usuario deben ser válidos.`
+      );
+    }
     const updatedDocument = await handleUpdatePost(post_id, req.body, user_id);
 
     return res.status(200).send(updatedDocument);
@@ -83,10 +92,11 @@ export async function handleUpdateRequest(req: JWTRequest, res: Response) {
   }
 }
 
+// GET POST BY POST_ID IN PARAMS :
 export async function handleGetPostByIdRequest(req: JWTRequest, res: Response) {
   try {
-    //jwtCheck // const user_id = req.auth?.sub;
-    // await throwErrorIfUserIsNotRegisteredOrVoid(user_id)
+    const user_id = req.auth?.sub;
+    await throwErrorIfUserIsNotRegisteredOrVoid(user_id);
     const post_id = req.params._id;
     const postFoundById = await Post.findById(post_id).lean().exec();
     if (postFoundById === null) {
@@ -101,11 +111,16 @@ export async function handleGetPostByIdRequest(req: JWTRequest, res: Response) {
   }
 }
 
+// DELETE POST BY POST_ID IN PARAMS :
 export async function handleDeletePostRequest(req: JWTRequest, res: Response) {
   try {
-    //jwtCheck // const user_id = req.auth?.sub;
-    const user_id = req.body.user_id; // temporal hasta jwtCheck
+    const user_id = req.auth?.sub;
     const post_id = req.params._id;
+    if (!post_id || !user_id) {
+      throw new Error(
+        `El id de la publicación y el id del usuario deben ser válidos.`
+      );
+    }
     const deleteResults = await findPostByIdAndDeleteIt(post_id, user_id);
     return res.status(200).send(deleteResults);
   } catch (error: any) {
