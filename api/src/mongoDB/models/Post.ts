@@ -1,5 +1,4 @@
 import { Date, Schema } from "mongoose";
-import { IUser, userSchema } from "./User";
 
 export interface IPost {
   _id?: string;
@@ -9,10 +8,15 @@ export interface IPost {
   date_found: Date;
   blurred_imgs: string[];
   comments: string | undefined;
-  user_posting: IUser;
+  user_posting: IUserPosting;
 }
 
-// Para counties, guardar el array de countries en algún lado y enviarlo al front. Cómo hacer esto? en qué idioma se tiene que guardar???? Api externa para esto???
+export interface IUserPosting {
+  _id: string;
+  name: string;
+  email: string;
+  profile_img?: string;
+}
 
 export const postSchema: Schema = new Schema<IPost>(
   {
@@ -32,7 +36,12 @@ export const postSchema: Schema = new Schema<IPost>(
     date_found: { type: Date, required: true },
     blurred_imgs: [{ type: String, required: false }],
     comments: { type: String, maxlength: 800, required: false },
-    user_posting: userSchema,
+    user_posting: {
+      _id: String,
+      name: String,
+      email: String,
+      profile_img: String,
+    },
   },
   { timestamps: true }
 );

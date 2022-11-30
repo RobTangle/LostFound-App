@@ -38,7 +38,7 @@ export async function handleNewPostRequest(req: JWTRequest, res: Response) {
     };
     const validatedPost = validatePost(newPostToValidate);
     const newPost = await Post.create(validatedPost);
-    userInDB.posts.push(newPost._id);
+    userInDB.posts.push(newPost);
     await userInDB.save();
     res.status(200).send(newPost);
     // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
@@ -83,9 +83,9 @@ export async function handleUpdateRequest(req: JWTRequest, res: Response) {
         `El id de la publicación y el id del usuario deben ser válidos.`
       );
     }
-    const updatedDocument = await handleUpdatePost(post_id, req.body, user_id);
+    const updateResponse = await handleUpdatePost(post_id, req.body, user_id);
 
-    return res.status(200).send(updatedDocument);
+    return res.status(updateResponse.status).send(updateResponse);
   } catch (error: any) {
     console.log(`Error en ruta PUT "/post/:_id. ${error.message}`);
     return res.status(400).send({ error: error.message });
@@ -122,7 +122,7 @@ export async function handleDeletePostRequest(req: JWTRequest, res: Response) {
       );
     }
     const deleteResults = await findPostByIdAndDeleteIt(post_id, user_id);
-    return res.status(200).send(deleteResults);
+    return res.status(deleteResults.status).send(deleteResults);
   } catch (error: any) {
     console.log(`Error en ruta DELETE "post/:_id". ${error.message}`);
     return res.status(400).send({ error: error.message });

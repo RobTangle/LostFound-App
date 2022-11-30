@@ -7,6 +7,7 @@ import {
   stringContainsURLs,
 } from "./genericValidators";
 import { arrayOfCountriesTwoChars } from "../miscellanea/CountiesArrays";
+import { IUserPosting } from "../mongoDB/models/Post";
 
 // VALIDATE UPDATE POST DATA :
 export function validateUpdatePostData(bodyFromReq: any): {
@@ -45,7 +46,7 @@ export function validatePost(bodyFromReq: any): {
   date_found: any;
   blurred_imgs: string[];
   comments: string | undefined;
-  user_posting: IUser;
+  user_posting: IUserPosting;
 } {
   const {
     name_on_doc,
@@ -140,11 +141,17 @@ function checkComments(commentsFromReq: any): string | undefined {
   );
 }
 
-function checkUserPosting(userPosting: any): IUser {
+function checkUserPosting(userPosting: any): IUserPosting {
   if (isFalsyArgument(userPosting)) {
     throw new Error(
       `Error in validation: The user posting can't be a falsy value.`
     );
   }
-  return userPosting;
+  let userPostingObj = {
+    _id: userPosting._id,
+    name: userPosting.name,
+    email: userPosting.email,
+    profile_img: userPosting.profile_img,
+  };
+  return userPostingObj;
 }

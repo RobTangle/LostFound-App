@@ -1,4 +1,5 @@
 import { Schema, Types } from "mongoose";
+import { IPost, postSchema } from "./Post";
 import { ISubscription, subscriptionSchema } from "./Subscription";
 
 export interface IUser {
@@ -6,7 +7,7 @@ export interface IUser {
   name: string;
   email: string;
   profile_img?: string;
-  posts: string[];
+  posts: Types.DocumentArray<IPost>;
   subscriptions: Types.DocumentArray<ISubscription>;
 }
 
@@ -15,7 +16,6 @@ export interface INewUser {
   name: string;
   email: string;
   profile_img?: string;
-  // posts: string[];
 }
 
 export const userSchema: Schema = new Schema<IUser>(
@@ -34,7 +34,7 @@ export const userSchema: Schema = new Schema<IUser>(
       default:
         "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
     },
-    posts: [{ type: String, ref: "Post" }],
+    posts: [postSchema],
     // Suscripciones de alertas. [{query}, {query}] MAX 5.
     subscriptions: [subscriptionSchema],
   },
