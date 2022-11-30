@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkUserProfileImg = exports.checkUserEmail = exports.validateNewUser = void 0;
 const genericValidators_1 = require("./genericValidators");
 function validateNewUser(objFromReq, _id) {
-    const { name, email, profile_img, posts } = objFromReq;
+    const { name, email, profile_img } = objFromReq;
     const validatedUser = {
         _id: checkUserId(_id),
         name: checkUserName(name),
         email: checkUserEmail(email),
         profile_img: checkUserProfileImg(profile_img),
-        posts: checkUserPosts(posts),
+        // posts: checkUserPosts(posts),
         // subscriptions: checkUserSubscriptions(subscriptions),
     };
     return validatedUser;
@@ -57,9 +57,9 @@ function checkUserProfileImg(profileImgFromReq) {
 }
 exports.checkUserProfileImg = checkUserProfileImg;
 // CHECK USER POSTS :
-function checkUserPosts(postsFromReq) {
-    return [];
-}
+// function checkUserPosts(postsFromReq: any): [] {
+//   return [];
+// }
 // CHECK USER POSTS :
 // function checkUserSubscriptions(subscriptionsFromReq: any) {
 //   return []
