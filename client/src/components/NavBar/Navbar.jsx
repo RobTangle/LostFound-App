@@ -91,17 +91,19 @@ function Navbar() {
             </>
           ) : (
             <>
-              <LoginButton style="text-left" />
+              <LoginButton style="text-left uppercase " />
             </>
           )}
         </div>
       )}
-      <div className="hidden mx-auto md:flex md:w-full items-center md:justify-around md:py-3 md:px-5 md:gap-8  md:text-gray text-sm">
+      <div className="hidden mx-auto md:flex md:w-full items-center justify-between md:py-3 md:px-5 md:gap-8  md:text-gray text-sm">
         <div>
           <Link
+
             className="text-medium font-bold font-heading text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-600 to-indigo-700"
             to="/home"
           >
+
             LOST
             <span className="font-heading text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-700">
               FOUND
@@ -147,7 +149,7 @@ function Navbar() {
           </>
         ) : null}
         <div className="flex items-center">
-          {!isLoading && !isAuthenticated && <LoginButton />}
+          {!isLoading && !isAuthenticated && <LoginButton style=" uppercase " />}
         </div>
       </div>
     </div>
