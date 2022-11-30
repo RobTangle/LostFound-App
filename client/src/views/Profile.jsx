@@ -6,12 +6,12 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Navbar from "../components/NavBar/Navbar";
 import Footer from "../components/Footer/Footer";
-import { header } from "../constants/header";
-import accessToken from "../constants/accessToken";
+
+import accessTokenName from "../constants/accessToken";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
-  const u = useSelector((state) => state.userProfile);
+  const userProfile = useSelector((state) => state.user.userProfile);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -22,12 +22,26 @@ export const Profile = () => {
     link4: false,
   });
 
-  const accessTokenLostFound = localStorage.getItem("accessTokenLostFound");
-  // useEffect(() => {
-  //   !u && dispatch(getUserInfo(accessTokenLostFound));
-  // }, []);
+  useEffect(() => {
+    async function getTokenAndDispatchGetUserInfo() {
+      let accessToken = localStorage.getItem(accessTokenName);
+      if (!accessToken) {
+        console.log(
+          "AccessToken no encontrado en localStorage. Usando getAccessTokenSilently Hook..."
+        );
+        accessToken = await getAccessTokenSilently();
+      }
+      dispatch(getUserInfo(accessToken));
+    }
+    if (!userProfile.email) {
+      console.log("!userProfile. Invocando getTokenAndDispatchGetUserInfo()");
+      getTokenAndDispatchGetUserInfo();
+    }
+    console.log("El userProfile existe...");
+  }, []);
 
-  console.log(user);
+  console.log("user =", user);
+  console.log("userProfile = ", userProfile);
   return (
     <div>
       <Navbar />
@@ -36,14 +50,14 @@ export const Profile = () => {
           <div className="flex flex-row flex-wrap-reverse justify-center">
             <div className="flex flex-col justify-center m-8 text-center">
               <img
-                src={user?.picture}
+                src={userProfile?.profile_img}
                 alt="user image"
                 className="self-center flex-shrink-0 w-24 h-24 mb-4 bg-center bg-cover rounded-full bg-gray-500"
               />
               <p className="text-xl font-semibold leading-tight">
-                {user?.nickname}
+                {userProfile?.name}
               </p>
-              <p className="text-gray-400">{user?.email}</p>
+              <p className="text-gray-400">{userProfile?.email}</p>
             </div>
           </div>
         </div>
