@@ -6,6 +6,7 @@ import { getCountries } from "../../redux/features/user/userThunk";
 import { searchPost } from "../../redux/features/post/postThunk";
 import { searchFormValidator } from "../../helpers/search-form-validation";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -13,6 +14,7 @@ const SearchForm = () => {
   const dispatch = useDispatch();
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
+  const { getAccessTokenSilently } = useAuth0();
 
   const [search, setSearch] = useState({
     name: "",
@@ -30,7 +32,7 @@ const SearchForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validation = searchFormValidator(search, t);
     if (validation.error) {
@@ -38,16 +40,18 @@ const SearchForm = () => {
       console.log("ERROR AL VALIDAR SEARCH = ", validation);
     } else {
       if (validation === true) {
-        dispatch(searchPost(search));
+        const accessToken = await getAccessTokenSilently();
+        dispatch(searchPost(search, accessToken));
       }
     }
   };
 
   useEffect(() => {
+    console.log("Paises = ", countries.length);
     !countries.lenght && dispatch(getCountries(currentLang));
   }, [dispatch]);
 
-  console.log("ACAAA", countries);
+  // console.log("ACAAA", countries);
   return (
     <div className="grid md:flex">
       <div className="grid">
@@ -121,9 +125,6 @@ const SearchForm = () => {
                       {c[1]}
                     </option>
                   ))}
-                {/* <option>New Mexico</option>
-                <option>Missouri</option>
-                <option>Texas</option> */}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
