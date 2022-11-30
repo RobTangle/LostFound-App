@@ -16,6 +16,7 @@ export interface IUserPosting {
   name: string;
   email: string;
   profile_img?: string;
+  additional_contact_info?: string;
 }
 
 export const postSchema: Schema = new Schema<IPost>(
@@ -37,10 +38,15 @@ export const postSchema: Schema = new Schema<IPost>(
     blurred_imgs: [{ type: String, required: false }],
     comments: { type: String, maxlength: 800, required: false },
     user_posting: {
-      _id: String,
-      name: String,
-      email: String,
-      profile_img: String,
+      _id: { type: String, required: true },
+      name: { type: String, required: true },
+      email: { type: String, required: true },
+      profile_img: { type: String, required: false },
+      additional_contact_info: {
+        type: String,
+        required: false,
+        maxlength: 150,
+      },
     },
   },
   { timestamps: true }

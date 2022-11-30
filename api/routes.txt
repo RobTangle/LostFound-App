@@ -15,7 +15,7 @@ DELETE "/destroyAll/:_id" : JWT; Borra toda la data asociada a un user _id en la
 /post :
 GET  "/findAll" : Retorna un arreglo con todos los posts en la collection Posts;
 
-POST  "/newPost" : JWT; { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
+POST  "/newPost" : JWT; { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, additional_contact_info } ; Crea un documento Post y también pushea el documento creado al arreglo userInDB.posts ; Retorna el nuevo Post.
 EXTRA: Esta ruta, luego de la creación exitosa de un new Post, va a invocar a una función que chequea si alguna Subscription coincide con el nuevo Post y va a enviar emails avisando a las suscripciones que correspondan.
 
 GET  "/search" : JWT; Realiza una búsqueda por query usando la aux fn searchPostsByQuery(req.query). Retorna un arreglo de Posts que matchearon con los valores enviados por req.query ; { name, number, country, date_lost } = req.query;
