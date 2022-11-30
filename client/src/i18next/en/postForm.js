@@ -1,5 +1,6 @@
 export const postForm = {
   countryLabel: "Where you found them",
+  imageLabel: "Document images",
   dateLabel: "Date you found them",
   nameLabel: "Full name",
   nameSubLabel: "as it appears on the found document",

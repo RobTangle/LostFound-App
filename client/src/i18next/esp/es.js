@@ -5,6 +5,7 @@ import { postForm } from "./postForm";
 import { registerForm } from "../esp/registerForm";
 import { subscriptionForm } from "./subscriptionForm";
 import { navbar } from "./navbar";
+import { profile } from "./profile";
 
 export const esp = {
   home: home,
@@ -13,6 +14,6 @@ export const esp = {
   postForm: postForm,
   registerForm: registerForm,
   subscriptionForm: subscriptionForm,
-  navbar:navbar
-
+  navbar: navbar,
+  profile: profile,
 };

@@ -187,25 +187,24 @@ const PostForm = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="w-full sm:w-1/2 md:w-1/4 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-zip"
-            >
-              {t("postForm.dateLabel")}
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-zip"
-              type="file"
-              accept=".png, .jpg, .jpeg"
-              required
-              name="blurred_images"
-              onChange={upload}
-            />
-          </div>
         </div>
         <div className="w-full md:w-1/2 px-3">
+          <label
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            htmlFor="grid-zip"
+          >
+            {t("postForm.imageLabel")}
+          </label>
+          <input
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 mb-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="grid-zip"
+            type="file"
+            accept=".png, .jpg, .jpeg"
+            required
+            multiple
+            name="blurred_images"
+            onChange={upload}
+          />
           <label
             className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="comments"
@@ -224,7 +223,7 @@ const PostForm = () => {
             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"
           ></textarea>
         </div>
-        <div className="w-full md:w-1/2 px-3">
+        <div className="w-full md:w-1/2 px-3 mt-2">
           <button className="w-full bg-gray-200 hover:bg-emerald-300 hover:text-white border border-emerald-300 rounded py-3 text-slate-500">
             {t("postForm.submitButton")}
           </button>
