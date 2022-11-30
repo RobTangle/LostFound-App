@@ -1,5 +1,6 @@
 //check if user existe en db
 import { URL_EXISTS_IN_DB } from "../constants/url";
+import accessTokenName from "../constants/accessToken";
 
 export async function userExist(
   user,
@@ -8,11 +9,9 @@ export async function userExist(
   getAccessTokenSilently
 ) {
   const claims = await getAccessTokenSilently();
-  localStorage.setItem("token", claims);
-  try
-  {
-    if (isAuthenticated && user)
-    {
+  localStorage.setItem(accessTokenName, claims);
+  try {
+    if (isAuthenticated && user) {
       let exist = await fetch(
         URL_EXISTS_IN_DB, // El user_id va por Token:
         {
@@ -21,17 +20,14 @@ export async function userExist(
           },
         }
       ).then((response) => response.json());
-      if (exist.msg)
-      {
+      if (exist.msg) {
         navigate("/home");
       }
-      if (exist.msg === false)
-      {
+      if (exist.msg === false) {
         navigate("/register");
       }
     }
-  } catch (error)
-  {
+  } catch (error) {
     console.log(`Error en el Login Button`);
     console.log(error);
   }
