@@ -20,19 +20,32 @@ function Navbar() {
   };
 
   return (
-    <div className="w-full h-full min-h-[40px]  items-center mx-auto md:shadow-3xl  flex justify-between text-gray font-sans ">
+    <div className="w-full h-full min-h-[40px] items-center mx-auto md:shadow-3xl flex justify-between text-gray font-sans ">
       <div className="md:hidden">
+        <div className="mt-4">
+          <Link
+            className="text-2xl font-bold font-heading text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-600 to-indigo-700 ml-4 mt"
+            to="/home"
+          >
+            LOST
+            <span className="font-heading text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-700">
+              FOUND
+            </span>
+          </Link>
+        </div>
         {menu ? (
           <button
             className="text-2xl absolute right-5 top-5 z-50"
-            onClick={handleMenu}>
+            onClick={handleMenu}
+          >
             <VscClose />
           </button>
         ) : (
           <>
             <button
               className="text-2xl absolute right-5 top-5 z-50"
-              onClick={handleMenu}>
+              onClick={handleMenu}
+            >
               <BiMenu />
             </button>
           </>
@@ -69,7 +82,7 @@ function Navbar() {
                 text={t("navbar.contact")}
               />
               <NavbarLink
-                path="/home/profile"
+                path="/profile"
                 divStyle="hover:text-blue duration-300 transition-all"
                 text={t("navbar.profile")}
               />
@@ -86,8 +99,11 @@ function Navbar() {
       <div className="hidden mx-auto md:flex md:w-full items-center justify-between md:py-3 md:px-5 md:gap-8  md:text-gray text-sm">
         <div>
           <Link
-            className="text-lg font-bold font-heading text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-600 to-indigo-700"
-            to="/home">
+
+            className="text-medium font-bold font-heading text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-600 to-indigo-700"
+            to="/home"
+          >
+
             LOST
             <span className="font-heading text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-700">
               FOUND
@@ -119,7 +135,7 @@ function Navbar() {
             />
             <div className="flex gap-3 items-center">
               <NavbarLink
-                path="/home/profile"
+                path="/profile"
                 divStyle="hover:text-blue text-xl duration-300 transition-all"
                 text={<FaUserCircle />}
               />

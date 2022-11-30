@@ -1,7 +1,10 @@
 export const postForm = {
   nameLabel: "Nombre completo",
+  imageLabel: "Imágenes del documento",
+  nameSubLabel: "como figura en el documento encontrado",
   namePlaceholder: "Juan Pérez",
   numberLabel: "DNI / Número de Tarjeta",
+  numberSubLabel: "del documento encontrado",
   numberPlaceholder: "34.523.110 / 65-39201/04",
   countryLabel: "País donde lo encontraste",
   dateLabel: "Fecha en que lo encontró",

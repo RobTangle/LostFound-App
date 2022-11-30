@@ -5,6 +5,7 @@ import { searchForm } from "./searchForm";
 import { registerForm } from "./registerForm";
 import { subscriptionForm } from "./subscriptionForm";
 import { navbar } from "./navbar";
+import { profile } from "./profile";
 
 export const eng = {
   landing: landing,
@@ -13,5 +14,6 @@ export const eng = {
   postForm: postForm,
   registerForm: registerForm,
   subscriptionForm: subscriptionForm,
-  navbar:navbar
+  navbar: navbar,
+  profile: profile,
 };

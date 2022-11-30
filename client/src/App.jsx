@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Landing, Home, Register, Search, Post, Found } from "./views";
+import { Landing, Home, Register, Search, Found, Profile } from "./views";
 import SubscriptionForm from "./components/SubscriptionForm/SubscriptionForm";
 
 function App() {
@@ -8,11 +8,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/post" element={<Found />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/register" element={<Register />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/post" element={<Post />} />
-        <Route path="/found" element={<Found />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/subscription" element={<SubscriptionForm />} />
       </Routes>
     </BrowserRouter>
