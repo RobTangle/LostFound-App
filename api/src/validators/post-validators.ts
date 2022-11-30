@@ -7,6 +7,7 @@ import {
   stringContainsURLs,
 } from "./genericValidators";
 import { arrayOfCountriesTwoChars } from "../miscellanea/CountiesArrays";
+import { IUserPosting } from "../mongoDB/models/Post";
 
 // VALIDATE UPDATE POST DATA :
 export function validateUpdatePostData(bodyFromReq: any): {
@@ -45,7 +46,7 @@ export function validatePost(bodyFromReq: any): {
   date_found: any;
   blurred_imgs: string[];
   comments: string | undefined;
-  user_posting: IUser;
+  user_posting: IUserPosting;
 } {
   const {
     name_on_doc,
@@ -55,6 +56,7 @@ export function validatePost(bodyFromReq: any): {
     blurred_imgs,
     comments,
     user_posting,
+    additional_contact_info,
   } = bodyFromReq;
 
   const validatedPost = {
@@ -64,7 +66,7 @@ export function validatePost(bodyFromReq: any): {
     date_found: checkAndParseDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
     comments: checkComments(comments),
-    user_posting: checkUserPosting(user_posting),
+    user_posting: checkUserPosting(user_posting, additional_contact_info),
   };
   return validatedPost;
 }
@@ -140,11 +142,30 @@ function checkComments(commentsFromReq: any): string | undefined {
   );
 }
 
-function checkUserPosting(userPosting: any): IUser {
+function checkUserPosting(
+  userPosting: any,
+  additional_contact_info: string | undefined
+): IUserPosting {
   if (isFalsyArgument(userPosting)) {
     throw new Error(
       `Error in validation: The user posting can't be a falsy value.`
     );
   }
-  return userPosting;
+
+  let userPostingObj: IUserPosting = {
+    _id: userPosting._id,
+    name: userPosting.name,
+    email: userPosting.email,
+    profile_img: userPosting.profile_img,
+  };
+  if (additional_contact_info) {
+    if (stringContainsURLs(additional_contact_info)) {
+      throw new Error("The additional contact information has URLs.");
+    }
+  }
+  if (isStringBetween1AndXCharsLong(150, additional_contact_info)) {
+    userPostingObj.additional_contact_info = additional_contact_info;
+  }
+
+  return userPostingObj;
 }

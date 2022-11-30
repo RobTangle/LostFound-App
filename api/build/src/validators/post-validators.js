@@ -19,7 +19,7 @@ function validateUpdatePostData(bodyFromReq) {
 exports.validateUpdatePostData = validateUpdatePostData;
 // VALIDATE NEW POST :
 function validatePost(bodyFromReq) {
-    const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, user_posting, } = bodyFromReq;
+    const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, user_posting, additional_contact_info, } = bodyFromReq;
     const validatedPost = {
         name_on_doc: checkNameOnDoc(name_on_doc),
         number_on_doc: checkNumberOnDoc(number_on_doc),
@@ -27,7 +27,7 @@ function validatePost(bodyFromReq) {
         date_found: (0, genericValidators_1.checkAndParseDate)(date_found),
         blurred_imgs: checkBlurredImgs(blurred_imgs),
         comments: checkComments(comments),
-        user_posting: checkUserPosting(user_posting),
+        user_posting: checkUserPosting(user_posting, additional_contact_info),
     };
     return validatedPost;
 }
@@ -99,9 +99,23 @@ function checkComments(commentsFromReq) {
     }
     throw new Error(`The comment entered is invalid. Please, enter a text of no more than ${maxLength} characters long or leave the input empty.`);
 }
-function checkUserPosting(userPosting) {
+function checkUserPosting(userPosting, additional_contact_info) {
     if ((0, genericValidators_1.isFalsyArgument)(userPosting)) {
         throw new Error(`Error in validation: The user posting can't be a falsy value.`);
     }
-    return userPosting;
+    let userPostingObj = {
+        _id: userPosting._id,
+        name: userPosting.name,
+        email: userPosting.email,
+        profile_img: userPosting.profile_img,
+    };
+    if (additional_contact_info) {
+        if ((0, genericValidators_1.stringContainsURLs)(additional_contact_info)) {
+            throw new Error("The additional contact information has URLs.");
+        }
+    }
+    if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(150, additional_contact_info)) {
+        userPostingObj.additional_contact_info = additional_contact_info;
+    }
+    return userPostingObj;
 }

@@ -39,7 +39,7 @@ function handleNewPostRequest(req, res) {
             const newPostToValidate = Object.assign(Object.assign({}, req.body), { user_posting: userInDB });
             const validatedPost = (0, post_validators_1.validatePost)(newPostToValidate);
             const newPost = yield mongoDB_1.Post.create(validatedPost);
-            userInDB.posts.push(newPost._id);
+            userInDB.posts.push(newPost);
             yield userInDB.save();
             res.status(200).send(newPost);
             // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
@@ -84,8 +84,8 @@ function handleUpdateRequest(req, res) {
             if (!post_id || !user_id) {
                 throw new Error(`El id de la publicación y el id del usuario deben ser válidos.`);
             }
-            const updatedDocument = yield (0, post_r_auxiliary_1.handleUpdatePost)(post_id, req.body, user_id);
-            return res.status(200).send(updatedDocument);
+            const updateResponse = yield (0, post_r_auxiliary_1.handleUpdatePost)(post_id, req.body, user_id);
+            return res.status(updateResponse.status).send(updateResponse);
         }
         catch (error) {
             console.log(`Error en ruta PUT "/post/:_id. ${error.message}`);
@@ -128,7 +128,7 @@ function handleDeletePostRequest(req, res) {
                 throw new Error(`El id de la publicación y el id del usuario deben ser válidos.`);
             }
             const deleteResults = yield (0, post_r_auxiliary_1.findPostByIdAndDeleteIt)(post_id, user_id);
-            return res.status(200).send(deleteResults);
+            return res.status(deleteResults.status).send(deleteResults);
         }
         catch (error) {
             console.log(`Error en ruta DELETE "post/:_id". ${error.message}`);
