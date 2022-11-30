@@ -13,12 +13,13 @@ import { header } from "../../../constants/header";
 //     }
 //   };
 // }
-export function searchPost({ name, number, country, date_lost }) {
+export function searchPost({ name, number, country, date_lost }, token) {
   return async function (dispatch) {
     try {
       let response = await axios.get(
         URL_P_G_SEARCH_BY_QUERY +
-          `?name=${name}&number=${number}&country=${country}&date_lost=${date_lost}`
+          `?name=${name}&number=${number}&country=${country}&date_lost=${date_lost}`,
+        header(token)
       );
       return dispatch(getSearch(response.data));
     } catch (error) {
