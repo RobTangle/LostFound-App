@@ -13,7 +13,7 @@ module.exports = {
       },
       backgroundImage: {
         landing: "url('URLDEIMAGEN')",
-        home: "url('URLDEIMAGEN')",
+        home: "url('../public/bg.svg')",
         home1: "url('URLDEIMAGEN')",
         home2: "url('URLDEIMAGEN')",
         search:

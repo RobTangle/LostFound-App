@@ -77,11 +77,11 @@ export function Landing() {
                 <LoginButton style="border-solid border-b-2 text-green px-3 py-2  " />
               </div>
             </div>
-            <div className="flex w-full mx-5 items-center justify-center mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128">
+            <div className="flex w-full mx-5 items-center justify-center mt-8 lg:mt-0 h-72 sm:h-80 max-w-[550px]">
               <img
                 src={lostWallet}
                 alt=""
-                className="object-contain h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128 "
+                className="object-contain w-full-h-full "
               />
             </div>
           </div>
