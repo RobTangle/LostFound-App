@@ -6,6 +6,7 @@ import { getCountries } from "../../redux/features/user/userThunk";
 import { postFormValidator } from "../../helpers/post-form-validator";
 import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const PostForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -13,7 +14,7 @@ const PostForm = () => {
   const dispatch = useDispatch();
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
-
+  const { getAccessTokenSilently } = useAuth0();
   //CLOUDINARY-------------------------------------
   //eslint-disable-next-line
 
@@ -58,7 +59,7 @@ const PostForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validation = postFormValidator(post, t);
     if (validation.error) {
@@ -66,8 +67,9 @@ const PostForm = () => {
       errorMessage = validation.error;
     }
     if (validation === true) {
+      const accessToken = await getAccessTokenSilently();
       console.log("Despachando createPost !", post);
-      // dispatch(createPost(post));
+      // dispatch(createPost(post, accessToken));
     }
   };
 
@@ -75,7 +77,6 @@ const PostForm = () => {
     !countries.lenght && dispatch(getCountries(currentLang));
   }, [dispatch]);
 
-  // console.log("ACAAA", countries);
   return (
     <div className="grid md:flex">
       <div className="grid">
