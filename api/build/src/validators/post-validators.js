@@ -103,5 +103,11 @@ function checkUserPosting(userPosting) {
     if ((0, genericValidators_1.isFalsyArgument)(userPosting)) {
         throw new Error(`Error in validation: The user posting can't be a falsy value.`);
     }
-    return userPosting;
+    let userPostingObj = {
+        _id: userPosting._id,
+        name: userPosting.name,
+        email: userPosting.email,
+        profile_img: userPosting.profile_img,
+    };
+    return userPostingObj;
 }

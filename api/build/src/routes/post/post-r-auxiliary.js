@@ -101,7 +101,7 @@ function handleUpdatePost(post_id, reqFromBody, user_id) {
         }
         const validatedData = (0, post_validators_1.validateUpdatePostData)(reqFromBody);
         const postInDB = yield mongoDB_1.Post.findById(post_id).exec();
-        const userInDB = yield mongoDB_1.User.findById(user_id, { _id: 1 }).lean().exec();
+        const userInDB = yield mongoDB_1.User.findById(user_id).exec();
         if (postInDB === null) {
             throw new Error(`Post con id "${post_id}" no fue encontrado en la base de datos.`);
         }
@@ -111,24 +111,51 @@ function handleUpdatePost(post_id, reqFromBody, user_id) {
         if (postInDB.user_posting._id !== userInDB._id) {
             throw new Error(`El id del post no pertenece al usuario que desea modificarlo.`);
         }
-        // let validatedDataKeys: string[] = Object.keys(validatedData);
-        // for (let i = 0; i < validatedDataKeys.length; i++) {
-        //   const element = validatedDataKeys[i];
-        //   postInDB[element] = validatedData[element];
-        // }
-        postInDB.name_on_doc = validatedData.name_on_doc;
-        postInDB.number_on_doc = validatedData.number_on_doc;
-        postInDB.country_found = validatedData.country_found;
-        postInDB.date_found = validatedData.date_found;
-        postInDB.blurred_imgs = validatedData.blurred_imgs;
-        postInDB.comments = validatedData.comments;
-        yield postInDB.save();
-        return postInDB;
+        let response = {
+            userPost: 0,
+            postCollection: 0,
+            total: 0,
+            msg: "",
+            status: 200,
+        };
+        try {
+            // editar en collection Post:
+            postInDB.name_on_doc = validatedData.name_on_doc;
+            postInDB.number_on_doc = validatedData.number_on_doc;
+            postInDB.country_found = validatedData.country_found;
+            postInDB.date_found = validatedData.date_found;
+            postInDB.blurred_imgs = validatedData.blurred_imgs;
+            postInDB.comments = validatedData.comments;
+            yield postInDB.save();
+            response.postCollection++;
+            response.total++;
+            // editar en User.posts:
+            let userPost = userInDB.posts.id(post_id);
+            if (userPost) {
+                userPost.name_on_doc = validatedData.name_on_doc;
+                userPost.number_on_doc = validatedData.number_on_doc;
+                userPost.country_found = validatedData.country_found;
+                userPost.date_found = validatedData.date_found;
+                userPost.blurred_imgs = validatedData.blurred_imgs;
+                userPost.comments = validatedData.comments;
+                yield userInDB.save();
+                response.userPost++;
+                response.total++;
+            }
+        }
+        catch (error) {
+            response.msg = error.message;
+            response.status = 400;
+        }
+        finally {
+            return response;
+        }
     });
 }
 exports.handleUpdatePost = handleUpdatePost;
 // DELETE POST :
 function findPostByIdAndDeleteIt(post_id, user_id) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         if (!post_id || !user_id) {
             throw new Error(`El id del Post y el id del usuario deben ser válidos.`);
@@ -145,23 +172,37 @@ function findPostByIdAndDeleteIt(post_id, user_id) {
         if (postInDB.user_posting._id !== userInDB._id) {
             throw new Error(`El post que se quiere eliminar no pertenece al usuario con id "${user_id}"`);
         }
-        let postsDeleted = {
+        let response = {
             userPosts: 0,
-            postDocument: null,
+            postCollection: 0,
+            total: 0,
+            msg: "",
+            status: 200,
         };
-        //borrar referencia en User.posts:
-        for (let i = 0; i < userInDB.posts.length; i++) {
-            const element = userInDB.posts[i];
-            if (element == postInDB._id) {
-                userInDB.posts.splice(i, 1);
-                postsDeleted.userPosts++;
+        try {
+            // buscar y borrar post de User.posts:
+            let userPostRemoved = yield ((_a = userInDB.posts.id(post_id)) === null || _a === void 0 ? void 0 : _a.remove());
+            if (userPostRemoved) {
+                console.log("chequeo si el post ya fue removido antes de hacer el await userInDB.save() = ", userInDB);
+                yield userInDB.save();
+                console.log("después del userInDB.save(), consologueo el userInDB = ", userInDB);
+                response.userPosts++;
+                response.total++;
+            }
+            // buscar y borrar documento en collection Post:
+            const deletedPost = yield mongoDB_1.Post.findByIdAndDelete(post_id).exec();
+            if (deletedPost) {
+                response.postCollection++;
+                response.total++;
             }
         }
-        yield userInDB.save();
-        // borrar documento en collection Post:
-        const deletedPost = yield mongoDB_1.Post.findByIdAndDelete(post_id).exec();
-        postsDeleted.postDocument = deletedPost;
-        return postsDeleted;
+        catch (error) {
+            response.status = 400;
+            response.msg = error.message;
+        }
+        finally {
+            return response;
+        }
     });
 }
 exports.findPostByIdAndDeleteIt = findPostByIdAndDeleteIt;

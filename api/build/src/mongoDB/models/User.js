@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userSchema = void 0;
 const mongoose_1 = require("mongoose");
+const Post_1 = require("./Post");
 const Subscription_1 = require("./Subscription");
 exports.userSchema = new mongoose_1.Schema({
     _id: { type: String, required: true },
@@ -17,7 +18,7 @@ exports.userSchema = new mongoose_1.Schema({
         required: false,
         default: "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
     },
-    posts: [{ type: String, ref: "Post" }],
+    posts: [Post_1.postSchema],
     // Suscripciones de alertas. [{query}, {query}] MAX 5.
     subscriptions: [Subscription_1.subscriptionSchema],
 }, { timestamps: true });
