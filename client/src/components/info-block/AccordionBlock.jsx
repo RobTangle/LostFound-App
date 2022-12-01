@@ -11,9 +11,17 @@ export default function AccordionBlock({
   img,
   mainColor,
 }) {
+  const bgColor = mainColor === "green" ? "#27995a" : "#2676fc";
+  const accordionVariants = {
+    unselected: { backgroundColor: "#fff" },
+    selected: { backgroundColor: bgColor, fontColor: "#fff" },
+  };
   return (
     <motion.div
-      className={`w-full md:flex md:items-center mx-auto grid grid-cols-3 items-center`}>
+      className={`w-full md:flex md:items-center mx-auto grid grid-cols-3 items-center`}
+      variants={accordionVariants}
+      initial="unselected"
+      animate={buttonAnimateBool ? "unselected" : "selected"}>
       <div className="w-20 md:w-32 mx-auto">
         <img
           className="object-cover w-full  h-full object-center"
@@ -31,7 +39,9 @@ export default function AccordionBlock({
         </motion.p>
       </div>
       <motion.button
-        className={`text-${mainColor} text-2xl md:mx-6 mx-auto col-span-3 animate animate-pulse`}
+        className={`text-${
+          buttonAnimateBool ? mainColor : "white"
+        } text-2xl md:mx-6 mx-auto col-span-3 animate animate-pulse`}
         onClick={handleButton}
         variants={button_variants}
         animate={buttonAnimateBool ? "open" : "closed"}>
