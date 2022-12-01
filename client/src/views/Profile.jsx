@@ -42,6 +42,7 @@ export const Profile = () => {
 
   console.log("user =", user);
   console.log("userProfile = ", userProfile);
+
   return (
     <div>
       <Navbar />

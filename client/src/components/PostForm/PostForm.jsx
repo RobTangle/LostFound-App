@@ -21,27 +21,6 @@ const PostForm = () => {
   //CLOUDINARY-------------------------------------
   //eslint-disable-next-line
 
-  const CLOUD_NAME = "lostfound";
-  const UPLOAD_PRESET = "dyzge4vha";
-
-  const upload = async (e) => {
-    const img = e.target.files[0];
-    const data = new FormData();
-    data.append("file", img);
-    data.append("upload_preset", CLOUD_NAME);
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${UPLOAD_PRESET}/image/upload`,
-      { method: "POST", body: data }
-    );
-    const dataNew = await response.json();
-    setPost({
-      ...post,
-      blurred_imgs: dataNew.secure_url,
-    });
-    // reemplazar con un mensaje de éxito o la acción deseada
-  };
-  //-------------------------------------------------------------
-
   const [post, setPost] = useState({
     name_on_doc: "",
     number_on_doc: "",
@@ -52,6 +31,7 @@ const PostForm = () => {
     additional_contact_info: "",
   });
 
+  const [image, setImage] = useState("");
   const maxDateAllowed = parseDateToSetMaxDate();
 
   // MENSAJE DE ERROR AL SUBMITEAR :
@@ -60,6 +40,26 @@ const PostForm = () => {
     setPost({
       ...post,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleImage = async (e) => {
+    const image = e.target.files[0];
+    // console.log(typeof image);
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "ilrqfhcn");
+    data.append("cloud_name", "dtfcydx7h");
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/dtfcydx7h/image/upload`,
+      { method: "POST", body: data }
+    );
+    const dataNew = await response.json();
+    console.log(dataNew);
+    setPost({
+      ...post,
+      blurred_imgs: dataNew.secure_url,
     });
   };
 
@@ -83,6 +83,15 @@ const PostForm = () => {
         if (response.status === 201) {
           alert("Publicación creada exitosamente");
           console.log(response);
+          setPost({
+            name_on_doc: "",
+            number_on_doc: "",
+            country_found: "",
+            date_found: "",
+            blurred_imgs: "",
+            comments: "",
+            additional_contact_info: "",
+          });
         }
         if (response.status >= 400) {
           alert("Algo salió mal. " + response.data?.error);
@@ -226,7 +235,7 @@ const PostForm = () => {
             accept=".png, .jpg, .jpeg"
             multiple
             name="blurred_images"
-            onChange={upload}
+            onChange={handleImage}
           />
           <label
             className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
