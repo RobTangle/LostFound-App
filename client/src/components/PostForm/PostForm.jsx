@@ -26,7 +26,7 @@ const PostForm = () => {
     number_on_doc: "",
     country_found: "",
     date_found: "",
-    blurred_imgs: "",
+    blurred_imgs: [],
     comments: "",
     additional_contact_info: "",
   });
@@ -59,7 +59,7 @@ const PostForm = () => {
     console.log(dataNew);
     setPost({
       ...post,
-      blurred_imgs: dataNew.secure_url,
+      blurred_imgs: [dataNew.secure_url],
     });
   };
 
@@ -88,7 +88,7 @@ const PostForm = () => {
             number_on_doc: "",
             country_found: "",
             date_found: "",
-            blurred_imgs: "",
+            blurred_imgs: [],
             comments: "",
             additional_contact_info: "",
           });
