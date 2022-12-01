@@ -35,7 +35,7 @@ function handleCreateNewSubscriptionRequest(req, res) {
                 throw new Error(`El user id '${user_id}' es inválido.`);
             }
             const objToReturn = yield (0, subscription_r_auxiliary_1.handleNewSubscription)(req.body, user_id);
-            return res.status(200).send(objToReturn);
+            return res.status(201).send(objToReturn);
         }
         catch (error) {
             console.log(`Error en POST 'subscription/'. ${error.message}`);

@@ -12,7 +12,7 @@ exports.postSchema = new mongoose_1.Schema({
     number_on_doc: {
         type: String,
         maxlength: 100,
-        required: true,
+        required: false,
         lowercase: true,
     },
     country_found: { type: String, required: true, uppercase: true },

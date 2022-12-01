@@ -55,6 +55,9 @@ function checkNameOnDoc(nameFromReq) {
 }
 exports.checkNameOnDoc = checkNameOnDoc;
 function checkNumberOnDoc(numberOnDocFromReq) {
+    if (!numberOnDocFromReq) {
+        return undefined;
+    }
     if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(100, numberOnDocFromReq)) {
         // estos métodos dejan afuera las letras con tíldes. Pero como debería ser un número, no deberían haber caracteres de ese tipo.
         let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
