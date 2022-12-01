@@ -13,7 +13,7 @@ export default function AccordionBlock({
 }) {
   return (
     <motion.div
-      className={`w-full md:flex md:items-center md:border-b-4 border-${mainColor} mx-auto grid grid-cols-3 items-center`}>
+      className={`w-full md:flex md:items-center mx-auto grid grid-cols-3 items-center`}>
       <div className="w-20 md:w-32 mx-auto">
         <img
           className="object-cover w-full  h-full object-center"
