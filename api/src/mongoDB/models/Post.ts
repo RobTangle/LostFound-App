@@ -3,7 +3,7 @@ import { Date, Schema } from "mongoose";
 export interface IPost {
   _id?: string;
   name_on_doc: string;
-  number_on_doc: string;
+  number_on_doc?: string;
   country_found: string;
   date_found: Date;
   blurred_imgs: string[];
@@ -30,7 +30,7 @@ export const postSchema: Schema = new Schema<IPost>(
     number_on_doc: {
       type: String,
       maxlength: 100,
-      required: true,
+      required: false,
       lowercase: true,
     },
     country_found: { type: String, required: true, uppercase: true },

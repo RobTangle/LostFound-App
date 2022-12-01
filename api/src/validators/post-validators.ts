@@ -12,7 +12,7 @@ import { IUserPosting } from "../mongoDB/models/Post";
 // VALIDATE UPDATE POST DATA :
 export function validateUpdatePostData(bodyFromReq: any): {
   name_on_doc: string;
-  number_on_doc: string;
+  number_on_doc: string | undefined;
   country_found: string;
   date_found: any;
   blurred_imgs: string[];
@@ -46,7 +46,7 @@ export function validateUpdatePostData(bodyFromReq: any): {
 // VALIDATE NEW POST :
 export function validatePost(bodyFromReq: any): {
   name_on_doc: string;
-  number_on_doc: string;
+  number_on_doc: string | undefined;
   country_found: string;
   date_found: any;
   blurred_imgs: string[];
@@ -102,7 +102,10 @@ export function checkNameOnDoc(nameFromReq: any): string {
   throw new Error(`El nombre en el documento "${nameFromReq} no es válido.`);
 }
 
-export function checkNumberOnDoc(numberOnDocFromReq: any): string {
+export function checkNumberOnDoc(numberOnDocFromReq: any): string | undefined {
+  if (!numberOnDocFromReq) {
+    return undefined;
+  }
   if (isStringBetween1AndXCharsLong(100, numberOnDocFromReq)) {
     // estos métodos dejan afuera las letras con tíldes. Pero como debería ser un número, no deberían haber caracteres de ese tipo.
     let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
