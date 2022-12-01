@@ -12,6 +12,11 @@ export const postForm = {
   title: "Encontraste documentos?",
   commentsLabel: "Comentarios",
   commentsPlaceHolder: "Comentarios relevantes",
+  additional_contact_info_label: "INFORMACIÓN DE CONTACTO ADICIONAL",
+  additional_contacto_info_sub:
+    "Sólo le mostraremos esta información al usuario que se quiera contactar contigo. Campo no obligatorio",
+  additional_contact_info_placeholder:
+    "Información de contacto adicional a su email",
   subtitle: "Completá el formulario para publicar un aviso",
   submitButton: "Crear aviso",
   //errors:
@@ -26,4 +31,6 @@ export const postForm = {
     "Por favor, ingrese la fecha en la que encontró el documento.",
   errorDateInvalid: "La fecha ingresada es inválida.",
   errorCommentsLength: "El comentario no puede tener más de 800 caracteres.",
+  errorAdditional_contact_info_length:
+    "La información de contacto adicional excede la cantidad de caracteres permitidos.",
 };
