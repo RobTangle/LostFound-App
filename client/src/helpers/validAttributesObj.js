@@ -13,6 +13,10 @@ export const validAttr = {
     maxLength: 800,
     minLength: 0,
   },
+  additional_contact_info: {
+    maxLength: 150,
+    minLength: 0,
+  },
   // USER PROFILE :
   email: {
     maxLength: 100,

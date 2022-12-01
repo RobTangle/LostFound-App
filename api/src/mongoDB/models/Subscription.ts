@@ -8,7 +8,7 @@ import { Schema } from "mongoose";
 
 export interface ISubscription {
   name_on_doc: string;
-  number_on_doc: string;
+  number_on_doc?: string;
   country_lost: string;
   date_lost: Date;
   user_subscribed: { _id: string; name: string; email: string };
@@ -24,7 +24,7 @@ export const subscriptionSchema: Schema = new Schema<ISubscription>({
   number_on_doc: {
     type: String,
     maxlength: 100,
-    required: true,
+    required: false,
     lowercase: true,
   },
   country_lost: { type: String, required: true, uppercase: true },

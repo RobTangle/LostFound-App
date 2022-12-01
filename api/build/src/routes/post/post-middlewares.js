@@ -41,7 +41,7 @@ function handleNewPostRequest(req, res) {
             const newPost = yield mongoDB_1.Post.create(validatedPost);
             userInDB.posts.push(newPost);
             yield userInDB.save();
-            res.status(200).send(newPost);
+            res.status(201).send(newPost);
             // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
             let resultOfSendingAlerts = yield (0, nodemailer_1.handleAlertAfterNewPost)(newPost);
             console.log(resultOfSendingAlerts);

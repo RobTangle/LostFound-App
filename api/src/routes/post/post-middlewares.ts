@@ -40,7 +40,7 @@ export async function handleNewPostRequest(req: JWTRequest, res: Response) {
     const newPost = await Post.create(validatedPost);
     userInDB.posts.push(newPost);
     await userInDB.save();
-    res.status(200).send(newPost);
+    res.status(201).send(newPost);
     // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
     let resultOfSendingAlerts = await handleAlertAfterNewPost(newPost);
     console.log(resultOfSendingAlerts);

@@ -7,8 +7,14 @@ import { validAttr } from "./validAttributesObj";
 
 export function postFormValidator(post, t) {
   try {
-    const { name_on_doc, number_on_doc, country_found, date_found, comments } =
-      post;
+    const {
+      name_on_doc,
+      number_on_doc,
+      country_found,
+      date_found,
+      comments,
+      additional_contact_info,
+    } = post;
     if (
       !isStringBetweenXAndYCharsLong(
         validAttr.name_on_doc.minLength,
@@ -47,6 +53,13 @@ export function postFormValidator(post, t) {
     }
     if (!isValidDateBoolean(date_found)) {
       throw new Error(t("postForm.errorDateInvalid"));
+    }
+    if (
+      additional_contact_info &&
+      additional_contact_info?.length >
+        validAttr.additional_contact_info.maxLength
+    ) {
+      throw new Error(t("postForm.errorAdditional_contact_info_length"));
     }
     return true;
   } catch (error) {

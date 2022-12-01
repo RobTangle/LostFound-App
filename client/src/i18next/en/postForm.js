@@ -12,6 +12,11 @@ export const postForm = {
   title: "Found some documents?",
   commentsPlaceHolder: "Insert any relevant comments here",
   commentsLabel: "Comments",
+  additional_contact_info_label: "ADDITIONAL CONTACT INFORMATION",
+  additional_contacto_info_sub:
+    "We'll only show this information to the user that wants to contact you. This field is optional",
+  additional_contact_info_placeholder:
+    "Contact information (beside your email)",
   subtitle: "Complete the fields to create an announcement",
   submitButton: "Submit",
   // errors:
@@ -27,4 +32,6 @@ export const postForm = {
   errorDateFalsy: "You must enter a valid date.",
   errorCommentsLength:
     "The comments is too long. Maximum 800 characters allowed.",
+  errorAdditional_contact_info_length:
+    "The additional contact information data has too many characters.",
 };

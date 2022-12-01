@@ -32,7 +32,7 @@ export async function handleCreateNewSubscriptionRequest(
       throw new Error(`El user id '${user_id}' es inválido.`);
     }
     const objToReturn = await handleNewSubscription(req.body, user_id);
-    return res.status(200).send(objToReturn);
+    return res.status(201).send(objToReturn);
   } catch (error: any) {
     console.log(`Error en POST 'subscription/'. ${error.message}`);
     return res.status(400).send({ error: error.message });
