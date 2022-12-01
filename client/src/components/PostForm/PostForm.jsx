@@ -7,6 +7,9 @@ import { postFormValidator } from "../../helpers/post-form-validator";
 import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
+import { URL_P_PO_NEW_POST } from "../../constants/url";
+import { header } from "../../constants/header";
 
 const PostForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -46,6 +49,7 @@ const PostForm = () => {
     date_found: "",
     blurred_imgs: "",
     comments: "",
+    additional_contact_info: "",
   });
 
   const maxDateAllowed = parseDateToSetMaxDate();
@@ -64,12 +68,31 @@ const PostForm = () => {
     const validation = postFormValidator(post, t);
     if (validation.error) {
       console.log(`Error en la validación: ${validation.error}`);
+      alert(validation.error);
       errorMessage = validation.error;
     }
     if (validation === true) {
       const accessToken = await getAccessTokenSilently();
       console.log("Despachando createPost !", post);
-      // dispatch(createPost(post, accessToken));
+      try {
+        const response = await axios.post(
+          URL_P_PO_NEW_POST,
+          post,
+          header(accessToken)
+        );
+        if (response.status === 201) {
+          alert("Publicación creada exitosamente");
+          console.log(response);
+        }
+        if (response.status >= 400) {
+          alert("Algo salió mal. " + response.data?.error);
+          console.log(response);
+        }
+      } catch (error) {
+        alert("Hubo un error. " + error.message);
+        console.log(error);
+        // dispatch(createPost(post, accessToken));
+      }
     }
   };
 
@@ -201,7 +224,6 @@ const PostForm = () => {
             id="grid-zip"
             type="file"
             accept=".png, .jpg, .jpeg"
-            required
             multiple
             name="blurred_images"
             onChange={upload}
@@ -223,6 +245,27 @@ const PostForm = () => {
             maxLength={validAttr.comments.maxLength}
             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"
           ></textarea>
+        </div>
+        <div className="w-full md:w-1/2 px-3 mt-4">
+          <label
+            className=" tracking-wide text-gray-700 text-xs font-bold mb-2 grid"
+            htmlFor="grid-last-name"
+          >
+            {t("postForm.additional_contact_info_label")}
+            <span className="font-light">
+              ({t("postForm.additional_contacto_info_sub")})
+            </span>
+          </label>
+          <textarea
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="grid-last-name"
+            name="additional_contact_info"
+            value={post.additional_contact_info}
+            maxLength={validAttr.additional_contact_info.maxLength}
+            type="text"
+            placeholder={t("postForm.additional_contact_info_placeholder")}
+            onChange={handleChange}
+          />
         </div>
         <div className="w-full md:w-1/2 px-3 mt-2">
           <button className="w-full bg-gray-200 hover:bg-emerald-300 hover:text-white border border-emerald-300 rounded py-3 text-slate-500">
