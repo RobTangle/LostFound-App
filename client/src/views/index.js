@@ -5,3 +5,4 @@ export { Register } from "./Register";
 export { Search } from "./Search";
 export { Found } from "./Found";
 export { Profile } from "./Profile";
+export { Error404 } from "./Error404";

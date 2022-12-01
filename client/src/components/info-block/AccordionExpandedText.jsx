@@ -6,13 +6,12 @@ export default function AccordionExpandedText({
   text1,
   text2,
   text3,
-  desktop,
 }) {
   return (
     <div
       hidden={hiddenProp}
-      className={`bg-${mainColor}/80 mt-4  rounded-sm px-5 py-3 text-white `}>
-      <div className="flex flex-col gap-3">
+      className={` w-full  md:px-8 md:py-5  px-5 py-3 text-white  ${mainColor}`}>
+      <div className="flex flex-col gap-3 md:text-lg">
         <p>{text1}</p>
         <p>{text2}</p>
         <p>{text3}</p>

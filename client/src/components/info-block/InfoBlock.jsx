@@ -14,15 +14,14 @@ export default function InfoBlock({
 }) {
   const { t } = useTranslation();
   const button_variants = {
-    closed: { rotate: 180, transition: { duration: 0.5 } },
+    closed: { rotate: 180, transition: { duration: 0.3 } },
     open: { rotate: 0 },
   };
   const containerGrowsVariants = {
-    unselected: { transition: { duration: 0.5 } },
-    selected: { fontWeight: "bold" },
+    unselected: { color:'#000',transition: { duration: 0.3 } },
+    selected: { color:'#fff'  },
   };
   const { width } = useWindowDimensions();
-  console.log("🚀 ~ file: InfoBlock.jsx ~ line 25 ~ width", width);
 
   return (
     <motion.section
@@ -33,7 +32,7 @@ export default function InfoBlock({
       exit="hidden"
       viewport={{ once: true, amount: 0.8 }}>
       <div className="font-sans flex flex-col ">
-        <div className="grid grid-cols-1 gap-8 mt-8 md:mt-16 md:flex md:gap-12 mx-5 md:mx-0 ">
+        <div className="grid grid-cols-1  mt-8 md:mt-16 md:flex md:gap-12 mx-5 md:mx-0 ">
           <AccordionBlock
             containerGrowsVariants={containerGrowsVariants}
             divAnimateBool={foundTip}
@@ -46,9 +45,8 @@ export default function InfoBlock({
           />
           {width < 640 && (
             <AccordionExpandedText
-              mobile={true}
               hiddenProp={lostTip}
-              mainColor="green"
+              mainColor="bg-green"
               text1={t("home.lostTips1")}
               text2={t("home.lostTips2")}
               text3={t("home.lostTips3")}
@@ -67,37 +65,31 @@ export default function InfoBlock({
           />
           {width < 640 && (
             <AccordionExpandedText
-              mobile={true}
               hiddenProp={foundTip}
-              mainColor="blue"
+              mainColor="bg-blue"
               text1={t("home.foundTips1")}
               text2={t("home.foundTips2")}
               text3={t("home.foundTips3")}
             />
           )}
         </div>
-        {width > 640 && (<>
+        {width > 640 && (!foundTip ? (<AccordionExpandedText
+              hiddenProp={foundTip}
+              mainColor="bg-blue"
+              text1={t("home.foundTips1")}
+              text2={t("home.foundTips2")}
+              text3={t("home.foundTips3")}
+            />): (<AccordionExpandedText
+              hiddenProp={lostTip}
+              mainColor="bg-green"
+              text1={t("home.lostTips1")}
+              text2={t("home.lostTips2")}
+              text3={t("home.lostTips3")}
+            />))}
 
-        <AccordionExpandedText
-          mobile={false}
-          hiddenProp={foundTip}
-          mainColor="blue"
-          text1={t("home.foundTips1")}
-          text2={t("home.foundTips2")}
-          text3={t("home.foundTips3")}
-          desktop={true}
-        />
-        <AccordionExpandedText
-          mobile={false}
-          hiddenProp={lostTip}
-          mainColor="green"
-          text1={t("home.lostTips1")}
-          text2={t("home.lostTips2")}
-          text3={t("home.lostTips3")}
-          desktop={true}
-          />
-          </>
-          )}
+
+
+
 
       </div>
     </motion.section>
