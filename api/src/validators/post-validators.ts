@@ -17,6 +17,7 @@ export function validateUpdatePostData(bodyFromReq: any): {
   date_found: any;
   blurred_imgs: string[];
   comments: string | undefined;
+  additional_contact_info: string | undefined;
 } {
   const {
     name_on_doc,
@@ -25,6 +26,7 @@ export function validateUpdatePostData(bodyFromReq: any): {
     date_found,
     blurred_imgs,
     comments,
+    additional_contact_info,
   } = bodyFromReq;
 
   const validatedUpdatePostData = {
@@ -34,6 +36,9 @@ export function validateUpdatePostData(bodyFromReq: any): {
     date_found: checkAndParseDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
     comments: checkComments(comments),
+    additional_contact_info: checkAdditionalContactInfo(
+      additional_contact_info
+    ),
   };
   return validatedUpdatePostData;
 }
@@ -69,6 +74,21 @@ export function validatePost(bodyFromReq: any): {
     user_posting: checkUserPosting(user_posting, additional_contact_info),
   };
   return validatedPost;
+}
+
+// CHECK ADDITIONAL CONTACT INFO :
+function checkAdditionalContactInfo(
+  addContactInfoFromReq: any
+): string | undefined {
+  if (!addContactInfoFromReq) {
+    return undefined;
+  }
+  if (isStringBetween1AndXCharsLong(150, addContactInfoFromReq)) {
+    return addContactInfoFromReq;
+  }
+  throw new Error(
+    `La información de contacto adicional '${addContactInfoFromReq}' no es válida. Ingrese una cadena de texto de hasta 150 caracteres de largo.`
+  );
 }
 
 export function checkNameOnDoc(nameFromReq: any): string {

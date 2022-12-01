@@ -102,7 +102,11 @@ function handleGetPostByIdRequest(req, res) {
             const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
             yield (0, user_auxiliaries_1.throwErrorIfUserIsNotRegisteredOrVoid)(user_id);
             const post_id = req.params._id;
-            const postFoundById = yield mongoDB_1.Post.findById(post_id).lean().exec();
+            const postFoundById = yield mongoDB_1.Post.findById(post_id, {
+                "user_posting.additional_contact_info": 0,
+            })
+                .lean()
+                .exec();
             if (postFoundById === null) {
                 return res
                     .status(404)

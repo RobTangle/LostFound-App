@@ -1,5 +1,4 @@
-import { Post, Subscription, User } from "../../mongoDB";
-import { IPost } from "../../mongoDB/models/Post";
+import { Post, User } from "../../mongoDB";
 import { validateUpdatePostData } from "../../validators/post-validators";
 import { checkAndParseDate } from "../../validators/genericValidators";
 
@@ -39,6 +38,7 @@ export async function searchPostsByQuery(
         "user_posting.posts": 0,
         "user_posting.createdAt": 0,
         "user_posting.updatedAt": 0,
+        "user_posting.additional_contact_info": 0,
       }
     )
       .lean()
@@ -47,49 +47,6 @@ export async function searchPostsByQuery(
   } catch (error: any) {
     console.log(`Error en fn aux search Posts By Query`);
     throw new Error(error.message);
-  }
-}
-
-export async function findMatchingSuscriptions(newPost: IPost) {
-  try {
-    const { name_on_doc, number_on_doc, country_found, date_found } = newPost;
-
-    // parseos y validaciones:
-    // numberOnDoc, le saco los símbolos:
-    let numberOnDocParsed;
-    if (typeof number_on_doc === "string") {
-      numberOnDocParsed = number_on_doc
-        .replace(/[^A-Za-z0-9]/g, "")
-        .toLowerCase();
-    }
-    // date_found: No necesito parsearla porque ya vino parseada por haber sido recién creada.
-
-    const findMatchingSubscriptions = await Subscription.find(
-      {
-        name_on_doc: name_on_doc,
-        number_on_doc: numberOnDocParsed,
-        country_lost: country_found,
-        date_lost: { $lte: date_found },
-      },
-      {
-        _id: 1,
-        "user_subscribed._id": 1,
-        "user_subscribed.name": 1,
-        "user_subscribed.email": 1,
-      }
-    )
-      .lean()
-      .exec();
-    // Agregar en el email un link al detalle del post nuevo que coincide con su subscription. Para eso voy a necesitar el _id del nuevo post, y meterlo en el params de la url de nuestra página para que vea el detalle de la publicación. Por ejemplo :
-    // www.lostfound.app/found/${_id}
-    // let messageInEmail = "Hello, ${subscription.user_subscribed.name}! We've got great news!!! It seems that somebody found something that matches your subscription alert criteria. Go and check it out to see if this is your lucky day!
-    // www.lostfound.app/found/${_id}
-    // findMatchingSubscriptions.forEach(subscription => {
-    // sendAlertEmailTo(subscription.user_subscribing.email, messageInEmail)
-    // })
-    return findMatchingSubscriptions;
-  } catch (error: any) {
-    console.log(`Error en fn findMatchingSuscriptions. ${error.message}`);
   }
 }
 
@@ -139,6 +96,8 @@ export async function handleUpdatePost(
     postInDB.date_found = validatedData.date_found;
     postInDB.blurred_imgs = validatedData.blurred_imgs;
     postInDB.comments = validatedData.comments;
+    postInDB.user_posting.additional_contact_info =
+      validatedData.additional_contact_info;
     await postInDB.save();
     response.postCollection++;
     response.total++;
@@ -151,6 +110,8 @@ export async function handleUpdatePost(
       userPost.date_found = validatedData.date_found;
       userPost.blurred_imgs = validatedData.blurred_imgs;
       userPost.comments = validatedData.comments;
+      userPost.user_posting.additional_contact_info =
+        validatedData.additional_contact_info;
       await userInDB.save();
       response.userPost++;
       response.total++;
@@ -231,3 +192,48 @@ export async function findPostByIdAndDeleteIt(
     return response;
   }
 }
+
+//! CREO QUE ESTA FN ESTÁ DEPRECADA!!!!!!!!!!!!!!!!
+// async function findMatchingSuscriptions(newPost: IPost) {
+//   try {
+//     const { name_on_doc, number_on_doc, country_found, date_found } = newPost;
+
+//     // parseos y validaciones:
+//     // numberOnDoc, le saco los símbolos:
+//     let numberOnDocParsed;
+//     if (typeof number_on_doc === "string") {
+//       numberOnDocParsed = number_on_doc
+//         .replace(/[^A-Za-z0-9]/g, "")
+//         .toLowerCase();
+//     }
+//     // date_found: No necesito parsearla porque ya vino parseada por haber sido recién creada.
+
+//     const findMatchingSubscriptions = await Subscription.find(
+//       {
+//         name_on_doc: name_on_doc,
+//         number_on_doc: numberOnDocParsed,
+//         country_lost: country_found,
+//         date_lost: { $lte: date_found },
+//       },
+//       {
+//         _id: 1,
+//         "user_subscribed._id": 1,
+//         "user_subscribed.name": 1,
+//         "user_subscribed.email": 1,
+//       }
+//     )
+//       .lean()
+//       .exec();
+// Agregar en el email un link al detalle del post nuevo que coincide con su subscription. Para eso voy a necesitar el _id del nuevo post, y meterlo en el params de la url de nuestra página para que vea el detalle de la publicación. Por ejemplo :
+// www.lostfound.app/found/${_id}
+// let messageInEmail = "Hello, ${subscription.user_subscribed.name}! We've got great news!!! It seems that somebody found something that matches your subscription alert criteria. Go and check it out to see if this is your lucky day!
+// www.lostfound.app/found/${_id}
+// findMatchingSubscriptions.forEach(subscription => {
+// sendAlertEmailTo(subscription.user_subscribing.email, messageInEmail)
+// })
+//     return findMatchingSubscriptions;
+//   } catch (error: any) {
+//     console.log(`Error en fn findMatchingSuscriptions. ${error.message}`);
+//   }
+// }
+//!-------------------------------

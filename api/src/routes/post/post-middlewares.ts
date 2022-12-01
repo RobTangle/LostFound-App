@@ -98,7 +98,11 @@ export async function handleGetPostByIdRequest(req: JWTRequest, res: Response) {
     const user_id = req.auth?.sub;
     await throwErrorIfUserIsNotRegisteredOrVoid(user_id);
     const post_id = req.params._id;
-    const postFoundById = await Post.findById(post_id).lean().exec();
+    const postFoundById = await Post.findById(post_id, {
+      "user_posting.additional_contact_info": 0,
+    })
+      .lean()
+      .exec();
     if (postFoundById === null) {
       return res
         .status(404)

@@ -5,7 +5,7 @@ const genericValidators_1 = require("./genericValidators");
 const CountiesArrays_1 = require("../miscellanea/CountiesArrays");
 // VALIDATE UPDATE POST DATA :
 function validateUpdatePostData(bodyFromReq) {
-    const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, } = bodyFromReq;
+    const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, additional_contact_info, } = bodyFromReq;
     const validatedUpdatePostData = {
         name_on_doc: checkNameOnDoc(name_on_doc),
         number_on_doc: checkNumberOnDoc(number_on_doc),
@@ -13,6 +13,7 @@ function validateUpdatePostData(bodyFromReq) {
         date_found: (0, genericValidators_1.checkAndParseDate)(date_found),
         blurred_imgs: checkBlurredImgs(blurred_imgs),
         comments: checkComments(comments),
+        additional_contact_info: checkAdditionalContactInfo(additional_contact_info),
     };
     return validatedUpdatePostData;
 }
@@ -32,6 +33,16 @@ function validatePost(bodyFromReq) {
     return validatedPost;
 }
 exports.validatePost = validatePost;
+// CHECK ADDITIONAL CONTACT INFO :
+function checkAdditionalContactInfo(addContactInfoFromReq) {
+    if (!addContactInfoFromReq) {
+        return undefined;
+    }
+    if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(150, addContactInfoFromReq)) {
+        return addContactInfoFromReq;
+    }
+    throw new Error(`La información de contacto adicional '${addContactInfoFromReq}' no es válida. Ingrese una cadena de texto de hasta 150 caracteres de largo.`);
+}
 function checkNameOnDoc(nameFromReq) {
     if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(100, nameFromReq)) {
         if ((0, genericValidators_1.stringContainsURLs)(nameFromReq)) {
