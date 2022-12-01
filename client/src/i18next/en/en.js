@@ -6,6 +6,7 @@ import { registerForm } from "./registerForm";
 import { subscriptionForm } from "./subscriptionForm";
 import { navbar } from "./navbar";
 import { profile } from "./profile";
+import { error } from "./error404";
 
 export const eng = {
   landing: landing,
@@ -16,4 +17,5 @@ export const eng = {
   subscriptionForm: subscriptionForm,
   navbar: navbar,
   profile: profile,
+  error: error
 };

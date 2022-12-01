@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Landing, Home, Register, Search, Found, Profile } from "./views";
+import { Landing, Home, Register, Search, Found, Profile, Error404 } from "./views";
 import SubscriptionForm from "./components/SubscriptionForm/SubscriptionForm";
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/search" element={<Search />} />
         <Route path="/subscription" element={<SubscriptionForm />} />
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
   );
