@@ -14,7 +14,14 @@ export default function AccordionBlock({
   const bgColor = mainColor === "green" ? "#27995a" : "#2676fc";
   const accordionVariants = {
     unselected: { backgroundColor: "#fff" },
-    selected: { backgroundColor: bgColor, fontColor: "#fff" },
+    selected: {
+      backgroundColor: bgColor,
+      fontColor: "#fff",
+      transition: {
+        duration: 0.3,
+      },
+
+    },
   };
   return (
     <motion.div

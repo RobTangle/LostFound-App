@@ -5,12 +5,12 @@ import PostForm from "../components/PostForm/PostForm";
 
 export function Found() {
   return (
-    <div>
+    <>
       <NavBar />
       <div className="mx-auto relative">
         <PostForm />
       </div>
       <Footer />
-    </div>
+    </>
   );
 }

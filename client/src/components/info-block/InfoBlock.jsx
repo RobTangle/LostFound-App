@@ -18,7 +18,7 @@ export default function InfoBlock({
     open: { rotate: 0 },
   };
   const containerGrowsVariants = {
-    unselected: { color:'#000',transition: { duration: 0.3 } },
+    unselected: { color:'#000' },
     selected: { color:'#fff'  },
   };
   const { width } = useWindowDimensions();
