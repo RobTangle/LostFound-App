@@ -19,8 +19,6 @@ const PostForm = () => {
   const { t } = useTranslation();
   const { getAccessTokenSilently } = useAuth0();
   //CLOUDINARY-------------------------------------
-  //eslint-disable-next-line
-
   const [post, setPost] = useState({
     name_on_doc: "",
     number_on_doc: "",
@@ -34,7 +32,7 @@ const PostForm = () => {
   const [image, setImage] = useState("");
   const maxDateAllowed = parseDateToSetMaxDate();
 
-  // MENSAJE DE ERROR AL SUBMITEAR :
+  // error messages for the form when the user submits
   let errorMessage = "";
   const handleChange = (e) => {
     setPost({
@@ -81,7 +79,7 @@ const PostForm = () => {
           header(accessToken)
         );
         if (response.status === 201) {
-          alert("Publicación creada exitosamente");
+          alert("Post created successfully");
           console.log(response);
           setPost({
             name_on_doc: "",
@@ -110,25 +108,23 @@ const PostForm = () => {
   }, [dispatch]);
 
   return (
-    <div className="grid md:flex">
-      <div className="grid">
-        <h1 className="text-3xl font-extralight text-neutral-400 md:text-5xl mt-6 md:ml-12 w-full text-center md:text-start p-2 md:p-0 md:w-1/2">
+    <div className="grid md:flex font-sans">
+      <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-blue">
+        <h1 className="text-2xl text-white md:text-5xl md:mt-6 md:ml-8 w-full text-center md:text-start p-2 md:p-0 lg:w-3/4">
           {t("postForm.title")}
         </h1>
-        <p className="font-extralight text-indigo-400 text-medium md:text-xl md:ml-12 w-full text-center md:text-start md:w-1/2">
+        <p className=" text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2">
           {t("postForm.subtitle")}
         </p>
       </div>
       <form
-        className="w-full mx-auto md:m-8 p-4 sm:p-6 md:p-0"
-        onSubmit={handleSubmit}
-      >
-        <div className="flex flex-wrap mb-2 gap-2">
-          <div className="w-full md:w-1/2 px-3">
+        className="w-full mx-auto h-full flex flex-col justify-between sm:px-6 md:px-2 text-gray"
+        onSubmit={handleSubmit}>
+        <div className="flex flex-wrap  mb-1 gap-2 w-full md:grid md:grid-cols-2">
+          <div className="w-full  px-3">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 grid"
-              htmlFor="grid-last-name"
-            >
+              className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
+              htmlFor="grid-last-name">
               {t("postForm.nameLabel")}
               <span className="lowercase font-light">
                 ({t("postForm.nameSubLabel")})
@@ -145,11 +141,10 @@ const PostForm = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="w-full md:w-1/2 px-3">
+          <div className="w-full   px-3">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 grid"
-              htmlFor="grid-last-name"
-            >
+              className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
+              htmlFor="grid-last-name">
               {t("postForm.numberLabel")}
               <span className="lowercase font-light">
                 ({t("postForm.numberSubLabel")})
@@ -167,12 +162,11 @@ const PostForm = () => {
             />
           </div>
         </div>
-        <div className="flex flex-wrap mb-2">
-          <div className="w-full sm:w-1/2 md:w-1/4 px-3 mb-6 md:mb-0">
+        <div className="flex flex-wrap  mt-1 mb-1 md:grid md:grid-cols-2">
+          <div className="w-full  px-3 mb-2 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-state"
-            >
+              className="block uppercase tracking-wide text-sm font-bold mt-2 mb-1"
+              htmlFor="grid-state">
               {t("postForm.countryLabel")}
             </label>
             <div className="relative">
@@ -181,8 +175,7 @@ const PostForm = () => {
                 id="grid-state"
                 name="country_found"
                 required
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 <option value="">{t("postForm.selectCountry")}</option>
                 {countries.length &&
                   countries.map((c) => (
@@ -195,18 +188,16 @@ const PostForm = () => {
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
+                  viewBox="0 0 20 20">
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
             </div>
           </div>
-          <div className="w-full sm:w-1/2 md:w-1/4 px-3 mb-6 md:mb-0">
+          <div className="w-full px-3 mb-2 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-zip"
-            >
+              className="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1"
+              htmlFor="grid-zip">
               {t("postForm.dateLabel")}
             </label>
             <input
@@ -221,15 +212,14 @@ const PostForm = () => {
             />
           </div>
         </div>
-        <div className="w-full md:w-1/2 px-3">
+        <div className="w-full px-3">
           <label
-            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="grid-zip"
-          >
+            className="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1"
+            htmlFor="grid-zip">
             {t("postForm.imageLabel")}
           </label>
           <input
-            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 mb-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 mt-2 mb-1 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
             id="grid-zip"
             type="file"
             accept=".png, .jpg, .jpeg"
@@ -238,9 +228,8 @@ const PostForm = () => {
             onChange={handleImage}
           />
           <label
-            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="comments"
-          >
+            className="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1"
+            htmlFor="comments">
             {t("postForm.commentsLabel")}
           </label>
           <textarea
@@ -248,18 +237,16 @@ const PostForm = () => {
             id="comments"
             placeholder={t("postForm.commentsPlaceHolder")}
             cols="30"
-            rows="5"
+            rows="3"
             value={post.comments}
             onChange={handleChange}
             maxLength={validAttr.comments.maxLength}
-            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"
-          ></textarea>
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"></textarea>
         </div>
-        <div className="w-full md:w-1/2 px-3 mt-4">
+        <div className="w-full  px-3 mt-4">
           <label
-            className=" tracking-wide text-gray-700 text-xs font-bold mb-2 grid"
-            htmlFor="grid-last-name"
-          >
+            className=" tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
+            htmlFor="grid-last-name">
             {t("postForm.additional_contact_info_label")}
             <span className="font-light">
               ({t("postForm.additional_contacto_info_sub")})
@@ -276,8 +263,8 @@ const PostForm = () => {
             onChange={handleChange}
           />
         </div>
-        <div className="w-full md:w-1/2 px-3 mt-2">
-          <button className="w-full bg-gray-200 hover:bg-emerald-300 hover:text-white border border-emerald-300 rounded py-3 text-slate-500">
+        <div className="w-full lg:w-1/2 px-3 mt-2">
+          <button className="w-full bg-gray-200 hover:bg-blue hover:text-white px-3 border-b-2 border-blue py-2 text-slate-500 transition-all duration-300">
             {t("postForm.submitButton")}
           </button>
         </div>

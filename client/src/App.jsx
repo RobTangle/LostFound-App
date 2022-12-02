@@ -11,7 +11,6 @@ function App() {
         <Route path="/post" element={<Found />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/search" element={<Search />} />
         <Route path="/subscription" element={<SubscriptionForm />} />
         <Route path="*" element={<Error404 />} />
