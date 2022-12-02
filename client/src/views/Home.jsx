@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import NavBar from "../components/NavBar/Navbar";
 import Footer from "../components/Footer/Footer";
 import Wallet3d from "../components/Wallet3d/Wallet3d";
@@ -10,8 +9,6 @@ import InfoBlock from "../components/info-block/InfoBlock";
 export function Home() {
   const [lostTip, setLostTip] = useState(true);
   const [foundTip, setFoundTip] = useState(true);
-
-  const navigate = useNavigate();
 
   const handleLostTip = () => {
     setFoundTip(true);
@@ -38,8 +35,37 @@ export function Home() {
   return (
     <div>
       <NavBar />
-      <div className="hidden sm:block sm:mx-auto h-[500px] relative sm:h-[450px] ">
-        <Wallet3d />
+      <div className="mt-5 flex flex-col md:flex-row md:items-center md:justify-center w-full bg-home2 bg-cover bg-no-repeat bg-center bg-opacity-5">
+        <div className="hidden sm:flex h-[500px] relative sm:w-[450px] ">
+          <Wallet3d />
+        </div>
+        <div className="font-sans flex flex-col gap-5 font-semibold ">
+          <div className="flex flex-col gap-1  hover:scale-[1.02] transition-all duration-300">
+            <p className=" text-xl md:text-3xl text-green">Lost your docs? </p>
+            <p className="text-lg font-normal">
+              Don't worry, we got you covered. We are here to help you find your
+              lost documents.
+            </p>
+            <Link
+              to="/search"
+              className="bg-green w-fit text-white px-3 py-2 rounded-md">
+              Find them
+            </Link>
+          </div>
+          <div className="flex flex-col gap-1 hover:scale-[1.02] transition-all duration-300">
+            <p className=" text-xl md:text-3xl text-blue">
+              Found any documents?
+            </p>
+            <p className="text-lg font-normal">
+              We are here to help you find the owner of the documents you found.
+            </p>
+            <Link
+              to="/post"
+              className="bg-blue w-fit text-white px-3 py-2 rounded-md ">
+              Post them
+            </Link>
+          </div>
+        </div>
       </div>
       <Banner
         leftImage={true}
