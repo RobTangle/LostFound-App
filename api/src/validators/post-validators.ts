@@ -4,6 +4,7 @@ import {
   isFalsyArgument,
   isStringBetween1AndXCharsLong,
   isStringXCharsLong,
+  isValidURLImage,
   stringContainsURLs,
 } from "./genericValidators";
 import { arrayOfCountriesTwoChars } from "../miscellanea/CountiesArrays";
@@ -142,7 +143,11 @@ function checkBlurredImgs(blurredImgsFromReq: any): string[] {
     }
     let blurredImgs = blurredImgsFromReq.map((image) => {
       // aplicar fn que blurrea imágenes...
-      return image;
+      if (isValidURLImage(image)) {
+        return image;
+      } else {
+        throw new Error("La imagen no tiene un formato válido.");
+      }
     });
     return blurredImgs;
   }

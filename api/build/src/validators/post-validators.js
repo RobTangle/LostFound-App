@@ -94,7 +94,12 @@ function checkBlurredImgs(blurredImgsFromReq) {
         }
         let blurredImgs = blurredImgsFromReq.map((image) => {
             // aplicar fn que blurrea imágenes...
-            return image;
+            if ((0, genericValidators_1.isValidURLImage)(image)) {
+                return image;
+            }
+            else {
+                throw new Error("La imagen no tiene un formato válido.");
+            }
         });
         return blurredImgs;
     }
