@@ -3,17 +3,17 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
+import { createPost } from "../../redux/features/post/postThunk";
 import { postFormValidator } from "../../helpers/post-form-validator";
 import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
-import axios from "axios";
-import { URL_P_PO_NEW_POST } from "../../constants/url";
 import { header } from "../../constants/header";
 
 const PostForm = () => {
   const countries = useSelector((state) => state.user.countries);
-  // const results = useSelector((state) => state.post.searchResults);
+  const results = useSelector((state) => state.post.searchResults);
+  const newPost = useSelector((state) => state.post.newPost);
   const dispatch = useDispatch();
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
@@ -29,7 +29,6 @@ const PostForm = () => {
     additional_contact_info: "",
   });
 
-  const [image, setImage] = useState("");
   const maxDateAllowed = parseDateToSetMaxDate();
 
   // error messages for the form when the user submits
@@ -72,34 +71,17 @@ const PostForm = () => {
     if (validation === true) {
       const accessToken = await getAccessTokenSilently();
       console.log("Despachando createPost !", post);
-      try {
-        const response = await axios.post(
-          URL_P_PO_NEW_POST,
-          post,
-          header(accessToken)
-        );
-        if (response.status === 201) {
-          alert("Post created successfully");
-          console.log(response);
-          setPost({
-            name_on_doc: "",
-            number_on_doc: "",
-            country_found: "",
-            date_found: "",
-            blurred_imgs: [],
-            comments: "",
-            additional_contact_info: "",
-          });
-        }
-        if (response.status >= 400) {
-          alert("Algo salió mal. " + response.data?.error);
-          console.log(response);
-        }
-      } catch (error) {
-        alert("Hubo un error. " + error.message);
-        console.log(error);
-        // dispatch(createPost(post, accessToken));
-      }
+      dispatch(createPost(post, header(accessToken)));
+      alert("Publicación creada con éxito.");
+      setPost({
+        name_on_doc: "",
+        number_on_doc: "",
+        country_found: "",
+        date_found: "",
+        blurred_imgs: [],
+        comments: "",
+        additional_contact_info: "",
+      });
     }
   };
 
@@ -119,12 +101,14 @@ const PostForm = () => {
       </div>
       <form
         className="w-full mx-auto h-full flex flex-col justify-between sm:px-6 md:px-2 text-gray"
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-wrap  mb-1 gap-2 w-full md:grid md:grid-cols-2">
           <div className="w-full  px-3">
             <label
               className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
-              htmlFor="grid-last-name">
+              htmlFor="grid-last-name"
+            >
               {t("postForm.nameLabel")}
               <span className="lowercase font-light">
                 ({t("postForm.nameSubLabel")})
@@ -144,7 +128,8 @@ const PostForm = () => {
           <div className="w-full   px-3">
             <label
               className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
-              htmlFor="grid-last-name">
+              htmlFor="grid-last-name"
+            >
               {t("postForm.numberLabel")}
               <span className="lowercase font-light">
                 ({t("postForm.numberSubLabel")})
@@ -166,7 +151,8 @@ const PostForm = () => {
           <div className="w-full  px-3 mb-2 md:mb-0">
             <label
               className="block uppercase tracking-wide text-sm font-bold mt-2 mb-1"
-              htmlFor="grid-state">
+              htmlFor="grid-state"
+            >
               {t("postForm.countryLabel")}
             </label>
             <div className="relative">
@@ -175,7 +161,8 @@ const PostForm = () => {
                 id="grid-state"
                 name="country_found"
                 required
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 <option value="">{t("postForm.selectCountry")}</option>
                 {countries.length &&
                   countries.map((c) => (
@@ -188,7 +175,8 @@ const PostForm = () => {
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20">
+                  viewBox="0 0 20 20"
+                >
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
@@ -197,7 +185,8 @@ const PostForm = () => {
           <div className="w-full px-3 mb-2 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1"
-              htmlFor="grid-zip">
+              htmlFor="grid-zip"
+            >
               {t("postForm.dateLabel")}
             </label>
             <input
@@ -215,7 +204,8 @@ const PostForm = () => {
         <div className="w-full px-3">
           <label
             className="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1"
-            htmlFor="grid-zip">
+            htmlFor="grid-zip"
+          >
             {t("postForm.imageLabel")}
           </label>
           <input
@@ -229,7 +219,8 @@ const PostForm = () => {
           />
           <label
             className="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1"
-            htmlFor="comments">
+            htmlFor="comments"
+          >
             {t("postForm.commentsLabel")}
           </label>
           <textarea
@@ -241,12 +232,14 @@ const PostForm = () => {
             value={post.comments}
             onChange={handleChange}
             maxLength={validAttr.comments.maxLength}
-            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"></textarea>
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-sm"
+          ></textarea>
         </div>
         <div className="w-full  px-3 mt-4">
           <label
             className=" tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
-            htmlFor="grid-last-name">
+            htmlFor="grid-last-name"
+          >
             {t("postForm.additional_contact_info_label")}
             <span className="font-light">
               ({t("postForm.additional_contacto_info_sub")})

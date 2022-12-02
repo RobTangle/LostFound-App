@@ -1,6 +1,9 @@
-import { getSearch } from "./postSlice";
+import { getSearch, postDocument } from "./postSlice";
 import axios from "axios";
-import { URL_P_G_SEARCH_BY_QUERY } from "../../../constants/url";
+import {
+  URL_P_G_SEARCH_BY_QUERY,
+  URL_P_PO_NEW_POST,
+} from "../../../constants/url";
 import { header } from "../../../constants/header";
 
 // export function allUsers(obj, token) {
@@ -13,6 +16,18 @@ import { header } from "../../../constants/header";
 //     }
 //   };
 // }
+export function createPost(post, token) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.post(URL_P_PO_NEW_POST, post, token);
+      dispatch(postDocument(response.data, "Publicación creada correctamente"));
+    } catch (error) {
+      console.log(error.message);
+      dispatch(postDocument("Ups, algo salió mal! Intente nuevamente."));
+    }
+  };
+}
+
 export function searchPost({ name, number, country, date_lost }, token) {
   return async function (dispatch) {
     try {
