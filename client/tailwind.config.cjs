@@ -15,6 +15,7 @@ module.exports = {
         home: "url('../public/bg.svg')",
         search:
           "url('https://res.cloudinary.com/dyzge4vha/image/upload/v1669352622/Untitled_1-1525x709_18_g27g3f.png')",
+        home2:"url('../public/blob-haikei.svg')",
       },
     },
   },
