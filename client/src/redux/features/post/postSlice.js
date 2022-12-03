@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   searchResults: [],
+  newPost: {},
 };
 
 export const postSlice = createSlice({
@@ -11,9 +12,12 @@ export const postSlice = createSlice({
     getSearch: (state, action) => {
       state.searchResults = action.payload;
     },
+    postDocument: (state, action) => {
+      state.newPost = action.payload;
+    },
   },
 });
 // Action creators are generated for each case reducer function
-export const { getSearch } = postSlice.actions;
+export const { getSearch, postDocument } = postSlice.actions;
 
 export default postSlice.reducer;
