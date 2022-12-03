@@ -5,6 +5,7 @@ import {
   URL_P_PO_NEW_POST,
 } from "../../../constants/url";
 import { header } from "../../../constants/header";
+import Swal from "sweetalert2";
 
 // export function allUsers(obj, token) {
 //   return async function (dispatch) {
@@ -20,10 +21,31 @@ export function createPost(post, token) {
   return async function (dispatch) {
     try {
       const response = await axios.post(URL_P_PO_NEW_POST, post, token);
-      dispatch(postDocument(response.data, "Publicación creada correctamente"));
+      response.status === 201
+        ? Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Publicación creada con éxito",
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        : response.status >= 400 &&
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Ups, algo salió mal! Intente nuevamente.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
     } catch (error) {
       console.log(error.message);
-      dispatch(postDocument("Ups, algo salió mal! Intente nuevamente."));
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Ups, algo salió mal! Intente nuevamente.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 }

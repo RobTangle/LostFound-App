@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getUserInfo } from "../redux/features/user/userThunk";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useSelector, useDispatch } from "react-redux";
-
+import SearchForm from "../components/SearchForm/SearchForm";
 import Navbar from "../components/NavBar/Navbar";
 import Footer from "../components/Footer/Footer";
 
@@ -151,7 +151,7 @@ export const Profile = () => {
           POSTS
         </div>
         <div hidden={!tab.link3} className="border border-indigo-200 mx-auto">
-          SEARCH
+          <SearchForm />
         </div>
         <div hidden={!tab.link4} className="border border-indigo-200 mx-auto">
           SUBSCRIPTIONS

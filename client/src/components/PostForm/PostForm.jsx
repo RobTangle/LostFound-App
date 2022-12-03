@@ -9,6 +9,7 @@ import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
 import { header } from "../../constants/header";
+import Swal from "sweetalert2";
 
 const PostForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -71,17 +72,17 @@ const PostForm = () => {
     if (validation === true) {
       const accessToken = await getAccessTokenSilently();
       console.log("Despachando createPost !", post);
-      dispatch(createPost(post, header(accessToken)));
-      alert("Publicación creada con éxito.");
-      setPost({
-        name_on_doc: "",
-        number_on_doc: "",
-        country_found: "",
-        date_found: "",
-        blurred_imgs: [],
-        comments: "",
-        additional_contact_info: "",
-      });
+      dispatch(createPost(post, header(accessToken))).then(() =>
+        setPost({
+          name_on_doc: "",
+          number_on_doc: "",
+          country_found: "",
+          date_found: "",
+          blurred_imgs: [],
+          comments: "",
+          additional_contact_info: "",
+        })
+      );
     }
   };
 

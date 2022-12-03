@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   searchResults: [],
-  newPost: [],
+  newPost: {},
 };
 
 export const postSlice = createSlice({
