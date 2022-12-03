@@ -105,7 +105,7 @@ const SearchForm = () => {
         <div className="flex flex-wrap mb-2">
           <div className="w-full sm:w-1/2 md:w-1/4 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 after:content-['*'] after:ml-0.5"
               htmlFor="grid-state"
             >
               {t("searchForm.countryLabel")}
@@ -139,7 +139,7 @@ const SearchForm = () => {
           </div>
           <div className="w-full sm:w-1/2 md:w-1/4 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 after:content-['*'] after:ml-0.5"
               htmlFor="grid-zip"
             >
               {t("searchForm.dateLabel")}

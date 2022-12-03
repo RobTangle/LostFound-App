@@ -151,7 +151,7 @@ const PostForm = () => {
         <div className="flex flex-wrap  mt-1 mb-1 md:grid md:grid-cols-2">
           <div className="w-full  px-3 mb-2 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-sm font-bold mt-2 mb-1"
+              className="block uppercase tracking-wide text-sm font-bold mt-2 mb-1 after:content-['*'] after:ml-0.5"
               htmlFor="grid-state"
             >
               {t("postForm.countryLabel")}
@@ -185,13 +185,13 @@ const PostForm = () => {
           </div>
           <div className="w-full px-3 mb-2 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1"
+              className="block uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 after:content-['*'] after:ml-0.5"
               htmlFor="grid-zip"
             >
               {t("postForm.dateLabel")}
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 "
               id="grid-zip"
               type="date"
               required
