@@ -94,7 +94,7 @@ export const RegisterForm = () => {
             confirmButtonText: `Continuar`,
           }).then((result) => {
             if (result.isConfirmed) {
-              navigate("/");
+              navigate("/home");
             }
           });
         } else {
