@@ -43,12 +43,13 @@ export function Home() {
           <div className="flex flex-col gap-1  hover:scale-[1.02] transition-all duration-300">
             <p className=" text-xl md:text-3xl text-green">Lost your docs? </p>
             <p className="text-lg font-normal">
-              Don't worry, we got you covered. We are here to help you find your
-              lost documents.
+              Don't worry, we've got you covered. We are here to help you find
+              your lost documents.
             </p>
             <Link
               to="/search"
-              className="bg-green w-fit text-white px-3 py-2 rounded-md">
+              className="bg-green w-fit text-white px-3 py-2 rounded-md"
+            >
               Find them
             </Link>
           </div>
@@ -61,7 +62,8 @@ export function Home() {
             </p>
             <Link
               to="/post"
-              className="bg-blue w-fit text-white px-3 py-2 rounded-md ">
+              className="bg-blue w-fit text-white px-3 py-2 rounded-md "
+            >
               Post them
             </Link>
           </div>
