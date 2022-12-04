@@ -12,6 +12,8 @@ import {
   searchPostsByQuery,
   handleUpdatePost,
   findPostByIdAndDeleteIt,
+  addContactDateToUserContacting,
+  checkContactsDate,
 } from "./post-r-auxiliary";
 import { sendContactInfoEmailToBothUsers } from "./nodemailer-fns";
 
@@ -137,16 +139,11 @@ export async function handleContactUserRequest(req: JWTRequest, res: Response) {
     const user_id = req.auth?.sub;
     const post_id = req.params.post_id;
 
-    const user_contacting = await User.findById(user_id, {
-      name: 1,
-      email: 1,
-      additional_contact_info: 1,
-    })
-      .lean()
-      .exec();
+    const user_contacting = await User.findById(user_id).exec();
     if (!user_contacting) {
       throw new Error("Usuario no encontrado en la base de datos.");
     }
+
     const userInDBPosting = await Post.findById(post_id, {
       user_posting: 1,
       _id: 0,
@@ -157,13 +154,20 @@ export async function handleContactUserRequest(req: JWTRequest, res: Response) {
       throw new Error("No se han encontrado los datos del creador del aviso.");
     }
     const user_posting = userInDBPosting.user_posting;
-    console.log(Date.now());
+    // Chequear si excedió los 5 contactos en las últimas 24hs. throw Error || void :
+    checkContactsDate(user_contacting);
     await sendContactInfoEmailToBothUsers(user_posting, user_contacting);
-    console.log(Date.now());
 
-    return res
-      .status(202)
-      .send({ msg: "Processing request. Check your email." });
+    res.status(202).send({ msg: "Processing request. Check your email." });
+    // add new contact to user_contacting_contacts:
+    addContactDateToUserContacting(user_contacting).then(
+      function (succ) {
+        console.log("addContactDateToUserContacting: OK");
+      },
+      function (error) {
+        console.log("addContactDateToUserContacting: ERROR = ", error);
+      }
+    );
   } catch (error: any) {
     console.log(`Error en ruta POST "contact/:_id". ${error.message}`);
     return res.status(400).send({ error: error.message });
