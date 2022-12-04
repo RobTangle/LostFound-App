@@ -14,4 +14,10 @@ export const registerForm = {
   errorTitle: "Error",
   errorSubtitle: "You are not logged in, please log in.",
   errorButton: "Ok",
+  swalErrorSubmitFailedTitle: "Something went wrong 😶",
+  swalErrorSubmitFailedText:
+    "Please, check your internet conection and try again.",
+  swalSubmitSuccessTitle: "You've been registered!",
+  swalSubmitSuccessText: "We hope you find this app usefull",
+  swalConfirmButtonText: "Continue",
 };
