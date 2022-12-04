@@ -11,6 +11,11 @@ export async function handleNewSubscription(
   user_id: string | undefined
 ) {
   const userInDB = await getUserByIdOrThrowError(user_id);
+  if (userInDB.subscriptions.length >= 5) {
+    throw new Error(
+      "Límite máximo de suscriptiones alcanzado. Por favor, borre una subscripción antes de crear una nueva."
+    );
+  }
   const user_subscribed = {
     _id: userInDB._id,
     name: userInDB.name,
