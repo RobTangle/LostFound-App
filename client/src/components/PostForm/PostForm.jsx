@@ -19,7 +19,6 @@ const PostForm = () => {
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
   const { getAccessTokenSilently } = useAuth0();
-  //CLOUDINARY-------------------------------------
   const [post, setPost] = useState({
     name_on_doc: "",
     number_on_doc: "",
@@ -32,8 +31,6 @@ const PostForm = () => {
 
   const maxDateAllowed = parseDateToSetMaxDate();
 
-  // error messages for the form when the user submits
-  let errorMessage = "";
   const handleChange = (e) => {
     setPost({
       ...post,
@@ -41,6 +38,7 @@ const PostForm = () => {
     });
   };
 
+  //CLOUDINARY-------------------------------------
   const handleImage = async (e) => {
     const image = e.target.files[0];
     // console.log(typeof image);
@@ -66,8 +64,13 @@ const PostForm = () => {
     const validation = postFormValidator(post, t);
     if (validation.error) {
       console.log(`Error en la validación: ${validation.error}`);
-      alert(validation.error);
-      errorMessage = validation.error;
+      Swal.fire({
+        title: "Input error",
+        text: `${validation.error}`,
+        icon: "warning",
+        confirmButtonColor: "#2676fc",
+        confirmButtonText: "OK",
+      });
     }
     if (validation === true) {
       const accessToken = await getAccessTokenSilently();

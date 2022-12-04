@@ -7,6 +7,7 @@ import { searchPost } from "../../redux/features/post/postThunk";
 import { searchFormValidator } from "../../helpers/search-form-validation";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
+import Swal from "sweetalert2";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -37,6 +38,13 @@ const SearchForm = () => {
     const validation = searchFormValidator(search, t);
     if (validation.error) {
       // RENDER ERROR MESSAGE
+      Swal.fire({
+        title: "Error",
+        text: `${validation.error}`,
+        icon: "warning",
+        confirmButtonColor: "#2676fc",
+        confirmButtonText: "OK",
+      });
       console.log("ERROR AL VALIDAR SEARCH = ", validation);
     } else {
       if (validation === true) {
