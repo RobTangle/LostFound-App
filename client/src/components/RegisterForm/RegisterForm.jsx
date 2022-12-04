@@ -86,13 +86,45 @@ export const RegisterForm = () => {
         console.log("response.data = ", response.data);
         if (response.status === 200 || response.status === 201) {
           // RENDER successful and welcome message, with button to continue to /Home..
+          Swal.fire({
+            title: `${t("registerForm.swalSubmitSuccessTitle")}`,
+            text: `${t("registerForm.swalSubmitSuccessText")}`,
+            icon: "success",
+            confirmButtonColor: "#2676fc",
+            confirmButtonText: `Continuar`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/home");
+            }
+          });
         } else {
           // RENDER error message.
+          Swal.fire({
+            title: `${t("registerForm.swalErrorSubmitFailedTitle")}`,
+            text: `${t("registerForm.swalErrorSubmitFailedText")}`,
+            icon: "info",
+            confirmButtonColor: "#2676fc",
+            confirmButtonText: `${t("registerForm.errorButton")}`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+            }
+          });
         }
       }
     } catch (error) {
       console.log("ERROR EN EL HANDLE_SUBMIT = ", error.message);
       errorMessage = error.message;
+      // RENDER error message.
+      Swal.fire({
+        title: `${t("registerForm.swalErrorSubmitFailedTitle")}`,
+        text: `${t("registerForm.swalErrorSubmitFailedText")} ${errorMessage}`,
+        icon: "info",
+        confirmButtonColor: "#2676fc",
+        confirmButtonText: `${t("registerForm.errorButton")}`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
     }
   };
   if (!isAuthenticated && !isLoading) {
