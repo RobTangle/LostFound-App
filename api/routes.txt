@@ -33,6 +33,8 @@ GET  "/:_id" : JWT; Retorna un Post buscado por el req.params._id;
 
 DELETE  "/:_id" : JWT;  Borra un Post en la Collection Post y en el arreglo de User.posts. Recibe por req.params._id el _id del Post.
 
+POST  "/contact/:post_id" : JWT; Envía un email al usuario que se quiere contactar y al usuario que posteó el aviso con _id post_id. Chequea si el usuario que quiere contactar ha intentado contactar más de 5 veces en 24hs.
+
 
 /subscription :
 GET  "/findAll" : Retorna un arreglo de Documentos de Subscription ;

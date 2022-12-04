@@ -1,6 +1,8 @@
 import { Post, User } from "../../mongoDB";
 import { validateUpdatePostData } from "../../validators/post-validators";
 import { checkAndParseDate } from "../../validators/genericValidators";
+import { IUser } from "../../mongoDB/models/User";
+import { Document } from "mongoose";
 
 export async function searchPostsByQuery(
   queryFromReq: any
@@ -190,5 +192,47 @@ export async function findPostByIdAndDeleteIt(
     response.msg = error.message;
   } finally {
     return response;
+  }
+}
+
+export function checkContactsDate(user_contacting: IUser) {
+  if (
+    Array.isArray(user_contacting.contacts) &&
+    user_contacting.contacts.length >= 5
+  ) {
+    // check date of the oldest contact: Si tiene más de 24hs, le permito. Si el último tiene menos de 24hs, tiro error:
+    let dateNow = Date.now();
+    let oldestContact = user_contacting.contacts[0];
+    let timeFromOldestContact = dateNow - oldestContact;
+
+    if (timeFromOldestContact <= 86400000) {
+      throw new Error(`Too many contacts in the last 24hs.`);
+    }
+  }
+}
+
+// ADD CONTACT "TIMESTAMP" TO USER CONTACTING :
+export async function addContactDateToUserContacting(
+  user_contacting: Document<unknown, any, IUser> &
+    IUser &
+    Required<{ _id: string }>
+) {
+  if (
+    Array.isArray(user_contacting.contacts) &&
+    user_contacting.contacts.length >= 5
+  ) {
+    user_contacting.contacts.shift();
+    user_contacting.contacts.push(Date.now());
+    await user_contacting.save();
+    console.log("Contact shifteado y pusheado");
+  } else {
+    if (
+      Array.isArray(user_contacting.contacts) &&
+      user_contacting.contacts.length < 5
+    ) {
+      user_contacting.contacts.push(Date.now());
+      await user_contacting.save();
+      console.log("Contact pusheado");
+    }
   }
 }
