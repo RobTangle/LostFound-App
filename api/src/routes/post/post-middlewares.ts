@@ -1,6 +1,6 @@
 import { Request as JWTRequest } from "express-jwt";
 import { Response } from "express";
-import { Post } from "../../mongoDB";
+import { Post, User } from "../../mongoDB";
 import { IPost } from "../../mongoDB/models/Post";
 import { validatePost } from "../../validators/post-validators";
 import { handleAlertAfterNewPost } from "../subscription/nodemailer";
@@ -12,7 +12,10 @@ import {
   searchPostsByQuery,
   handleUpdatePost,
   findPostByIdAndDeleteIt,
+  addContactDateToUserContacting,
+  checkContactsDate,
 } from "./post-r-auxiliary";
+import { sendContactInfoEmailToBothUsers } from "./nodemailer-fns";
 
 export async function findAllPostsResponse(req: JWTRequest, res: Response) {
   try {
@@ -49,9 +52,6 @@ export async function handleNewPostRequest(req: JWTRequest, res: Response) {
     return res.status(400).send({ error: error.message });
   }
 }
-
-// En el formulario del front, que hagan un chequeo de que las letras del nombre sean [a-zA-z-0-9-áéíóúÁÉÍÓÚÜüçÇñÑ] y que no se equivoquen de tilde con la invertida. Tenemos que pedir que el nombre sea idéntico a como figura en el documento.
-// Ya que descartamos la importancia de las tarjetas de crédito y le damos más importanci a pasaportes y DNI, el nombres siempre va a figurar completo. Y las tarjetas de crédito, la persona debería denunciarlas inmediatamente.
 
 // SEARCH POSTS BY QUERY :
 export async function handleSearchByQueryRequest(
@@ -106,7 +106,11 @@ export async function handleGetPostByIdRequest(req: JWTRequest, res: Response) {
     if (postFoundById === null) {
       return res
         .status(404)
-        .send(`Post con id "${post_id}"  no encontrado en la base de datos.`);
+        .send(
+          "Post con id '" +
+            encodeURI(post_id) +
+            "' no encontrado en la base de datos."
+        );
     }
     return res.status(200).send(postFoundById);
   } catch (error: any) {
@@ -129,6 +133,47 @@ export async function handleDeletePostRequest(req: JWTRequest, res: Response) {
     return res.status(deleteResults.status).send(deleteResults);
   } catch (error: any) {
     console.log(`Error en ruta DELETE "post/:_id". ${error.message}`);
+    return res.status(400).send({ error: error.message });
+  }
+}
+
+// CONTACT USER :
+export async function handleContactUserRequest(req: JWTRequest, res: Response) {
+  try {
+    const user_id = req.auth?.sub;
+    const post_id = req.params.post_id;
+
+    const user_contacting = await User.findById(user_id).exec();
+    if (!user_contacting) {
+      throw new Error("Usuario no encontrado en la base de datos.");
+    }
+
+    const userInDBPosting = await Post.findById(post_id, {
+      user_posting: 1,
+      _id: 0,
+    })
+      .lean()
+      .exec();
+    if (!userInDBPosting) {
+      throw new Error("No se han encontrado los datos del creador del aviso.");
+    }
+    const user_posting = userInDBPosting.user_posting;
+    // Chequear si excedió los 5 contactos en las últimas 24hs. throw Error || void :
+    checkContactsDate(user_contacting);
+    await sendContactInfoEmailToBothUsers(user_posting, user_contacting);
+
+    res.status(202).send({ msg: "Processing request. Check your email." });
+    // add new contact to user_contacting_contacts:
+    addContactDateToUserContacting(user_contacting).then(
+      function (succ) {
+        console.log("addContactDateToUserContacting: OK");
+      },
+      function (error) {
+        console.log("addContactDateToUserContacting: ERROR = ", error);
+      }
+    );
+  } catch (error: any) {
+    console.log(`Error en ruta POST "contact/:_id". ${error.message}`);
     return res.status(400).send({ error: error.message });
   }
 }

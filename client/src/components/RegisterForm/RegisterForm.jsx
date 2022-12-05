@@ -9,10 +9,11 @@ import { URL_U_PO_REGISTER_NEW_USER } from "../../constants/url";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../spinner/Spinner";
+import accessTokenName from "../../constants/accessToken";
 
 export const RegisterForm = () => {
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const { user, isLoading, isAuthenticated, getAccessTokenSilently } =
     useAuth0();
 
@@ -29,7 +30,7 @@ export const RegisterForm = () => {
     const getUserMetadata = async () => {
       try {
         accessToken = await getAccessTokenSilently();
-        localStorage.setItem("accessTokenLostFound", accessToken);
+        localStorage.setItem(accessTokenName, accessToken);
         console.log("USER ", user);
       } catch (e) {
         console.log(e.message);
@@ -72,8 +73,7 @@ export const RegisterForm = () => {
         // RENDER ERROR :
       }
       if (userDataValidated.email) {
-        const accessTokenFromLS = localStorage.getItem("accessTokenLostFound");
-        // console.log("ACCESSTOKENFROMLS = ", accessTokenFromLS);
+        const accessTokenFromLS = localStorage.getItem(accessTokenName);
         const response = await axios.post(
           URL_U_PO_REGISTER_NEW_USER,
           userDataValidated,
@@ -86,13 +86,45 @@ export const RegisterForm = () => {
         console.log("response.data = ", response.data);
         if (response.status === 200 || response.status === 201) {
           // RENDER successful and welcome message, with button to continue to /Home..
+          Swal.fire({
+            title: `${t("registerForm.swalSubmitSuccessTitle")}`,
+            text: `${t("registerForm.swalSubmitSuccessText")}`,
+            icon: "success",
+            confirmButtonColor: "#2676fc",
+            confirmButtonText: `Continuar`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/home");
+            }
+          });
         } else {
           // RENDER error message.
+          Swal.fire({
+            title: `${t("registerForm.swalErrorSubmitFailedTitle")}`,
+            text: `${t("registerForm.swalErrorSubmitFailedText")}`,
+            icon: "info",
+            confirmButtonColor: "#2676fc",
+            confirmButtonText: `${t("registerForm.errorButton")}`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+            }
+          });
         }
       }
     } catch (error) {
       console.log("ERROR EN EL HANDLE_SUBMIT = ", error.message);
       errorMessage = error.message;
+      // RENDER error message.
+      Swal.fire({
+        title: `${t("registerForm.swalErrorSubmitFailedTitle")}`,
+        text: `${t("registerForm.swalErrorSubmitFailedText")} ${errorMessage}`,
+        icon: "info",
+        confirmButtonColor: "#2676fc",
+        confirmButtonText: `${t("registerForm.errorButton")}`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
     }
   };
   if (!isAuthenticated && !isLoading) {
@@ -108,7 +140,7 @@ export const RegisterForm = () => {
       }
     });
   }
-  if (isLoading) return <Spinner/>;
+  if (isLoading) return <Spinner />;
   if (isAuthenticated && !isLoading) {
     return (
       <div className="grid md:flex">
@@ -122,12 +154,14 @@ export const RegisterForm = () => {
         </div>
         <form
           className="w-full mx-auto md:m-8 p-4 sm:p-6 md:p-0"
-          onSubmit={handleSubmit}>
+          onSubmit={handleSubmit}
+        >
           <div className="flex flex-wrap mb-2 gap-2">
             <div className="w-full md:w-1/2 p-3">
               <label
                 className="block uppercase tracking-wide text-gray text-xs font-bold mb-1 font-sans"
-                htmlFor="grid-last-name">
+                htmlFor="grid-last-name"
+              >
                 {t("registerForm.userNameLabel")}
               </label>
               <input
@@ -144,7 +178,8 @@ export const RegisterForm = () => {
             <div className="w-full md:w-1/2 p-3">
               <label
                 className="block uppercase tracking-wide text-gray text-xs font-bold mb-1 font-sans"
-                htmlFor="grid-last-name">
+                htmlFor="grid-last-name"
+              >
                 {t("registerForm.emailLabel")}
               </label>
               <input
@@ -152,7 +187,7 @@ export const RegisterForm = () => {
                 id="grid-last-name"
                 type="email"
                 name="email"
-                maxLength={validAttr.email.maxLength} //! configurar esto
+                maxLength={validAttr.email.maxLength}
                 value={userForm.email}
                 onChange={handleChange}
                 disabled

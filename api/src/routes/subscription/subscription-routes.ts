@@ -11,20 +11,24 @@ import {
 const router = Router();
 
 router.get("/findAll", handleFindAllSubscriptionsRequest);
+
 // CREATE NEW SUBSCRIPTION :
 router.post("/", jwtCheck, handleCreateNewSubscriptionRequest);
+
 // DELETE SUBSCRIPTION :
 router.delete(
   "/:subscription_id",
   jwtCheck,
   handleDeleteSubscriptionByIdRequest
 );
+
 // UPDATE SUBSCRIPTION :
 router.patch(
   "/:subscription_id",
   jwtCheck,
   handleUpdateSubscriptionByIdRequest
 );
+
 // GET ALL USER SUBSCRIPTIONS :
 router.get("/userSubs", jwtCheck, handleGetUserSubscriptionsRequest);
 

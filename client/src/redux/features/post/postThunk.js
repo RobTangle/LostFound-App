@@ -1,7 +1,11 @@
-import { getSearch } from "./postSlice";
+import { getSearch, postDocument } from "./postSlice";
 import axios from "axios";
-import { URL_P_G_SEARCH_BY_QUERY } from "../../../constants/url";
+import {
+  URL_P_G_SEARCH_BY_QUERY,
+  URL_P_PO_NEW_POST,
+} from "../../../constants/url";
 import { header } from "../../../constants/header";
+import Swal from "sweetalert2";
 
 // export function allUsers(obj, token) {
 //   return async function (dispatch) {
@@ -13,6 +17,39 @@ import { header } from "../../../constants/header";
 //     }
 //   };
 // }
+export function createPost(post, token) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.post(URL_P_PO_NEW_POST, post, token);
+      response.status === 201
+        ? Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Publicación creada con éxito",
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        : response.status >= 400 &&
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Ups, algo salió mal! Intente nuevamente.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+    } catch (error) {
+      console.log(error.message);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Ups, algo salió mal! Intente nuevamente.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
+}
+
 export function searchPost({ name, number, country, date_lost }, token) {
   return async function (dispatch) {
     try {

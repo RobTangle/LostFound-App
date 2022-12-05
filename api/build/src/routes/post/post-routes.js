@@ -19,4 +19,6 @@ router.patch("/:_id", jwtMiddleware_1.default, post_middlewares_1.handleUpdateRe
 router.get("/:_id", jwtMiddleware_1.default, post_middlewares_1.handleGetPostByIdRequest);
 // DELETE POST BY POST_ID IN PARAMS :
 router.delete("/:_id", jwtMiddleware_1.default, post_middlewares_1.handleDeletePostRequest);
+// CONTACT POST OWNER :
+router.post("/contact/:post_id", jwtMiddleware_1.default, post_middlewares_1.handleContactUserRequest);
 exports.default = router;

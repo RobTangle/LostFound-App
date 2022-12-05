@@ -1,6 +1,8 @@
 import { Post, User } from "../../mongoDB";
 import { validateUpdatePostData } from "../../validators/post-validators";
 import { checkAndParseDate } from "../../validators/genericValidators";
+import { IUser } from "../../mongoDB/models/User";
+import { Document } from "mongoose";
 
 export async function searchPostsByQuery(
   queryFromReq: any
@@ -193,47 +195,44 @@ export async function findPostByIdAndDeleteIt(
   }
 }
 
-//! CREO QUE ESTA FN ESTÁ DEPRECADA!!!!!!!!!!!!!!!!
-// async function findMatchingSuscriptions(newPost: IPost) {
-//   try {
-//     const { name_on_doc, number_on_doc, country_found, date_found } = newPost;
+export function checkContactsDate(user_contacting: IUser) {
+  if (
+    Array.isArray(user_contacting.contacts) &&
+    user_contacting.contacts.length >= 5
+  ) {
+    // check date of the oldest contact: Si tiene más de 24hs, le permito. Si el último tiene menos de 24hs, tiro error:
+    let dateNow = Date.now();
+    let oldestContact = user_contacting.contacts[0];
+    let timeFromOldestContact = dateNow - oldestContact;
 
-//     // parseos y validaciones:
-//     // numberOnDoc, le saco los símbolos:
-//     let numberOnDocParsed;
-//     if (typeof number_on_doc === "string") {
-//       numberOnDocParsed = number_on_doc
-//         .replace(/[^A-Za-z0-9]/g, "")
-//         .toLowerCase();
-//     }
-//     // date_found: No necesito parsearla porque ya vino parseada por haber sido recién creada.
+    if (timeFromOldestContact <= 86400000) {
+      throw new Error(`Too many contacts in the last 24hs.`);
+    }
+  }
+}
 
-//     const findMatchingSubscriptions = await Subscription.find(
-//       {
-//         name_on_doc: name_on_doc,
-//         number_on_doc: numberOnDocParsed,
-//         country_lost: country_found,
-//         date_lost: { $lte: date_found },
-//       },
-//       {
-//         _id: 1,
-//         "user_subscribed._id": 1,
-//         "user_subscribed.name": 1,
-//         "user_subscribed.email": 1,
-//       }
-//     )
-//       .lean()
-//       .exec();
-// Agregar en el email un link al detalle del post nuevo que coincide con su subscription. Para eso voy a necesitar el _id del nuevo post, y meterlo en el params de la url de nuestra página para que vea el detalle de la publicación. Por ejemplo :
-// www.lostfound.app/found/${_id}
-// let messageInEmail = "Hello, ${subscription.user_subscribed.name}! We've got great news!!! It seems that somebody found something that matches your subscription alert criteria. Go and check it out to see if this is your lucky day!
-// www.lostfound.app/found/${_id}
-// findMatchingSubscriptions.forEach(subscription => {
-// sendAlertEmailTo(subscription.user_subscribing.email, messageInEmail)
-// })
-//     return findMatchingSubscriptions;
-//   } catch (error: any) {
-//     console.log(`Error en fn findMatchingSuscriptions. ${error.message}`);
-//   }
-// }
-//!-------------------------------
+// ADD CONTACT "TIMESTAMP" TO USER CONTACTING :
+export async function addContactDateToUserContacting(
+  user_contacting: Document<unknown, any, IUser> &
+    IUser &
+    Required<{ _id: string }>
+) {
+  if (
+    Array.isArray(user_contacting.contacts) &&
+    user_contacting.contacts.length >= 5
+  ) {
+    user_contacting.contacts.shift();
+    user_contacting.contacts.push(Date.now());
+    await user_contacting.save();
+    console.log("Contact shifteado y pusheado");
+  } else {
+    if (
+      Array.isArray(user_contacting.contacts) &&
+      user_contacting.contacts.length < 5
+    ) {
+      user_contacting.contacts.push(Date.now());
+      await user_contacting.save();
+      console.log("Contact pusheado");
+    }
+  }
+}

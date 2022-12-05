@@ -2,7 +2,6 @@ import morgan from "morgan";
 import helmet from "helmet";
 import express, { Request, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
-
 import cors from "cors";
 
 import userRouter from "./routes/user/user-routes";
@@ -10,11 +9,14 @@ import postRouter from "./routes/post/post-routes";
 import countriesRouter from "./routes/countries/countries-routes";
 import subscriptionRouter from "./routes/subscription/subscription-routes";
 import jwtCheck from "./config/jwtMiddleware";
+import { limiter } from "./config/rateLimiter";
+
 const app = express();
 
 app.use(helmet());
 app.use(express.json());
 app.use(cors());
+app.use(limiter);
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 

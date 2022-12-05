@@ -7,6 +7,7 @@ export interface IUser {
   name: string;
   email: string;
   profile_img?: string;
+  contacts?: number[];
   posts: Types.DocumentArray<IPost>;
   subscriptions: Types.DocumentArray<ISubscription>;
 }
@@ -33,6 +34,10 @@ export const userSchema: Schema = new Schema<IUser>(
       required: false,
       default:
         "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
+    },
+    contacts: {
+      type: [Number],
+      required: false,
     },
     posts: [postSchema],
     // Suscripciones de alertas. [{query}, {query}] MAX 5.

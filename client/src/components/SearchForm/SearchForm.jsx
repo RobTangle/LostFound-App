@@ -7,6 +7,7 @@ import { searchPost } from "../../redux/features/post/postThunk";
 import { searchFormValidator } from "../../helpers/search-form-validation";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
+import Swal from "sweetalert2";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -37,6 +38,13 @@ const SearchForm = () => {
     const validation = searchFormValidator(search, t);
     if (validation.error) {
       // RENDER ERROR MESSAGE
+      Swal.fire({
+        title: "Error",
+        text: `${validation.error}`,
+        icon: "warning",
+        confirmButtonColor: "#2676fc",
+        confirmButtonText: "OK",
+      });
       console.log("ERROR AL VALIDAR SEARCH = ", validation);
     } else {
       if (validation === true) {
@@ -105,7 +113,7 @@ const SearchForm = () => {
         <div className="flex flex-wrap mb-2">
           <div className="w-full sm:w-1/2 md:w-1/4 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 after:content-['*'] after:ml-0.5"
               htmlFor="grid-state"
             >
               {t("searchForm.countryLabel")}
@@ -139,7 +147,7 @@ const SearchForm = () => {
           </div>
           <div className="w-full sm:w-1/2 md:w-1/4 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 after:content-['*'] after:ml-0.5"
               htmlFor="grid-zip"
             >
               {t("searchForm.dateLabel")}

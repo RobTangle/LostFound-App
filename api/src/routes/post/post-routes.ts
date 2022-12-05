@@ -7,6 +7,7 @@ import {
   handleUpdateRequest,
   handleGetPostByIdRequest,
   handleDeletePostRequest,
+  handleContactUserRequest,
 } from "./post-middlewares";
 
 const router = Router();
@@ -28,5 +29,8 @@ router.get("/:_id", jwtCheck, handleGetPostByIdRequest);
 
 // DELETE POST BY POST_ID IN PARAMS :
 router.delete("/:_id", jwtCheck, handleDeletePostRequest);
+
+// CONTACT POST OWNER :
+router.post("/contact/:post_id", jwtCheck, handleContactUserRequest);
 
 export default router;

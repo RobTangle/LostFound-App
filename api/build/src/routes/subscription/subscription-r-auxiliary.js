@@ -17,6 +17,9 @@ const user_auxiliaries_1 = require("../user/user-auxiliaries");
 function handleNewSubscription(bodyFromReq, user_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const userInDB = yield (0, user_auxiliaries_1.getUserByIdOrThrowError)(user_id);
+        if (userInDB.subscriptions.length >= 5) {
+            throw new Error("Límite máximo de suscriptiones alcanzado. Por favor, borre una subscripción antes de crear una nueva.");
+        }
         const user_subscribed = {
             _id: userInDB._id,
             name: userInDB.name,

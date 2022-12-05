@@ -13,13 +13,13 @@ export function searchFormValidator({ name, number, country, date_lost }, t) {
     // const { name, number, country_found, date_found, comments } = post;
     if (
       !isStringBetweenXAndYCharsLong(
-        validAttr.name.minLength,
-        validAttr.name.maxLength,
+        validAttr.name_on_doc.minLength,
+        validAttr.name_on_doc.maxLength,
         name
       ) &&
       !isStringBetweenXAndYCharsLong(
-        validAttr.number.minLength,
-        validAttr.number.maxLength,
+        validAttr.number_on_doc?.minLength,
+        validAttr.number_on_doc?.maxLength,
         number
       )
     ) {

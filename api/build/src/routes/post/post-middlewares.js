@@ -9,12 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeletePostRequest = exports.handleGetPostByIdRequest = exports.handleUpdateRequest = exports.handleSearchByQueryRequest = exports.handleNewPostRequest = exports.findAllPostsResponse = void 0;
+exports.handleContactUserRequest = exports.handleDeletePostRequest = exports.handleGetPostByIdRequest = exports.handleUpdateRequest = exports.handleSearchByQueryRequest = exports.handleNewPostRequest = exports.findAllPostsResponse = void 0;
 const mongoDB_1 = require("../../mongoDB");
 const post_validators_1 = require("../../validators/post-validators");
 const nodemailer_1 = require("../subscription/nodemailer");
 const user_auxiliaries_1 = require("../user/user-auxiliaries");
 const post_r_auxiliary_1 = require("./post-r-auxiliary");
+const nodemailer_fns_1 = require("./nodemailer-fns");
 function findAllPostsResponse(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -53,8 +54,6 @@ function handleNewPostRequest(req, res) {
     });
 }
 exports.handleNewPostRequest = handleNewPostRequest;
-// En el formulario del front, que hagan un chequeo de que las letras del nombre sean [a-zA-z-0-9-áéíóúÁÉÍÓÚÜüçÇñÑ] y que no se equivoquen de tilde con la invertida. Tenemos que pedir que el nombre sea idéntico a como figura en el documento.
-// Ya que descartamos la importancia de las tarjetas de crédito y le damos más importanci a pasaportes y DNI, el nombres siempre va a figurar completo. Y las tarjetas de crédito, la persona debería denunciarlas inmediatamente.
 // SEARCH POSTS BY QUERY :
 function handleSearchByQueryRequest(req, res) {
     var _a;
@@ -110,7 +109,9 @@ function handleGetPostByIdRequest(req, res) {
             if (postFoundById === null) {
                 return res
                     .status(404)
-                    .send(`Post con id "${post_id}"  no encontrado en la base de datos.`);
+                    .send("Post con id '" +
+                    encodeURI(post_id) +
+                    "' no encontrado en la base de datos.");
             }
             return res.status(200).send(postFoundById);
         }
@@ -141,3 +142,42 @@ function handleDeletePostRequest(req, res) {
     });
 }
 exports.handleDeletePostRequest = handleDeletePostRequest;
+// CONTACT USER :
+function handleContactUserRequest(req, res) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
+            const post_id = req.params.post_id;
+            const user_contacting = yield mongoDB_1.User.findById(user_id).exec();
+            if (!user_contacting) {
+                throw new Error("Usuario no encontrado en la base de datos.");
+            }
+            const userInDBPosting = yield mongoDB_1.Post.findById(post_id, {
+                user_posting: 1,
+                _id: 0,
+            })
+                .lean()
+                .exec();
+            if (!userInDBPosting) {
+                throw new Error("No se han encontrado los datos del creador del aviso.");
+            }
+            const user_posting = userInDBPosting.user_posting;
+            // Chequear si excedió los 5 contactos en las últimas 24hs. throw Error || void :
+            (0, post_r_auxiliary_1.checkContactsDate)(user_contacting);
+            yield (0, nodemailer_fns_1.sendContactInfoEmailToBothUsers)(user_posting, user_contacting);
+            res.status(202).send({ msg: "Processing request. Check your email." });
+            // add new contact to user_contacting_contacts:
+            (0, post_r_auxiliary_1.addContactDateToUserContacting)(user_contacting).then(function (succ) {
+                console.log("addContactDateToUserContacting: OK");
+            }, function (error) {
+                console.log("addContactDateToUserContacting: ERROR = ", error);
+            });
+        }
+        catch (error) {
+            console.log(`Error en ruta POST "contact/:_id". ${error.message}`);
+            return res.status(400).send({ error: error.message });
+        }
+    });
+}
+exports.handleContactUserRequest = handleContactUserRequest;

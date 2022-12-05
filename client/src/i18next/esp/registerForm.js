@@ -14,4 +14,10 @@ export const registerForm = {
   errorTitle: "Error",
   errorSubtitle: "Usted no se encuentra logueado, por favor inicie sesión.",
   errorButton: "Ok",
+  swalErrorSubmitFailedTitle: "Algo salió mal 😶",
+  swalErrorSubmitFailedText:
+    "Por favor, chequea tu conexión a internet y vuelve a intentarlo.",
+  swalSubmitSuccessTitle: "¡Has sido registrado!",
+  swalSubmitSuccessText: "Esperamos que disfrutes de LostFound",
+  swalConfirmButtonText: "Continuar",
 };
