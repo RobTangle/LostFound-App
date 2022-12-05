@@ -109,7 +109,9 @@ function handleGetPostByIdRequest(req, res) {
             if (postFoundById === null) {
                 return res
                     .status(404)
-                    .send(`Post con id "${post_id}"  no encontrado en la base de datos.`);
+                    .send("Post con id '" +
+                    encodeURI(post_id) +
+                    "' no encontrado en la base de datos.");
             }
             return res.status(200).send(postFoundById);
         }
