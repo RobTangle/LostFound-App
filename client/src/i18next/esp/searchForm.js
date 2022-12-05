@@ -9,4 +9,9 @@ export const searchForm = {
   title: "Perdiste documentos importantes?",
   subtitle: "Completa los campos a continuación para encontrarlos",
   submitButton: "Buscar",
+  // errors :
+  errorNameInvalid:
+    "Nombre inválido. Escriba el nombre como figura en el documento.",
+  errorNumberInvalid:
+    "Número de documento inválido. Escriba el número que figura en el documento o deje el campo vacío.",
 };

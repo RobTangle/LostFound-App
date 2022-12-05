@@ -16,14 +16,19 @@ export function searchFormValidator({ name, number, country, date_lost }, t) {
         validAttr.name_on_doc.minLength,
         validAttr.name_on_doc.maxLength,
         name
-      ) &&
+      )
+    ) {
+      throw new Error(t("searchForm.errorNameInvalid"));
+    }
+    if (
+      number &&
       !isStringBetweenXAndYCharsLong(
         validAttr.number_on_doc?.minLength,
         validAttr.number_on_doc?.maxLength,
         number
       )
     ) {
-      throw new Error(t("postForm.errorNameAndNumberFalsy"));
+      throw new Error(t("searchForm.errorNumberInvalid"));
     }
     if (name.length > validAttr.name_on_doc.maxLength) {
       throw new Error(t("postForm.errorNameLength"));

@@ -124,6 +124,8 @@ const PostForm = () => {
               name="name_on_doc"
               value={post.name_on_doc}
               maxLength={validAttr.name_on_doc.maxLength}
+              minLength={validAttr.name_on_doc.minLength}
+              required
               type="text"
               placeholder={t("postForm.namePlaceholder")}
               onChange={handleChange}
@@ -145,6 +147,7 @@ const PostForm = () => {
               type="text"
               name="number_on_doc"
               maxLength={validAttr.number_on_doc.maxLength}
+              minLength={validAttr.number_on_doc.minLength}
               value={post.number_on_doc}
               placeholder="10.111.213 | 4544-2222-2222-2222"
               onChange={handleChange}

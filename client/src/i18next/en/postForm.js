@@ -22,6 +22,9 @@ export const postForm = {
   // errors:
   errorNameAndNumberFalsy:
     "You must enter the full name on the document and/or the number on the document.",
+  errorNameInvalid: "Invalid name. Please, enter the name on the document.",
+  errorNumberInvalid:
+    "Invalid number on document. Please, enter the number on the document or leave the input empty.",
   errorNameLength:
     "The name on the document is too long. Enter a maximum of 60 characters.",
   errorNumberLength:

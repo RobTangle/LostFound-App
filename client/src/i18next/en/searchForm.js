@@ -8,4 +8,8 @@ export const searchForm = {
   title: "Lost your documents?",
   subtitle: "Complete the fields to find them",
   submitButton: "Search",
+  // errors :
+  errorNameInvalid: "Invalid name. Please, enter the name on the document.",
+  errorNumberInvalid:
+    "Invalid number on document. Please, enter the number on the document or leave the input empty.",
 };
