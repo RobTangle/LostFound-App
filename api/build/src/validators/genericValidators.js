@@ -144,8 +144,13 @@ function isTypeofNumber(argumento) {
 exports.isTypeofNumber = isTypeofNumber;
 //IS EMAIL :
 function isEmail(argumento) {
+    if (argumento.length > 150) {
+        console.log("Error en fn val isEmail. El argumento es demasiado largo.");
+        throw new Error("The email length is too long");
+    }
+    let argTrimmed = argumento.trim();
     let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])");
-    return regex.test(argumento);
+    return regex.test(argTrimmed);
 }
 exports.isEmail = isEmail;
 // IS VALID URL IMAGE :
@@ -153,7 +158,12 @@ function isValidURLImage(argumento) {
     if (typeof argumento !== "string") {
         return false;
     }
-    return (argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
+    if (argumento.length > 250) {
+        console.log("Error en val fn isValidURLImage. El argumento es demasiado largo.");
+        throw new Error("The length of the url image is too long.");
+    }
+    let argTrimmed = argumento.trim();
+    return (argTrimmed.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
         null);
 }
 exports.isValidURLImage = isValidURLImage;
@@ -170,7 +180,12 @@ function stringToBoolean(argumento) {
 exports.stringToBoolean = stringToBoolean;
 // STRING CONTAINS URLS :
 function stringContainsURLs(argumento) {
-    if (new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(argumento)) {
+    if (argumento.length > 1000) {
+        console.log("Error en fn val stringContainsURLs: El argumento es demasiado largo.");
+        throw new Error("El argumento es demasiado largo.");
+    }
+    let argTrimmed = argumento.trim();
+    if (new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(argTrimmed)) {
         return true;
     }
     else {

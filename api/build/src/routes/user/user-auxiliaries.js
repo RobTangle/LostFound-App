@@ -72,7 +72,7 @@ function throwErrorIfEmailExistsInDB(emailFromReq) {
             throw new Error(`Error al chequear si el email existe en la DataBase: el email '${emailFromReq}' no tiene un formato de email válido.`);
         }
         let emailRegisteredAlready = yield mongoDB_1.User.findOne({
-            email: emailFromReq,
+            email: { $eq: emailFromReq },
         }, { _id: 1, name: 1 })
             .lean()
             .exec();

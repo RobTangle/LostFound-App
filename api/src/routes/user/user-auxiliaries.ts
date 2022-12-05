@@ -62,7 +62,7 @@ export async function throwErrorIfEmailExistsInDB(
   }
   let emailRegisteredAlready = await User.findOne(
     {
-      email: emailFromReq,
+      email: { $eq: emailFromReq },
     },
     { _id: 1, name: 1 }
   )
