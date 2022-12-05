@@ -90,7 +90,7 @@ const PostForm = () => {
   };
 
   useEffect(() => {
-    !countries.lenght && dispatch(getCountries(currentLang));
+    !countries.length && dispatch(getCountries(currentLang));
   }, [dispatch]);
 
   return (
