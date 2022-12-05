@@ -180,6 +180,10 @@ function stringToBoolean(argumento) {
 exports.stringToBoolean = stringToBoolean;
 // STRING CONTAINS URLS :
 function stringContainsURLs(argumento) {
+    if (typeof argumento !== "string") {
+        console.log("Error en val fn stringContainsURLs. El argumento no es un string.");
+        throw new Error("The argument must be a string");
+    }
     if (argumento.length > 1000) {
         console.log("Error en fn val stringContainsURLs: El argumento es demasiado largo.");
         throw new Error("El argumento es demasiado largo.");
