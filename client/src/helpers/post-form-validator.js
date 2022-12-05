@@ -20,14 +20,19 @@ export function postFormValidator(post, t) {
         validAttr.name_on_doc.minLength,
         validAttr.name_on_doc.maxLength,
         name_on_doc
-      ) &&
+      )
+    ) {
+      throw new Error(t("searchForm.errorNameInvalid"));
+    }
+    if (
+      number &&
       !isStringBetweenXAndYCharsLong(
-        validAttr.number_on_doc.minLength,
-        validAttr.number_on_doc.maxLength,
+        validAttr.number_on_doc?.minLength,
+        validAttr.number_on_doc?.maxLength,
         number_on_doc
       )
     ) {
-      throw new Error(t("postForm.errorNameAndNumberFalsy"));
+      throw new Error(t("searchForm.errorNumberInvalid"));
     }
     if (name_on_doc.length > validAttr.name_on_doc.maxLength) {
       throw new Error(t("postForm.errorNameLength"));

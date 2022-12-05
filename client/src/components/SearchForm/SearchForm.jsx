@@ -8,6 +8,7 @@ import { searchFormValidator } from "../../helpers/search-form-validation";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
 import Swal from "sweetalert2";
+import { validAttr } from "../../helpers/validAttributesObj";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -38,7 +39,7 @@ const SearchForm = () => {
     const validation = searchFormValidator(search, t);
     if (validation.error) {
       // RENDER ERROR MESSAGE
-    Swal.fire({
+      Swal.fire({
         title: "Error",
         text: `${validation.error}`,
         icon: "warning",
@@ -70,12 +71,14 @@ const SearchForm = () => {
       </div>
       <form
         className="w-full mx-auto h-full flex flex-col justify-around md:gap-6 sm:px-6 md:px-2 text-gray font-sans "
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-wrap mb-2 gap-2 md:gap-6">
           <div className="w-full  px-3">
             <label
               className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
-              htmlFor="grid-last-name">
+              htmlFor="grid-last-name"
+            >
               {t("searchForm.nameLabel")}
             </label>
             <input
@@ -83,6 +86,9 @@ const SearchForm = () => {
               id="grid-last-name"
               name="name"
               value={search.name}
+              required
+              maxLength={validAttr.name_on_doc.maxLength}
+              minLength={validAttr.name_on_doc.minLength}
               type="text"
               placeholder={t("searchForm.namePlaceholder")}
               onChange={handleChange}
@@ -91,7 +97,8 @@ const SearchForm = () => {
           <div className="w-full  px-3">
             <label
               className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
-              htmlFor="grid-last-name">
+              htmlFor="grid-last-name"
+            >
               {t("searchForm.numberLabel")}
             </label>
             <input
@@ -100,6 +107,8 @@ const SearchForm = () => {
               type="text"
               name="number"
               value={search.number}
+              maxLength={validAttr.number_on_doc.maxLength}
+              minLength={validAttr.number_on_doc.minLength}
               placeholder="10.111.213 | 4544-2222-2222-2222"
               onChange={handleChange}
             />
@@ -109,7 +118,8 @@ const SearchForm = () => {
           <div className="w-full  px-3">
             <label
               className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
-              htmlFor="grid-state">
+              htmlFor="grid-state"
+            >
               {t("searchForm.countryLabel")}
             </label>
             <div className="relative">
@@ -118,7 +128,8 @@ const SearchForm = () => {
                 id="grid-state"
                 name="country"
                 required
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 <option value="">Select a country</option>
                 {countries.length &&
                   countries.map((c) => (
@@ -131,7 +142,8 @@ const SearchForm = () => {
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20">
+                  viewBox="0 0 20 20"
+                >
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
@@ -140,7 +152,8 @@ const SearchForm = () => {
           <div className="w-full  px-3">
             <label
               className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
-              htmlFor="grid-zip">
+              htmlFor="grid-zip"
+            >
               {t("searchForm.dateLabel")}
             </label>
             <input
