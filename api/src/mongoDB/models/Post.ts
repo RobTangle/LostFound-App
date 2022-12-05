@@ -33,7 +33,7 @@ export const postSchema: Schema = new Schema<IPost>(
       required: false,
       lowercase: true,
     },
-    country_found: { type: String, required: true, uppercase: true },
+    country_found: { type: String, required: true, lowercase: true },
     date_found: { type: Date, required: true },
     blurred_imgs: [{ type: String, required: false }],
     comments: { type: String, maxlength: 800, required: false },
