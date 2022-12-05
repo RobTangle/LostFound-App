@@ -60,8 +60,8 @@ const SearchForm = () => {
   }, [dispatch]);
 
   return (
-    <div lassName="grid md:flex font-sans">
-      <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-green">
+    <div className="grid md:flex font-sans md:min-h-[80vh]">
+      <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-green ">
         <h1 className="text-2xl text-white md:text-5xl md:mt-6 md:ml-8 w-full text-center md:text-start p-2 md:p-0 lg:w-3/4">
           {t("searchForm.title")}
         </h1>
@@ -70,9 +70,9 @@ const SearchForm = () => {
         </p>
       </div>
       <form
-        className="w-full mx-auto h-full flex flex-col justify-between sm:px-6 md:px-2 text-gray font-sans"
+        className="w-full mx-auto h-full flex flex-col justify-around md:gap-6 sm:px-6 md:px-2 text-gray font-sans "
         onSubmit={handleSubmit}>
-        <div className="flex flex-wrap mb-2 gap-2">
+        <div className="flex flex-wrap mb-2 gap-2 md:gap-6">
           <div className="w-full  px-3">
             <label
               className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
@@ -106,7 +106,7 @@ const SearchForm = () => {
             />
           </div>
         </div>
-        <div className="flex flex-wrap mb-2 gap-2">
+        <div className="flex flex-wrap mb-2 gap-2 md:gap-6">
           <div className="w-full  px-3">
             <label
               className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
