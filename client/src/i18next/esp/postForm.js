@@ -33,4 +33,8 @@ export const postForm = {
   errorCommentsLength: "El comentario no puede tener más de 800 caracteres.",
   errorAdditional_contact_info_length:
     "La información de contacto adicional excede la cantidad de caracteres permitidos.",
+  errorNameInvalid:
+    "Nombre inválido. Escriba el nombre como figura en el documento.",
+  errorNumberInvalid:
+    "Número de documento inválido. Escriba el número que figura en el documento o deje el campo vacío.",
 };
