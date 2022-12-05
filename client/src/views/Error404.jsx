@@ -5,13 +5,13 @@ import { useTranslation } from "react-i18next";
 export function Error404() {
   const { t } = useTranslation();
   return (
-    <>
-      <div className="flex w-full justify-center my-5">
+    <div className="md:min-h-screen md:flex md:flex-col md:justify-center">
+      <div className="flex w-full  justify-center my-5">
         <Link
-          className=" text-2xl md:text-5xl  font-bold font-heading text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-600 to-indigo-700"
+          className=" text-2xl md:text-5xl  font-bold font-heading text-transparent bg-clip-text bg-gradient-to-r from-green/60 via-green to-blue/10"
           to="/home">
           LOST
-          <span className="font-heading text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-700">
+          <span className="font-heading text-transparent bg-clip-text bg-gradient-to-r from-blue/50 via-blue/80 to-blue">
             FOUND
           </span>
         </Link>
@@ -35,6 +35,6 @@ export function Error404() {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
