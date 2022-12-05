@@ -1,4 +1,3 @@
-import { IUser } from "../mongoDB/models/User";
 import {
   checkAndParseDate,
   isFalsyArgument,

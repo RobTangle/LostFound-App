@@ -1,6 +1,5 @@
 import { isValidObjectId } from "mongoose";
 import { Post, Subscription, User } from "../../mongoDB";
-import { IUser } from "../../mongoDB/models/User";
 import {
   isEmail,
   isStringBetweenXAndYCharsLong,
