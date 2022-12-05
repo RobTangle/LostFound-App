@@ -104,7 +104,7 @@ const PostForm = () => {
         </p>
       </div>
       <form
-        className="w-full mx-auto h-full flex flex-col justify-between sm:px-6 md:px-2 text-gray"
+        className="w-full mx-auto h-full flex flex-col justify-between sm:px-6 md:px-2 text-gray font-sans"
         onSubmit={handleSubmit}
       >
         <div className="flex flex-wrap  mb-1 gap-2 w-full md:grid md:grid-cols-2">

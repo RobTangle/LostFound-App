@@ -7,16 +7,7 @@ import {
 import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
 
-// export function allUsers(obj, token) {
-//   return async function (dispatch) {
-//     try {
-//       let response = await axios.get(URL_ALL_USERS, header(token));
-//       return dispatch(setAllUsers(response.data));
-//     } catch (error) {
-//       return dispatch(setAllUsers({ error: error.response?.data?.error }));
-//     }
-//   };
-// }
+
 export function createPost(post, token) {
   return async function (dispatch) {
     try {
