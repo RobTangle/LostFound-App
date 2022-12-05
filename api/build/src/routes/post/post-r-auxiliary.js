@@ -30,9 +30,12 @@ function searchPostsByQuery(queryFromReq) {
             const postsFound = yield mongoDB_1.Post.find({
                 $and: [
                     {
-                        $or: [{ name_on_doc: name }, { number_on_doc: numberOnDocParsed }],
+                        $or: [
+                            { name_on_doc: { $eq: name } },
+                            { number_on_doc: { $eq: numberOnDocParsed } },
+                        ],
                     },
-                    { country_found: country },
+                    { country_found: { $eq: country } },
                     { date_found: { $gte: verifiedDate } },
                 ],
             }, {
