@@ -32,7 +32,7 @@ export function validateUpdatePostData(bodyFromReq: any): {
 
   const validatedUpdatePostData = {
     name_on_doc: checkAndParseNameOnDoc(name_on_doc),
-    number_on_doc: checkNumberOnDoc(number_on_doc),
+    number_on_doc: checkAndParseNumberOnDoc(number_on_doc),
     country_found: checkCountry(country_found),
     date_found: checkAndParseDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
@@ -67,7 +67,7 @@ export function validatePost(bodyFromReq: any): {
 
   const validatedPost = {
     name_on_doc: checkAndParseNameOnDoc(name_on_doc),
-    number_on_doc: checkNumberOnDoc(number_on_doc),
+    number_on_doc: checkAndParseNumberOnDoc(number_on_doc),
     country_found: checkCountry(country_found),
     date_found: checkAndParseDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
@@ -103,7 +103,9 @@ export function checkAndParseNameOnDoc(nameFromReq: any): string {
   throw new Error(`El nombre en el documento "${nameFromReq} no es válido.`);
 }
 
-export function checkNumberOnDoc(numberOnDocFromReq: any): string | undefined {
+export function checkAndParseNumberOnDoc(
+  numberOnDocFromReq: string | undefined
+): string | undefined {
   if (!numberOnDocFromReq) {
     return undefined;
   }
@@ -122,6 +124,7 @@ export function checkNumberOnDoc(numberOnDocFromReq: any): string | undefined {
 export function parseNumberOnDoc(numberOnDocFromReq: string): string {
   // excluyen los símbolos y sólo deja caracteres alfanuméricos y en lowercase :
   let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
+    .trim()
     .replace(/[^A-Za-z0-9]/g, "")
     .toLowerCase();
   return onlyAlphaNumCharsAndLowerCased;

@@ -1,7 +1,7 @@
 import { Post, User } from "../../mongoDB";
 import {
   checkAndParseNameOnDoc,
-  parseNumberOnDoc,
+  checkAndParseNumberOnDoc,
   validateUpdatePostData,
 } from "../../validators/post-validators";
 import { checkAndParseDate } from "../../validators/genericValidators";
@@ -20,17 +20,19 @@ export async function searchPostsByQuery(
 
     // Parseo de inputs:
     let nameOnDocParsed = checkAndParseNameOnDoc(name);
+    console.log(nameOnDocParsed);
+
     let countryParsed = country.toLowerCase();
-    let numberOnDocParsed;
-    // parseo el número del documento para sacarle los símbolos:
-    if (typeof number === "string") {
-      // numberOnDocParsed = number.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
-      numberOnDocParsed = parseNumberOnDoc(number);
-    }
+    console.log(countryParsed);
+
+    let numberOnDocParsed = checkAndParseNumberOnDoc(number);
+    console.log(numberOnDocParsed);
 
     // date_lost tiene que ser menor o igual que date_found para que matchee.
     // La parseo con DateTime para chequear si es una fecha válida y que salte un error si no lo es:
     let verifiedDate = checkAndParseDate(date_lost);
+    console.log(verifiedDate);
+
     // mongoose automáticamente compara la fecha yyyy-MM-dd correctamente contra la ISO de la DB. Pero igualmente intento parsearla con Luxon para que chequee si es una fecha válida o no. Si no lo es, tirará error. Si lo es, aprovecho y la uso para la query, pero es lo mismo que usar la date yyyy-MM-dd que viene por query.
 
     const postsFound = await Post.find(
