@@ -87,7 +87,7 @@ function userExistsInDBBoolean(user_id) {
         if (!user_id || typeof user_id !== "string") {
             throw new Error(`El id de usuario "${user_id}"a buscar no es válido.`);
         }
-        const userInDB = yield mongoDB_1.User.findById(user_id, { _id: 1 }).lean().exec();
+        const userInDB = yield mongoDB_1.User.exists({ _id: { $eq: user_id } });
         if (userInDB) {
             return true;
         }

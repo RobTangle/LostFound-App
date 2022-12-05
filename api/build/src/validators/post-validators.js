@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkCountry = exports.checkNumberOnDoc = exports.checkNameOnDoc = exports.validatePost = exports.validateUpdatePostData = void 0;
+exports.checkCountry = exports.parseNumberOnDoc = exports.checkAndParseNumberOnDoc = exports.checkAndParseNameOnDoc = exports.validatePost = exports.validateUpdatePostData = void 0;
 const genericValidators_1 = require("./genericValidators");
 const CountiesArrays_1 = require("../miscellanea/CountiesArrays");
 // VALIDATE UPDATE POST DATA :
 function validateUpdatePostData(bodyFromReq) {
     const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, additional_contact_info, } = bodyFromReq;
     const validatedUpdatePostData = {
-        name_on_doc: checkNameOnDoc(name_on_doc),
-        number_on_doc: checkNumberOnDoc(number_on_doc),
+        name_on_doc: checkAndParseNameOnDoc(name_on_doc),
+        number_on_doc: checkAndParseNumberOnDoc(number_on_doc),
         country_found: checkCountry(country_found),
         date_found: (0, genericValidators_1.checkAndParseDate)(date_found),
         blurred_imgs: checkBlurredImgs(blurred_imgs),
@@ -22,8 +22,8 @@ exports.validateUpdatePostData = validateUpdatePostData;
 function validatePost(bodyFromReq) {
     const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, user_posting, additional_contact_info, } = bodyFromReq;
     const validatedPost = {
-        name_on_doc: checkNameOnDoc(name_on_doc),
-        number_on_doc: checkNumberOnDoc(number_on_doc),
+        name_on_doc: checkAndParseNameOnDoc(name_on_doc),
+        number_on_doc: checkAndParseNumberOnDoc(number_on_doc),
         country_found: checkCountry(country_found),
         date_found: (0, genericValidators_1.checkAndParseDate)(date_found),
         blurred_imgs: checkBlurredImgs(blurred_imgs),
@@ -43,31 +43,42 @@ function checkAdditionalContactInfo(addContactInfoFromReq) {
     }
     throw new Error(`La información de contacto adicional '${addContactInfoFromReq}' no es válida. Ingrese una cadena de texto de hasta 150 caracteres de largo.`);
 }
-function checkNameOnDoc(nameFromReq) {
+function checkAndParseNameOnDoc(nameFromReq) {
     if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(100, nameFromReq)) {
         if ((0, genericValidators_1.stringContainsURLs)(nameFromReq)) {
             throw new Error(`URLs are not allowed.`);
         }
-        let nameParsedToLowerCase = nameFromReq.toLowerCase();
+        let nameParsedToLowerCase = nameFromReq.toLowerCase().trim();
         return nameParsedToLowerCase;
     }
     throw new Error(`El nombre en el documento "${nameFromReq} no es válido.`);
 }
-exports.checkNameOnDoc = checkNameOnDoc;
-function checkNumberOnDoc(numberOnDocFromReq) {
+exports.checkAndParseNameOnDoc = checkAndParseNameOnDoc;
+function checkAndParseNumberOnDoc(numberOnDocFromReq) {
     if (!numberOnDocFromReq) {
         return undefined;
     }
     if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(100, numberOnDocFromReq)) {
         // estos métodos dejan afuera las letras con tíldes. Pero como debería ser un número, no deberían haber caracteres de ese tipo.
-        let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
-            .replace(/[^A-Za-z0-9]/g, "")
-            .toLowerCase();
-        return onlyAlphaNumCharsAndLowerCased;
+        // let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
+        //   .replace(/[^A-Za-z0-9]/g, "")
+        //   .toLowerCase();
+        // return onlyAlphaNumCharsAndLowerCased;
+        return parseNumberOnDoc(numberOnDocFromReq);
     }
     throw new Error(`The document number "${numberOnDocFromReq}" is invalid.`);
 }
-exports.checkNumberOnDoc = checkNumberOnDoc;
+exports.checkAndParseNumberOnDoc = checkAndParseNumberOnDoc;
+// PARSE NUMBER ON DOC :
+function parseNumberOnDoc(numberOnDocFromReq) {
+    // excluyen los símbolos y sólo deja caracteres alfanuméricos y en lowercase :
+    let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
+        .trim()
+        .replace(/[^A-Za-z0-9]/g, "")
+        .toLowerCase();
+    return onlyAlphaNumCharsAndLowerCased;
+}
+exports.parseNumberOnDoc = parseNumberOnDoc;
 // Buscar forma de tener los mismos países en el front que en el back. En el front se deberían ver los nombres de los países.
 // Podría ordenar el arreglo para que los países más populares estén en los primeros elementos de la lista para que encuentre el match rápidamente.
 // Crear índices en MongoDB
@@ -75,11 +86,12 @@ function checkCountry(countryFromReq) {
     if (!(0, genericValidators_1.isStringXCharsLong)(2, countryFromReq)) {
         throw new Error(`The country must be a string 2 chars long.`);
     }
+    let countryFromReqLowerCased = countryFromReq.toLowerCase();
     // CHECKEAR SI EXISTE EN EL ARREGLO DE PAÍSES...
     for (let i = 0; i < CountiesArrays_1.arrayOfCountriesTwoChars.length; i++) {
         const element = CountiesArrays_1.arrayOfCountriesTwoChars[i];
-        if (element.toUpperCase() === countryFromReq.toUpperCase()) {
-            return element;
+        if (element.toLowerCase() === countryFromReqLowerCased) {
+            return element.toLowerCase();
         }
     }
     throw new Error(`The country "${countryFromReq}" is invalid.`);
