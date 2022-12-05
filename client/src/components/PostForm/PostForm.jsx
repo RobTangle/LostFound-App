@@ -125,6 +125,7 @@ const PostForm = () => {
               value={post.name_on_doc}
               maxLength={validAttr.name_on_doc.maxLength}
               minLength={validAttr.name_on_doc.minLength}
+              required
               type="text"
               placeholder={t("postForm.namePlaceholder")}
               onChange={handleChange}
