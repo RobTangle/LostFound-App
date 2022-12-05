@@ -38,7 +38,7 @@ const SearchForm = () => {
     const validation = searchFormValidator(search, t);
     if (validation.error) {
       // RENDER ERROR MESSAGE
-      Swal.fire({
+    Swal.fire({
         title: "Error",
         text: `${validation.error}`,
         icon: "warning",
@@ -53,10 +53,9 @@ const SearchForm = () => {
       }
     }
   };
-
   useEffect(() => {
     console.log("Paises = ", countries.length);
-    !countries.lenght && dispatch(getCountries(currentLang));
+    !countries.length && dispatch(getCountries(currentLang));
   }, [dispatch]);
 
   return (
@@ -115,7 +114,7 @@ const SearchForm = () => {
             </label>
             <div className="relative">
               <select
-                className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="block appearance-none w-full bg-gray-200 border  border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-state"
                 name="country"
                 required
