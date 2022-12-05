@@ -1,4 +1,3 @@
-import { IUser } from "../mongoDB/models/User";
 import {
   checkAndParseDate,
   isFalsyArgument,
@@ -31,8 +30,8 @@ export function validateUpdatePostData(bodyFromReq: any): {
   } = bodyFromReq;
 
   const validatedUpdatePostData = {
-    name_on_doc: checkNameOnDoc(name_on_doc),
-    number_on_doc: checkNumberOnDoc(number_on_doc),
+    name_on_doc: checkAndParseNameOnDoc(name_on_doc),
+    number_on_doc: checkAndParseNumberOnDoc(number_on_doc),
     country_found: checkCountry(country_found),
     date_found: checkAndParseDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
@@ -66,8 +65,8 @@ export function validatePost(bodyFromReq: any): {
   } = bodyFromReq;
 
   const validatedPost = {
-    name_on_doc: checkNameOnDoc(name_on_doc),
-    number_on_doc: checkNumberOnDoc(number_on_doc),
+    name_on_doc: checkAndParseNameOnDoc(name_on_doc),
+    number_on_doc: checkAndParseNumberOnDoc(number_on_doc),
     country_found: checkCountry(country_found),
     date_found: checkAndParseDate(date_found),
     blurred_imgs: checkBlurredImgs(blurred_imgs),
@@ -92,29 +91,42 @@ function checkAdditionalContactInfo(
   );
 }
 
-export function checkNameOnDoc(nameFromReq: any): string {
+export function checkAndParseNameOnDoc(nameFromReq: any): string {
   if (isStringBetween1AndXCharsLong(100, nameFromReq)) {
     if (stringContainsURLs(nameFromReq)) {
       throw new Error(`URLs are not allowed.`);
     }
-    let nameParsedToLowerCase = nameFromReq.toLowerCase();
+    let nameParsedToLowerCase = nameFromReq.toLowerCase().trim();
     return nameParsedToLowerCase;
   }
   throw new Error(`El nombre en el documento "${nameFromReq} no es válido.`);
 }
 
-export function checkNumberOnDoc(numberOnDocFromReq: any): string | undefined {
+export function checkAndParseNumberOnDoc(
+  numberOnDocFromReq: string | undefined
+): string | undefined {
   if (!numberOnDocFromReq) {
     return undefined;
   }
   if (isStringBetween1AndXCharsLong(100, numberOnDocFromReq)) {
     // estos métodos dejan afuera las letras con tíldes. Pero como debería ser un número, no deberían haber caracteres de ese tipo.
-    let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
-      .replace(/[^A-Za-z0-9]/g, "")
-      .toLowerCase();
-    return onlyAlphaNumCharsAndLowerCased;
+    // let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
+    //   .replace(/[^A-Za-z0-9]/g, "")
+    //   .toLowerCase();
+    // return onlyAlphaNumCharsAndLowerCased;
+    return parseNumberOnDoc(numberOnDocFromReq);
   }
   throw new Error(`The document number "${numberOnDocFromReq}" is invalid.`);
+}
+
+// PARSE NUMBER ON DOC :
+export function parseNumberOnDoc(numberOnDocFromReq: string): string {
+  // excluyen los símbolos y sólo deja caracteres alfanuméricos y en lowercase :
+  let onlyAlphaNumCharsAndLowerCased = numberOnDocFromReq
+    .trim()
+    .replace(/[^A-Za-z0-9]/g, "")
+    .toLowerCase();
+  return onlyAlphaNumCharsAndLowerCased;
 }
 
 // Buscar forma de tener los mismos países en el front que en el back. En el front se deberían ver los nombres de los países.
@@ -124,11 +136,12 @@ export function checkCountry(countryFromReq: any): string {
   if (!isStringXCharsLong(2, countryFromReq)) {
     throw new Error(`The country must be a string 2 chars long.`);
   }
+  let countryFromReqLowerCased = countryFromReq.toLowerCase();
   // CHECKEAR SI EXISTE EN EL ARREGLO DE PAÍSES...
   for (let i = 0; i < arrayOfCountriesTwoChars.length; i++) {
     const element = arrayOfCountriesTwoChars[i];
-    if (element.toUpperCase() === countryFromReq.toUpperCase()) {
-      return element;
+    if (element.toLowerCase() === countryFromReqLowerCased) {
+      return element.toLowerCase();
     }
   }
   throw new Error(`The country "${countryFromReq}" is invalid.`);

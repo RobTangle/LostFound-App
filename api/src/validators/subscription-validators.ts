@@ -7,8 +7,8 @@ import {
 import { ISubscription } from "../mongoDB/models/Subscription";
 import {
   checkCountry,
-  checkNameOnDoc,
-  checkNumberOnDoc,
+  checkAndParseNameOnDoc,
+  checkAndParseNumberOnDoc,
 } from "./post-validators";
 
 export function validateUpdateSubscriptionData(bodyFromReq: any) {
@@ -21,8 +21,8 @@ export function validateUpdateSubscriptionData(bodyFromReq: any) {
   } = bodyFromReq;
   const validatedData = {
     // _id: checkObjectId(subscription_id),
-    name_on_doc: checkNameOnDoc(name_on_doc),
-    number_on_doc: checkNumberOnDoc(number_on_doc),
+    name_on_doc: checkAndParseNameOnDoc(name_on_doc),
+    number_on_doc: checkAndParseNumberOnDoc(number_on_doc),
     country_lost: checkCountry(country_lost),
     date_lost: checkAndParseDate(date_lost),
   };
@@ -38,8 +38,8 @@ export function validateSubscription(bodyFromReq: any): ISubscription {
     user_subscribed,
   } = bodyFromReq;
   const validatedSubscription = {
-    name_on_doc: checkNameOnDoc(name_on_doc),
-    number_on_doc: checkNumberOnDoc(number_on_doc),
+    name_on_doc: checkAndParseNameOnDoc(name_on_doc),
+    number_on_doc: checkAndParseNumberOnDoc(number_on_doc),
     country_lost: checkCountry(country_lost),
     date_lost: checkAndParseDate(date_lost),
     user_subscribed: checkUserSubscribed(user_subscribed),

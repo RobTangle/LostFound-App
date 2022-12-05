@@ -1,6 +1,5 @@
 import { isValidObjectId } from "mongoose";
 import { Post, Subscription, User } from "../../mongoDB";
-import { IUser } from "../../mongoDB/models/User";
 import {
   isEmail,
   isStringBetweenXAndYCharsLong,
@@ -81,7 +80,7 @@ export async function userExistsInDBBoolean(
   if (!user_id || typeof user_id !== "string") {
     throw new Error(`El id de usuario "${user_id}"a buscar no es válido.`);
   }
-  const userInDB = await User.findById(user_id, { _id: 1 }).lean().exec();
+  const userInDB = await User.exists({ _id: { $eq: user_id } });
   if (userInDB) {
     return true;
   } else {

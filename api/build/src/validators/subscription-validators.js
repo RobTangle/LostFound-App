@@ -9,8 +9,8 @@ function validateUpdateSubscriptionData(bodyFromReq) {
     name_on_doc, number_on_doc, country_lost, date_lost, } = bodyFromReq;
     const validatedData = {
         // _id: checkObjectId(subscription_id),
-        name_on_doc: (0, post_validators_1.checkNameOnDoc)(name_on_doc),
-        number_on_doc: (0, post_validators_1.checkNumberOnDoc)(number_on_doc),
+        name_on_doc: (0, post_validators_1.checkAndParseNameOnDoc)(name_on_doc),
+        number_on_doc: (0, post_validators_1.checkAndParseNumberOnDoc)(number_on_doc),
         country_lost: (0, post_validators_1.checkCountry)(country_lost),
         date_lost: (0, genericValidators_1.checkAndParseDate)(date_lost),
     };
@@ -20,8 +20,8 @@ exports.validateUpdateSubscriptionData = validateUpdateSubscriptionData;
 function validateSubscription(bodyFromReq) {
     const { name_on_doc, number_on_doc, country_lost, date_lost, user_subscribed, } = bodyFromReq;
     const validatedSubscription = {
-        name_on_doc: (0, post_validators_1.checkNameOnDoc)(name_on_doc),
-        number_on_doc: (0, post_validators_1.checkNumberOnDoc)(number_on_doc),
+        name_on_doc: (0, post_validators_1.checkAndParseNameOnDoc)(name_on_doc),
+        number_on_doc: (0, post_validators_1.checkAndParseNumberOnDoc)(number_on_doc),
         country_lost: (0, post_validators_1.checkCountry)(country_lost),
         date_lost: (0, genericValidators_1.checkAndParseDate)(date_lost),
         user_subscribed: checkUserSubscribed(user_subscribed),

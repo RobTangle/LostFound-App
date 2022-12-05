@@ -17,22 +17,27 @@ function searchPostsByQuery(queryFromReq) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { name, number, country, date_lost } = queryFromReq;
-            // parseo el número del documento para sacarle los símbolos:
-            let numberOnDocParsed;
-            if (typeof number === "string") {
-                numberOnDocParsed = number.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
-            }
+            // Parseo de inputs:
+            let nameOnDocParsed = (0, post_validators_1.checkAndParseNameOnDoc)(name);
+            console.log(nameOnDocParsed);
+            let countryParsed = country.toLowerCase();
+            console.log(countryParsed);
+            let numberOnDocParsed = (0, post_validators_1.checkAndParseNumberOnDoc)(number);
+            console.log(numberOnDocParsed);
             // date_lost tiene que ser menor o igual que date_found para que matchee.
             // La parseo con DateTime para chequear si es una fecha válida y que salte un error si no lo es:
             let verifiedDate = (0, genericValidators_1.checkAndParseDate)(date_lost);
+            console.log(verifiedDate);
             // mongoose automáticamente compara la fecha yyyy-MM-dd correctamente contra la ISO de la DB. Pero igualmente intento parsearla con Luxon para que chequee si es una fecha válida o no. Si no lo es, tirará error. Si lo es, aprovecho y la uso para la query, pero es lo mismo que usar la date yyyy-MM-dd que viene por query.
-            // El name se compara automáticamente con un "iLike". No hace falta pasarla a minúscula.
             const postsFound = yield mongoDB_1.Post.find({
                 $and: [
                     {
-                        $or: [{ name_on_doc: name }, { number_on_doc: numberOnDocParsed }],
+                        $or: [
+                            { name_on_doc: { $eq: nameOnDocParsed } },
+                            { number_on_doc: { $eq: numberOnDocParsed } },
+                        ],
                     },
-                    { country_found: country },
+                    { country_found: { $eq: countryParsed } },
                     { date_found: { $gte: verifiedDate } },
                 ],
             }, {
