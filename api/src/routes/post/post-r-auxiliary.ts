@@ -1,5 +1,9 @@
 import { Post, User } from "../../mongoDB";
-import { validateUpdatePostData } from "../../validators/post-validators";
+import {
+  checkAndParseNameOnDoc,
+  parseNumberOnDoc,
+  validateUpdatePostData,
+} from "../../validators/post-validators";
 import { checkAndParseDate } from "../../validators/genericValidators";
 import { IUser } from "../../mongoDB/models/User";
 import { Document } from "mongoose";
@@ -13,25 +17,32 @@ export async function searchPostsByQuery(
 > {
   try {
     const { name, number, country, date_lost } = queryFromReq;
-    // parseo el número del documento para sacarle los símbolos:
+
+    // Parseo de inputs:
+    let nameOnDocParsed = checkAndParseNameOnDoc(name);
+    let countryParsed = country.toLowerCase();
     let numberOnDocParsed;
+    // parseo el número del documento para sacarle los símbolos:
     if (typeof number === "string") {
-      numberOnDocParsed = number.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+      // numberOnDocParsed = number.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+      numberOnDocParsed = parseNumberOnDoc(number);
     }
 
     // date_lost tiene que ser menor o igual que date_found para que matchee.
     // La parseo con DateTime para chequear si es una fecha válida y que salte un error si no lo es:
     let verifiedDate = checkAndParseDate(date_lost);
-
     // mongoose automáticamente compara la fecha yyyy-MM-dd correctamente contra la ISO de la DB. Pero igualmente intento parsearla con Luxon para que chequee si es una fecha válida o no. Si no lo es, tirará error. Si lo es, aprovecho y la uso para la query, pero es lo mismo que usar la date yyyy-MM-dd que viene por query.
-    // El name se compara automáticamente con un "iLike". No hace falta pasarla a minúscula.
+
     const postsFound = await Post.find(
       {
         $and: [
           {
-            $or: [{ name_on_doc: name }, { number_on_doc: numberOnDocParsed }],
+            $or: [
+              { name_on_doc: { $eq: nameOnDocParsed } },
+              { number_on_doc: { $eq: numberOnDocParsed } },
+            ],
           },
-          { country_found: country },
+          { country_found: { $eq: countryParsed } },
           { date_found: { $gte: verifiedDate } },
         ],
       },
