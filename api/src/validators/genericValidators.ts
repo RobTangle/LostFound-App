@@ -240,3 +240,53 @@ export function checkAndParseDate(dateFromReq: string): Date {
 // console.log(parsed.toJSDate());
 // let fromInputSmall = DateTime.fromISO(dateInputFormat);
 // console.log(fromInputSmall.toJSDate());
+
+// SANITIZE STRING TO PROTECT HTML CODE
+export function sanitizeHTML(string: any) {
+  const map: any = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "/": "&#x2F;",
+  };
+  const reg = /[&<>"'/]/gi;
+  return string.replace(reg, (match: string | number) => map[match]);
+}
+
+// SANITIZE ID by replacing ilegal caracters
+export function sanitizeID(string: any) {
+  if (typeof string !== "string") {
+    console.log(`Error en sanitizeID. El typeof del id no es un string.`);
+    throw new Error("El id debe ser un string.");
+  }
+  if (string.length > 50) {
+    console.log("Error en sanitizeID. El string es demasiado largo.");
+
+    throw new Error("El id es demasiado largo.");
+  }
+  const map: any = {
+    "{": "",
+    "}": "",
+    "<": "",
+    ">": "",
+    "/": "",
+    ".": "",
+    ",": "",
+    $: "",
+    "%": "",
+    "(": "",
+    ")": "",
+    "!": "",
+    "|": "",
+    "[": "",
+    "]": "",
+    "´": "",
+    "`": "",
+    "&": "",
+    "'": "",
+  };
+  const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
+  return string.replace(reg, (match: string | number) => map[match]);
+}
