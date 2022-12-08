@@ -290,3 +290,15 @@ export function sanitizeID(string: any) {
   const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
   return string.replace(reg, (match: string | number) => map[match]);
 }
+
+export function checkValidUserIdFormatOrThrowError(
+  user_id: string | undefined
+): string {
+  if (!user_id) {
+    throw new Error("User id es falso.");
+  }
+  if (isStringBetween1And50CharsLong(user_id)) {
+    return user_id;
+  }
+  throw new Error("User id inválido");
+}
