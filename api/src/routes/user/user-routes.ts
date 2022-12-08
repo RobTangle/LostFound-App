@@ -4,9 +4,9 @@ import {
   handleFindAllUsersRequest,
   handleRegisterNewUserRequest,
   handleUserExistsInDBRequest,
-  handleUpdateUserRequest,
   handleDeleteAllUserDataRequest,
   handleGetUserInfoRequest,
+  handleUpdateUserSanitizingRequest,
 } from "./user-middlewares";
 
 const router = Router();
@@ -24,7 +24,7 @@ router.post("/register", jwtCheck, handleRegisterNewUserRequest);
 router.get("/existsInDB", jwtCheck, handleUserExistsInDBRequest);
 
 // UPDATE USER INFO :
-router.patch("/update", jwtCheck, handleUpdateUserRequest);
+router.patch("/update", jwtCheck, handleUpdateUserSanitizingRequest);
 
 // DELETE ALL USER DATA FROM DB :
 router.delete("/destroyAll/:_id", jwtCheck, handleDeleteAllUserDataRequest);
