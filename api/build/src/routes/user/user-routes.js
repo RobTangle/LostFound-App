@@ -16,7 +16,7 @@ router.post("/register", jwtMiddleware_1.default, user_middlewares_1.handleRegis
 // USER EXSITS IN DB. res = {msg: true / false}
 router.get("/existsInDB", jwtMiddleware_1.default, user_middlewares_1.handleUserExistsInDBRequest);
 // UPDATE USER INFO :
-router.patch("/update", jwtMiddleware_1.default, user_middlewares_1.handleUpdateUserRequest);
+router.patch("/update", jwtMiddleware_1.default, user_middlewares_1.handleUpdateUserSanitizingRequest);
 // DELETE ALL USER DATA FROM DB :
 router.delete("/destroyAll/:_id", jwtMiddleware_1.default, user_middlewares_1.handleDeleteAllUserDataRequest);
 exports.default = router;

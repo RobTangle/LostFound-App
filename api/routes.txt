@@ -7,7 +7,7 @@ POST  "/register" : JWT; {name, email, profile_img } = req.body; Retorna el nuev
 
 GET  "/existsInDB" : JWT; Agarra el req.auth.sub del JWT, busca ese _id en la DB y responde {"msg": true / false} dependiendo si ese User _id ya existe o no en la DB.
 
-PATCH  "/update": JWT; { name, profile_img } = req.body;  Retorna un objeto { name: 0/1, profile_img: 0/1, userUpdated: IUser }. El 0 o 1 representa si se actualizó esa propiedad o no.
+PATCH  "/update": JWT; { name, profile_img } = req.body;  Retorna status 200 y el documento actualizado, o 400 en caso de que no lo haya encontrado o error.
 
 DELETE "/destroyAll/:_id" : JWT; Borra toda la data asociada a un user _id en la collection User, Subscription y Post.
 

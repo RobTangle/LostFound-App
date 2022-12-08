@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkAndParseDate = exports.checkObjectId = exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+exports.checkValidUserIdFormatOrThrowError = exports.sanitizeID = exports.sanitizeHTML = exports.checkAndParseDate = exports.checkObjectId = exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
 const luxon_1 = require("luxon");
 const mongoose_1 = require("mongoose");
 // IS STRING:
@@ -223,3 +223,62 @@ exports.checkAndParseDate = checkAndParseDate;
 // console.log(parsed.toJSDate());
 // let fromInputSmall = DateTime.fromISO(dateInputFormat);
 // console.log(fromInputSmall.toJSDate());
+// SANITIZE STRING TO PROTECT HTML CODE
+function sanitizeHTML(string) {
+    const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#x27;",
+        "/": "&#x2F;",
+    };
+    const reg = /[&<>"'/]/gi;
+    return string.replace(reg, (match) => map[match]);
+}
+exports.sanitizeHTML = sanitizeHTML;
+// SANITIZE ID by replacing ilegal caracters
+function sanitizeID(string) {
+    if (typeof string !== "string") {
+        console.log(`Error en sanitizeID. El typeof del id no es un string.`);
+        throw new Error("El id debe ser un string.");
+    }
+    if (string.length > 50) {
+        console.log("Error en sanitizeID. El string es demasiado largo.");
+        throw new Error("El id es demasiado largo.");
+    }
+    const map = {
+        "{": "",
+        "}": "",
+        "<": "",
+        ">": "",
+        "/": "",
+        ".": "",
+        ",": "",
+        $: "",
+        "%": "",
+        "(": "",
+        ")": "",
+        "!": "",
+        "|": "",
+        "[": "",
+        "]": "",
+        "´": "",
+        "`": "",
+        "&": "",
+        "'": "",
+    };
+    const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
+    return string.replace(reg, (match) => map[match]);
+}
+exports.sanitizeID = sanitizeID;
+function checkValidUserIdFormatOrThrowError(user_id) {
+    if (!user_id) {
+        throw new Error("User id es falso.");
+    }
+    if (isStringBetween1And50CharsLong(user_id)) {
+        return user_id;
+    }
+    throw new Error("User id inválido");
+}
+exports.checkValidUserIdFormatOrThrowError = checkValidUserIdFormatOrThrowError;

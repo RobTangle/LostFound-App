@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeleteAllUserDataRequest = exports.handleUpdateUserRequest = exports.handleUserExistsInDBRequest = exports.handleRegisterNewUserRequest = exports.handleGetUserInfoRequest = exports.handleFindAllUsersRequest = void 0;
+exports.handleDeleteAllUserDataRequest = exports.handleUpdateUserSanitizingRequest = exports.handleUserExistsInDBRequest = exports.handleRegisterNewUserRequest = exports.handleGetUserInfoRequest = exports.handleFindAllUsersRequest = void 0;
 const mongoDB_1 = require("../../mongoDB");
 const user_validators_1 = require("../../validators/user-validators");
 const user_auxiliaries_1 = require("./user-auxiliaries");
@@ -84,18 +84,29 @@ function handleUserExistsInDBRequest(req, res) {
     });
 }
 exports.handleUserExistsInDBRequest = handleUserExistsInDBRequest;
-// UPDATE USER INFO :
-function handleUpdateUserRequest(req, res) {
+//! UPDATE USER INFO : // NO ESTÁ SIENDO USADA ACTUALMENTE YA QUE FUE REEMPLAZA POR LA SANITIZING REQUEST FN
+// export async function handleUpdateUserRequest(req: JWTRequest, res: Response) {
+//   try {
+//     const _id = req.auth?.sub;
+//     const { name, profile_img } = req.body;
+//     if (!_id) {
+//       throw new Error(`El user id '${_id}' no es válido.`);
+//     }
+//     const updatedObj = await updateNameAndProfileImg(name, profile_img, _id);
+//     return res.status(200).send(updatedObj);
+//   } catch (error: any) {
+//     console.log(`Error en PUT 'user/update'. ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// }
+// UPDATE USER INFO SANITIZING REQUEST :
+function handleUpdateUserSanitizingRequest(req, res) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const _id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            const { name, profile_img } = req.body;
-            if (!_id) {
-                throw new Error(`El user id '${_id}' no es válido.`);
-            }
-            const updatedObj = yield (0, user_auxiliaries_1.updateNameAndProfileImg)(name, profile_img, _id);
-            return res.status(200).send(updatedObj);
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
+            const response = yield (0, user_auxiliaries_1.updateUserProfileSanitizing)(req.body, user_id);
+            return res.status(200).send(response);
         }
         catch (error) {
             console.log(`Error en PUT 'user/update'. ${error.message}`);
@@ -103,7 +114,7 @@ function handleUpdateUserRequest(req, res) {
         }
     });
 }
-exports.handleUpdateUserRequest = handleUpdateUserRequest;
+exports.handleUpdateUserSanitizingRequest = handleUpdateUserSanitizingRequest;
 // DELETE ALL USER DATA FROM DB :
 function handleDeleteAllUserDataRequest(req, res) {
     var _a;

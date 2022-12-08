@@ -1,6 +1,8 @@
+import { ExpressJwtRequest } from "express-jwt";
 import { isValidObjectId } from "mongoose";
 import { Post, Subscription, User } from "../../mongoDB";
 import {
+  checkValidUserIdFormatOrThrowError,
   isEmail,
   isStringBetweenXAndYCharsLong,
   isValidURLImage,
@@ -102,49 +104,29 @@ export async function throwErrorIfUserIsNotRegisteredOrVoid(
   }
 }
 
-export async function updateNameAndProfileImg(
-  name: string | undefined,
-  profile_img: string | undefined,
-  user_id: string | undefined
+// UPDATE USER PROFILE WITH VALIDATE AND SANITIZE MONGOOSE FNS:
+export async function updateUserProfileSanitizing(
+  bodyFromReq: any,
+  user_idFromReq: string | undefined
 ) {
-  const userInDB = await getUserByIdOrThrowError(user_id);
-  let updated: {
-    userUpdated:
-      | (import("mongoose").Document<unknown, any, { [x: string]: any }> & {
-          [x: string]: any;
-        } & Required<{ _id: unknown }>)
-      | undefined;
-    name: number;
-    profile_img: number;
-  } = {
-    name: 0,
-    profile_img: 0,
-    userUpdated: undefined,
-  };
-  if (name) {
-    if (
-      isStringBetweenXAndYCharsLong(2, 50, name) &&
-      !stringContainsURLs(name)
-    ) {
-      userInDB.name = name;
-      updated.name = 1;
-    } else {
-      throw new Error(`El nombre ingresado "${name}" no es válido.`);
+  const user_id = checkValidUserIdFormatOrThrowError(user_idFromReq);
+
+  const userToUpdate = await User.findByIdAndUpdate(
+    user_id,
+    { $set: bodyFromReq },
+    {
+      sanitizeFilter: true,
+      returnOriginal: false,
+      runValidators: true,
     }
+  ).exec();
+
+  if (userToUpdate) {
+    console.log("Usuario actualizado");
+    return userToUpdate;
+  } else {
+    throw new Error("Usuario no encontrado y no actualizado.");
   }
-  if (profile_img) {
-    if (isValidURLImage(profile_img)) {
-      userInDB.profile_img = profile_img;
-      updated.profile_img = 1;
-    } else {
-      throw new Error(
-        `La URL de imágen de perfíl ingresada "${profile_img}" no es válida.`
-      );
-    }
-  }
-  await userInDB.save();
-  updated.userUpdated = userInDB;
-  return updated;
 }
 
 // HANDLE DELETE ALL DATA FROM USER :
@@ -180,3 +162,51 @@ export async function handleDeleteAllDataFromUser(user_id: string | undefined) {
     return responseObj;
   }
 }
+
+//! Código funcional o en desuso, pero que vale la pega guardar por ahora :
+
+//! FUNCIONA BIEN, PERO LA REEMPLAZO POR updateUserProfileSanitizing()
+// export async function updateNameAndProfileImg(
+//   name: string | undefined,
+//   profile_img: string | undefined,
+//   user_id: string | undefined
+// ) {
+//   const userInDB = await getUserByIdOrThrowError(user_id);
+//   let updated: {
+//     userUpdated:
+//       | (import("mongoose").Document<unknown, any, { [x: string]: any }> & {
+//           [x: string]: any;
+//         } & Required<{ _id: unknown }>)
+//       | undefined;
+//     name: number;
+//     profile_img: number;
+//   } = {
+//     name: 0,
+//     profile_img: 0,
+//     userUpdated: undefined,
+//   };
+//   if (name) {
+//     if (
+//       isStringBetweenXAndYCharsLong(2, 50, name) &&
+//       !stringContainsURLs(name)
+//     ) {
+//       userInDB.name = name;
+//       updated.name = 1;
+//     } else {
+//       throw new Error(`El nombre ingresado "${name}" no es válido.`);
+//     }
+//   }
+//   if (profile_img) {
+//     if (isValidURLImage(profile_img)) {
+//       userInDB.profile_img = profile_img;
+//       updated.profile_img = 1;
+//     } else {
+//       throw new Error(
+//         `La URL de imágen de perfíl ingresada "${profile_img}" no es válida.`
+//       );
+//     }
+//   }
+//   await userInDB.save();
+//   updated.userUpdated = userInDB;
+//   return updated;
+// }

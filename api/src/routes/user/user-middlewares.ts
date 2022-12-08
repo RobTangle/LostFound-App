@@ -7,8 +7,8 @@ import {
   getUserByIdLeanOrThrowError,
   throwErrorIfEmailExistsInDB,
   userExistsInDBBoolean,
-  updateNameAndProfileImg,
   handleDeleteAllDataFromUser,
+  updateUserProfileSanitizing,
 } from "./user-auxiliaries";
 
 // GET ALL USERS FROM DB (JUST FOR TESTING. NOT FOR PRODUCTION) :
@@ -80,17 +80,32 @@ export async function handleUserExistsInDBRequest(
   }
 }
 
-// UPDATE USER INFO :
-export async function handleUpdateUserRequest(req: JWTRequest, res: Response) {
-  try {
-    const _id = req.auth?.sub;
-    const { name, profile_img } = req.body;
-    if (!_id) {
-      throw new Error(`El user id '${_id}' no es válido.`);
-    }
-    const updatedObj = await updateNameAndProfileImg(name, profile_img, _id);
+//! UPDATE USER INFO : // NO ESTÁ SIENDO USADA ACTUALMENTE YA QUE FUE REEMPLAZA POR LA SANITIZING REQUEST FN
+// export async function handleUpdateUserRequest(req: JWTRequest, res: Response) {
+//   try {
+//     const _id = req.auth?.sub;
+//     const { name, profile_img } = req.body;
+//     if (!_id) {
+//       throw new Error(`El user id '${_id}' no es válido.`);
+//     }
+//     const updatedObj = await updateNameAndProfileImg(name, profile_img, _id);
 
-    return res.status(200).send(updatedObj);
+//     return res.status(200).send(updatedObj);
+//   } catch (error: any) {
+//     console.log(`Error en PUT 'user/update'. ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// }
+
+// UPDATE USER INFO SANITIZING REQUEST :
+export async function handleUpdateUserSanitizingRequest(
+  req: JWTRequest,
+  res: Response
+) {
+  try {
+    const user_id = req.auth?.sub;
+    const response = await updateUserProfileSanitizing(req.body, user_id);
+    return res.status(200).send(response);
   } catch (error: any) {
     console.log(`Error en PUT 'user/update'. ${error.message}`);
     return res.status(400).send({ error: error.message });

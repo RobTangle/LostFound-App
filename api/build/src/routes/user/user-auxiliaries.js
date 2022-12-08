@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeleteAllDataFromUser = exports.updateNameAndProfileImg = exports.throwErrorIfUserIsNotRegisteredOrVoid = exports.userExistsInDBBoolean = exports.throwErrorIfEmailExistsInDB = exports.userIsRegisteredInDB = exports.getUserByIdLeanOrThrowError = exports.getUserByIdOrThrowError = void 0;
+exports.handleDeleteAllDataFromUser = exports.updateUserProfileSanitizing = exports.throwErrorIfUserIsNotRegisteredOrVoid = exports.userExistsInDBBoolean = exports.throwErrorIfEmailExistsInDB = exports.userIsRegisteredInDB = exports.getUserByIdLeanOrThrowError = exports.getUserByIdOrThrowError = void 0;
 const mongoose_1 = require("mongoose");
 const mongoDB_1 = require("../../mongoDB");
 const genericValidators_1 = require("../../validators/genericValidators");
@@ -109,39 +109,25 @@ function throwErrorIfUserIsNotRegisteredOrVoid(user_id) {
     });
 }
 exports.throwErrorIfUserIsNotRegisteredOrVoid = throwErrorIfUserIsNotRegisteredOrVoid;
-function updateNameAndProfileImg(name, profile_img, user_id) {
+// UPDATE USER PROFILE WITH VALIDATE AND SANITIZE MONGOOSE FNS:
+function updateUserProfileSanitizing(bodyFromReq, user_idFromReq) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userInDB = yield getUserByIdOrThrowError(user_id);
-        let updated = {
-            name: 0,
-            profile_img: 0,
-            userUpdated: undefined,
-        };
-        if (name) {
-            if ((0, genericValidators_1.isStringBetweenXAndYCharsLong)(2, 50, name) &&
-                !(0, genericValidators_1.stringContainsURLs)(name)) {
-                userInDB.name = name;
-                updated.name = 1;
-            }
-            else {
-                throw new Error(`El nombre ingresado "${name}" no es válido.`);
-            }
+        const user_id = (0, genericValidators_1.checkValidUserIdFormatOrThrowError)(user_idFromReq);
+        const userToUpdate = yield mongoDB_1.User.findByIdAndUpdate(user_id, { $set: bodyFromReq }, {
+            sanitizeFilter: true,
+            returnOriginal: false,
+            runValidators: true,
+        }).exec();
+        if (userToUpdate) {
+            console.log("Usuario actualizado");
+            return userToUpdate;
         }
-        if (profile_img) {
-            if ((0, genericValidators_1.isValidURLImage)(profile_img)) {
-                userInDB.profile_img = profile_img;
-                updated.profile_img = 1;
-            }
-            else {
-                throw new Error(`La URL de imágen de perfíl ingresada "${profile_img}" no es válida.`);
-            }
+        else {
+            throw new Error("Usuario no encontrado y no actualizado.");
         }
-        yield userInDB.save();
-        updated.userUpdated = userInDB;
-        return updated;
     });
 }
-exports.updateNameAndProfileImg = updateNameAndProfileImg;
+exports.updateUserProfileSanitizing = updateUserProfileSanitizing;
 // HANDLE DELETE ALL DATA FROM USER :
 function handleDeleteAllDataFromUser(user_id) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -175,3 +161,49 @@ function handleDeleteAllDataFromUser(user_id) {
     });
 }
 exports.handleDeleteAllDataFromUser = handleDeleteAllDataFromUser;
+//! Código funcional o en desuso, pero que vale la pega guardar por ahora :
+//! FUNCIONA BIEN, PERO LA REEMPLAZO POR updateUserProfileSanitizing()
+// export async function updateNameAndProfileImg(
+//   name: string | undefined,
+//   profile_img: string | undefined,
+//   user_id: string | undefined
+// ) {
+//   const userInDB = await getUserByIdOrThrowError(user_id);
+//   let updated: {
+//     userUpdated:
+//       | (import("mongoose").Document<unknown, any, { [x: string]: any }> & {
+//           [x: string]: any;
+//         } & Required<{ _id: unknown }>)
+//       | undefined;
+//     name: number;
+//     profile_img: number;
+//   } = {
+//     name: 0,
+//     profile_img: 0,
+//     userUpdated: undefined,
+//   };
+//   if (name) {
+//     if (
+//       isStringBetweenXAndYCharsLong(2, 50, name) &&
+//       !stringContainsURLs(name)
+//     ) {
+//       userInDB.name = name;
+//       updated.name = 1;
+//     } else {
+//       throw new Error(`El nombre ingresado "${name}" no es válido.`);
+//     }
+//   }
+//   if (profile_img) {
+//     if (isValidURLImage(profile_img)) {
+//       userInDB.profile_img = profile_img;
+//       updated.profile_img = 1;
+//     } else {
+//       throw new Error(
+//         `La URL de imágen de perfíl ingresada "${profile_img}" no es válida.`
+//       );
+//     }
+//   }
+//   await userInDB.save();
+//   updated.userUpdated = userInDB;
+//   return updated;
+// }
