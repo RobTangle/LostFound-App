@@ -302,3 +302,38 @@ export function checkValidUserIdFormatOrThrowError(
   }
   throw new Error("User id inválido");
 }
+
+export function sanitizeSimbols(string: any) {
+  if (typeof string !== "string") {
+    console.log(`Error en sanitizeID. El typeof del id no es un string.`);
+    throw new Error("El id debe ser un string.");
+  }
+  if (string.length > 50) {
+    console.log("Error en sanitizeID. El string es demasiado largo.");
+
+    throw new Error("El id es demasiado largo.");
+  }
+  const map: any = {
+    "{": "",
+    "}": "",
+    "<": "",
+    ">": "",
+    "/": "",
+    ".": "",
+    ",": "",
+    $: "",
+    "%": "",
+    "(": "",
+    ")": "",
+    "!": "",
+    "|": "",
+    "[": "",
+    "]": "",
+    "´": "",
+    "`": "",
+    "&": "",
+    "'": "",
+  };
+  const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
+  return string.replace(reg, (match: string | number) => map[match]);
+}
