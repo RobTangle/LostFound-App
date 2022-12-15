@@ -118,6 +118,8 @@ npm validator
 
 npm safe-regex
 
+npm xss
+
 custom functions: sanitize & escape
 
 generic/custom error messages
