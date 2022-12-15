@@ -22,7 +22,7 @@ function checkUserId(userId) {
     }
     if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(50, userId)) {
         if (!(0, genericValidators_1.stringContainsURLs)(userId)) {
-            return userId;
+            return (0, genericValidators_1.sanitizeSimbols)(userId);
         }
     }
     throw new Error(`The user id "${userId}" is invalid.`);
@@ -31,7 +31,7 @@ function checkUserId(userId) {
 function checkUserName(nameFromReq) {
     if ((0, genericValidators_1.isStringBetweenXAndYCharsLong)(2, 50, nameFromReq)) {
         if (!(0, genericValidators_1.stringContainsURLs)(nameFromReq)) {
-            return nameFromReq;
+            return (0, genericValidators_1.sanitizeSimbols)(nameFromReq);
         }
     }
     throw new Error(`El nombre ingresado '${nameFromReq}' es inválido.`);

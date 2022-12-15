@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import { LeanDocument } from "mongoose";
 import { IUserPosting } from "../../mongoDB/models/Post";
 import { IUser } from "../../mongoDB/models/User";
+import validator from "validator";
 require("dotenv").config();
 const GMAIL_USER = process.env.GMAIL_USER;
 const GMAIL_PASS = process.env.GMAIL_PASS;
@@ -95,9 +96,11 @@ async function sendContactInfoMailToUserPosting(
 
       <div style="background-color: #ffffff; padding: 20px 0px 5px 0px; width: 100%; text-align: center;">
         <h1>¡Un posible dueño de la documentación que encontraste quiere contactarse contigo! 🙌🙌🙌</h1>
-        <p>¡Hola ${user_posting.name}! Queremos avisarte que alguien quiere contactarte por la documentación que has encontrado. Le hemos enviado un email con tus datos de contacto, al igual que a tí te enviamos los datos de contacto del usuario que quiere comunicarse contigo. </p>
-        <p> Nombre: ${user_contacting.name}</p>
-        <p> Email: ${user_contacting.email}</p>
+        <p>¡Hola ${validator.escape(
+          user_posting.name
+        )}! Queremos avisarte que alguien quiere contactarte por la documentación que has encontrado. Le hemos enviado un email con tus datos de contacto, al igual que a tí te enviamos los datos de contacto del usuario que quiere comunicarse contigo. </p>
+        <p> Nombre: ${validator.escape(user_contacting.name)}</p>
+        <p> Email: ${validator.escape(user_contacting.email)}</p>
 </br>
         Acá te brindamos unos consejos a tener en cuenta antes de entregarle los documentos a un tercero. ¡Asegúrate de leerlos! 
         <a href="https://lostfound.app/tips" target="_blank"> Tips a tener en cuenta </a> 
@@ -152,6 +155,10 @@ async function sendContactInfoMailToUserContacting(
     },
   });
 
+  let contactInfo = "-";
+  if (user_posting.additional_contact_info) {
+    contactInfo = validator.escape(user_posting.additional_contact_info);
+  }
   const mailToUserPosting = {
     from: "lostfound.app.info@gmail.com",
     to: user_contacting.email,
@@ -216,14 +223,12 @@ async function sendContactInfoMailToUserContacting(
 
       <div style="background-color: #ffffff; padding: 20px 0px 5px 0px; width: 100%; text-align: center;">
         <h1>¡Información de contacto del usuario que encontró los documentos! 🙌🙌🙌</h1>
-        <p>¡Hola ${
+        <p>¡Hola ${validator.escape(
           user_contacting.name
-        }! Acá te enviamos los datos de contactos que ha proporcionado el usuario que ha publicado los documentos por los que quieren contactar. Le hemos enviado un email con tus datos de contacto, al igual que a tí te enviamos los datos de contacto del usuario que quieres contactar. </p>
-        <p> Nombre: ${user_posting.name}</p>
-        <p> Email: ${user_posting.email}</p>
-        <p> Información de contacto adicional: ${
-          user_posting.additional_contact_info || "-"
-        }</p>
+        )}! Acá te enviamos los datos de contactos que ha proporcionado el usuario que ha publicado los documentos por los que quieren contactar. Le hemos enviado un email con tus datos de contacto, al igual que a tí te enviamos los datos de contacto del usuario que quieres contactar. </p>
+        <p> Nombre: ${validator.escape(user_posting.name)}</p>
+        <p> Email: ${validator.escape(user_posting.email)}</p>
+        <p> Información de contacto adicional: ${contactInfo}</p>
 </br>
         Acá te brindamos unos consejos a tener en cuenta. ¡Asegúrate de leerlos! 
         <a href="https://lostfound.app/tips" target="_blank"> Tips a tener en cuenta </a> 

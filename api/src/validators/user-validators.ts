@@ -5,6 +5,7 @@ import {
   isStringBetween1AndXCharsLong,
   isStringBetweenXAndYCharsLong,
   isValidURLImage,
+  sanitizeSimbols,
   stringContainsURLs,
 } from "./genericValidators";
 
@@ -31,7 +32,7 @@ function checkUserId(userId: string | undefined): string {
   }
   if (isStringBetween1AndXCharsLong(50, userId)) {
     if (!stringContainsURLs(userId)) {
-      return userId;
+      return sanitizeSimbols(userId);
     }
   }
   throw new Error(`The user id "${userId}" is invalid.`);
@@ -41,7 +42,7 @@ function checkUserId(userId: string | undefined): string {
 function checkUserName(nameFromReq: any): string {
   if (isStringBetweenXAndYCharsLong(2, 50, nameFromReq)) {
     if (!stringContainsURLs(nameFromReq)) {
-      return nameFromReq;
+      return sanitizeSimbols(nameFromReq);
     }
   }
   throw new Error(`El nombre ingresado '${nameFromReq}' es inválido.`);

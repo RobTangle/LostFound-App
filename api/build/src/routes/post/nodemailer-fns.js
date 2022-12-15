@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendContactInfoEmailToBothUsers = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const validator_1 = __importDefault(require("validator"));
 require("dotenv").config();
 const GMAIL_USER = process.env.GMAIL_USER;
 const GMAIL_PASS = process.env.GMAIL_PASS;
@@ -100,9 +101,9 @@ function sendContactInfoMailToUserPosting(user_posting, user_contacting) {
 
       <div style="background-color: #ffffff; padding: 20px 0px 5px 0px; width: 100%; text-align: center;">
         <h1>¡Un posible dueño de la documentación que encontraste quiere contactarse contigo! 🙌🙌🙌</h1>
-        <p>¡Hola ${user_posting.name}! Queremos avisarte que alguien quiere contactarte por la documentación que has encontrado. Le hemos enviado un email con tus datos de contacto, al igual que a tí te enviamos los datos de contacto del usuario que quiere comunicarse contigo. </p>
-        <p> Nombre: ${user_contacting.name}</p>
-        <p> Email: ${user_contacting.email}</p>
+        <p>¡Hola ${validator_1.default.escape(user_posting.name)}! Queremos avisarte que alguien quiere contactarte por la documentación que has encontrado. Le hemos enviado un email con tus datos de contacto, al igual que a tí te enviamos los datos de contacto del usuario que quiere comunicarse contigo. </p>
+        <p> Nombre: ${validator_1.default.escape(user_contacting.name)}</p>
+        <p> Email: ${validator_1.default.escape(user_contacting.email)}</p>
 </br>
         Acá te brindamos unos consejos a tener en cuenta antes de entregarle los documentos a un tercero. ¡Asegúrate de leerlos! 
         <a href="https://lostfound.app/tips" target="_blank"> Tips a tener en cuenta </a> 
@@ -147,6 +148,10 @@ function sendContactInfoMailToUserContacting(user_posting, user_contacting) {
                 pass: GMAIL_PASS,
             },
         });
+        let contactInfo = "-";
+        if (user_posting.additional_contact_info) {
+            contactInfo = validator_1.default.escape(user_posting.additional_contact_info);
+        }
         const mailToUserPosting = {
             from: "lostfound.app.info@gmail.com",
             to: user_contacting.email,
@@ -210,10 +215,10 @@ function sendContactInfoMailToUserContacting(user_posting, user_contacting) {
 
       <div style="background-color: #ffffff; padding: 20px 0px 5px 0px; width: 100%; text-align: center;">
         <h1>¡Información de contacto del usuario que encontró los documentos! 🙌🙌🙌</h1>
-        <p>¡Hola ${user_contacting.name}! Acá te enviamos los datos de contactos que ha proporcionado el usuario que ha publicado los documentos por los que quieren contactar. Le hemos enviado un email con tus datos de contacto, al igual que a tí te enviamos los datos de contacto del usuario que quieres contactar. </p>
-        <p> Nombre: ${user_posting.name}</p>
-        <p> Email: ${user_posting.email}</p>
-        <p> Información de contacto adicional: ${user_posting.additional_contact_info || "-"}</p>
+        <p>¡Hola ${validator_1.default.escape(user_contacting.name)}! Acá te enviamos los datos de contactos que ha proporcionado el usuario que ha publicado los documentos por los que quieren contactar. Le hemos enviado un email con tus datos de contacto, al igual que a tí te enviamos los datos de contacto del usuario que quieres contactar. </p>
+        <p> Nombre: ${validator_1.default.escape(user_posting.name)}</p>
+        <p> Email: ${validator_1.default.escape(user_posting.email)}</p>
+        <p> Información de contacto adicional: ${contactInfo}</p>
 </br>
         Acá te brindamos unos consejos a tener en cuenta. ¡Asegúrate de leerlos! 
         <a href="https://lostfound.app/tips" target="_blank"> Tips a tener en cuenta </a> 
