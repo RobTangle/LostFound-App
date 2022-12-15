@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { isValidObjectId } from "mongoose";
+import safe from "safe-regex";
 
 // IS STRING:
 export function isString(argumento: any): boolean {
@@ -95,10 +96,13 @@ export function isStringBetweenXAndYCharsLong(
 ): boolean {
   let error = `The argument "x" must be a positive number`;
   if (!x || typeof x !== "number" || x < 1) {
+    console.log(`The argument "x" must be a positive integer number`);
     throw new Error(`The argument "x" must be a positive integer number`);
   }
   let minCharsLong = x;
   if (!y || typeof y !== "number" || y < 1) {
+    console.log(`The argument "y" must be a positive integer number.`);
+
     throw new Error(`The argument "y" must be a positive integer number.`);
   }
   let maxCharsLong = y;
@@ -242,7 +246,7 @@ export function checkAndParseDate(dateFromReq: string): Date {
 // console.log(fromInputSmall.toJSDate());
 
 // SANITIZE STRING TO PROTECT HTML CODE
-export function sanitizeHTML(string: any) {
+export function escapeHTML(string: any) {
   const map: any = {
     "&": "&amp;",
     "<": "&lt;",
@@ -303,7 +307,7 @@ export function checkValidUserIdFormatOrThrowError(
   throw new Error("User id inválido");
 }
 
-export function sanitizeSimbols(string: any) {
+export function sanitizeSimbols(string: unknown) {
   if (typeof string !== "string") {
     console.log(`Error en sanitizeID. El typeof del id no es un string.`);
     throw new Error("El id debe ser un string.");
@@ -335,5 +339,14 @@ export function sanitizeSimbols(string: any) {
     "'": "",
   };
   const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
-  return string.replace(reg, (match: string | number) => map[match]);
+  return string.replace(reg, (match) => map[match]);
 }
+
+// Ilegal simbols for inputs: $ { } [ ] < > ` ./
+
+const regexATestear = new RegExp(
+  "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?"
+);
+
+let esSegura = safe(regexATestear);
+console.log(esSegura);
