@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { isValidObjectId } from "mongoose";
 import safe from "safe-regex";
+import validator from "validator";
 
 // IS STRING:
 export function isString(argumento: any): boolean {
@@ -152,17 +153,8 @@ export function isTypeofNumber(argumento: any): boolean {
 }
 
 //IS EMAIL :
-export function isEmail(argumento: string): boolean {
-  if (argumento.length > 150) {
-    console.log("Error en fn val isEmail. El argumento es demasiado largo.");
-    throw new Error("The email length is too long");
-  }
-  // let argTrimmed = argumento.trim();
-
-  let regex = new RegExp(
-    "([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])"
-  );
-  return regex.test(argumento);
+export function isEmail(argumento: string) {
+  return validator.isEmail(argumento);
 }
 
 // IS VALID URL IMAGE :
@@ -176,11 +168,10 @@ export function isValidURLImage(argumento: any): boolean {
     );
     throw new Error("The length of the url image is too long.");
   }
-  // let argTrimmed = argumento.trim();
-  return (
-    argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
-    null
+  const imageURLRegex = new RegExp(
+    /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif)$/
   );
+  return argumento.match(imageURLRegex) !== null;
 }
 
 // PARSE STRING TO BOOLEAN :
