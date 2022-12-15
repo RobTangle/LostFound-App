@@ -1,3 +1,5 @@
+import validator from "validator";
+
 // IS STRING BETWEEN X AND Y CHARACTERS LONG:
 export function isStringBetweenXAndYCharsLong(x, y, argumento) {
   let error = `The argument "x" must be a positive number`;
@@ -38,25 +40,23 @@ export function isValidURLImage(argumento) {
   if (typeof argumento !== "string") {
     return false;
   }
-  return (
-    argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
-    null
+  const imageURLRegex = new RegExp(
+    /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif)$/
   );
+  return argumento.match(imageURLRegex) !== null;
 }
 
 //IS EMAIL :
 export function isEmail(argumento) {
-  let regex = new RegExp(
-    "([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])"
-  );
-  return regex.test(argumento);
+  return validator.isEmail(argumento);
 }
 
 // IS VALID DATE = TRUE / FALSE :
+// Checks if the date argument is higher or lower than the current date.
 export function isValidDateBoolean(date_found) {
   let dateNow = Date.now();
   let dateFoundParsed = Date.parse(date_found);
-  if (typeof dateFoundParsed !== "number") {
+  if (typeof dateFoundParsed !== "number" || isNaN(dateFoundParsed)) {
     console.log("typeof dateFoundParsed !== 'number' ");
     return false;
   }
