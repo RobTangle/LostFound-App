@@ -1,2 +1,5 @@
 node_modules
 .env
+notas-validaciones.txt
+validateRequest.ts
+# security-node.md
