@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sanitizeSimbols = exports.checkValidUserIdFormatOrThrowError = exports.sanitizeID = exports.escapeHTML = exports.checkAndParseDate = exports.checkObjectId = exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
 const luxon_1 = require("luxon");
 const mongoose_1 = require("mongoose");
+const validator_1 = __importDefault(require("validator"));
 // IS STRING:
 function isString(argumento) {
     if (typeof argumento !== "string") {
@@ -146,13 +150,7 @@ function isTypeofNumber(argumento) {
 exports.isTypeofNumber = isTypeofNumber;
 //IS EMAIL :
 function isEmail(argumento) {
-    if (argumento.length > 150) {
-        console.log("Error en fn val isEmail. El argumento es demasiado largo.");
-        throw new Error("The email length is too long");
-    }
-    // let argTrimmed = argumento.trim();
-    let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])");
-    return regex.test(argumento);
+    return validator_1.default.isEmail(argumento);
 }
 exports.isEmail = isEmail;
 // IS VALID URL IMAGE :
@@ -164,9 +162,8 @@ function isValidURLImage(argumento) {
         console.log("Error en val fn isValidURLImage. El argumento es demasiado largo.");
         throw new Error("The length of the url image is too long.");
     }
-    // let argTrimmed = argumento.trim();
-    return (argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
-        null);
+    const imageURLRegex = new RegExp(/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif)$/);
+    return argumento.match(imageURLRegex) !== null;
 }
 exports.isValidURLImage = isValidURLImage;
 // PARSE STRING TO BOOLEAN :
