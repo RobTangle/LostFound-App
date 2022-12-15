@@ -9,10 +9,20 @@
 7. Server side JS injection
 8. Error stack trace 2.
 9. Limit payload size using a reverse-proxy or a middleware
-10. GitHub CodeQL Analysis
-11. Notes for using cookies
+10. express.urlencoded({extended: true / false})
+11. GitHub CodeQL Analysis
+12. Notes for using cookies
+<hr>
+
+## Nice guides:
 
 ### Complete Node Best Practices Guide : https://github.com/goldbergyoni/nodebestpractices
+
+### 5 Node Express Boilderplates: https://dev.to/rhuzaifa/top-5-node-express-boilerplates-for-building-restful-api-s-1ehl
+
+### Node Express Boilerplate: https://github.com/hagopj13/node-express-boilerplate
+
+<hr>
 
 ## Details:
 
@@ -91,9 +101,11 @@ https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/security/
 
 https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/security/requestpayloadsizelimit.md
 
-10. **Usar GitHub Security script CodeQL Analysis:** Activar el script en el repositorio desde la pestaña "Security".
+10. **express.urlencoded({extended: true / false})**: The extended option allows to choose between parsing the URL-encoded data with the querystring library (when false) or the qs library (when true).
 
-Si se usan cookie y sessions, ver las configuraciones particular a tener en cuenta.
+11. **Usar GitHub Security script CodeQL Analysis:** Activar el script en el repositorio desde la pestaña "Security".
+
+12. Si se usan cookie y sessions, ver las configuraciones particular a tener en cuenta.
 
 # Resumen:
 
@@ -123,11 +135,14 @@ Limit user input string length when using regex.
 
 **Check email:** <code> validator.isEmail(argument) </code>
 
+**Escape html simbols:** <code>validator.escape(argument) </code>
+
 **sanitize HTML dangerous simbols:** < > & ; " ' /
 
 \*It replaces the simbols for an empty string.
 
 <pre>
+// Sanitize HTML Simbols :
 export function sanitizeHTMLSimbols(string: unknown) {
   if (typeof string !== "string") {
     console.log(`Error en sanitizeID. El typeof del id no es un string.`);
@@ -151,12 +166,22 @@ return string.replace(reg, (match: string | number) => map[match]);
 </pre>
 
 <pre>
-function isValidURLImageValidator(string) {
-  const safeRegexIsURLImage = new RegExp(
-    /^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.))?$/
+// IS VALID URL IMAGE :
+function isValidURLImage(argumento) {
+  if (typeof argumento !== "string") {
+    console.log("La URL Image no es typeof string");
+    return false;
+  }
+  if (argumento.length > 512) {
+    console.log(
+      "Error en val fn isValidURLImage. El argumento es demasiado largo."
+    );
+    return false;
+  }
+  return (
+    argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.))?$/gim) !==
+    null
   );
-  console.log("is safe regex = ", safe(safeRegexIsURLImage));
-  return validator.matches(string, safeRegexIsURLImage);
 }
  </pre>
 
@@ -174,15 +199,45 @@ function stringContainsURLs(argumento) {
     );
     throw new Error("El argumento es demasiado largo.");
   }
-  let argTrimmed = argumento.trim();
+  // let argTrimmed = argumento.trim();
   if (
     new RegExp(
       "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?"
-    ).test(argTrimmed)
+    ).test(argumento)
   ) {
     return true;
   } else {
     return false;
   }
+}
+</pre>
+
+<pre>
+// Sanitize HTML And JS Simbols :
+function sanitizeHTMLAndJSSimbols(string) {
+  if (typeof string !== "string") {
+    console.log(`Error en sanitizeID. El typeof del id no es un string.`);
+    throw new Error("Something went wrong.");
+  }
+  if (string.length > 50) {
+    console.log("Error en sanitizeID. El string es demasiado largo.");
+    throw new Error("Something went wrong.");
+  }
+  const map = {
+    "{": "",
+    "}": "",
+    "[": "",
+    "]": "",
+    "|": "",
+    "?": "",
+    "<": "",
+    ">": "",
+    "/": "",
+    "&": "",
+    "'": "",
+    '"': "",
+  };
+  const reg = /[&<{}>|?\[\]'"\/]/gi;
+  return string.replace(reg, (match) => map[match]);
 }
 </pre>
