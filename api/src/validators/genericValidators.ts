@@ -157,12 +157,12 @@ export function isEmail(argumento: string): boolean {
     console.log("Error en fn val isEmail. El argumento es demasiado largo.");
     throw new Error("The email length is too long");
   }
-  let argTrimmed = argumento.trim();
+  // let argTrimmed = argumento.trim();
 
   let regex = new RegExp(
     "([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])"
   );
-  return regex.test(argTrimmed);
+  return regex.test(argumento);
 }
 
 // IS VALID URL IMAGE :
@@ -176,9 +176,9 @@ export function isValidURLImage(argumento: any): boolean {
     );
     throw new Error("The length of the url image is too long.");
   }
-  let argTrimmed = argumento.trim();
+  // let argTrimmed = argumento.trim();
   return (
-    argTrimmed.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
+    argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
     null
   );
 }
@@ -208,11 +208,11 @@ export function stringContainsURLs(argumento: string): boolean {
     );
     throw new Error("El argumento es demasiado largo.");
   }
-  let argTrimmed = argumento.trim();
+  // let argTrimmed = argumento.trim();
   if (
     new RegExp(
-      "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?"
-    ).test(argTrimmed)
+      "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.)?"
+    ).test(argumento)
   ) {
     return true;
   } else {
@@ -341,12 +341,3 @@ export function sanitizeSimbols(string: unknown) {
   const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
   return string.replace(reg, (match) => map[match]);
 }
-
-// Ilegal simbols for inputs: $ { } [ ] < > ` ./
-
-const regexATestear = new RegExp(
-  "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?"
-);
-
-let esSegura = safe(regexATestear);
-console.log(esSegura);
