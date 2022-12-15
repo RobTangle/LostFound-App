@@ -4,11 +4,13 @@ import {
   isStringBetween1AndXCharsLong,
   isStringXCharsLong,
   isValidURLImage,
+  sanitizeSimbols,
   stringContainsURLs,
 } from "./genericValidators";
 import { arrayOfCountriesTwoChars } from "../miscellanea/CountiesArrays";
 import { IUserPosting } from "../mongoDB/models/Post";
 import validator from "validator";
+import xss from "xss";
 
 // VALIDATE UPDATE POST DATA :
 export function validateUpdatePostData(bodyFromReq: any): {
@@ -98,7 +100,8 @@ export function checkAndParseNameOnDoc(nameFromReq: any): string {
       throw new Error(`URLs are not allowed.`);
     }
     let nameParsedToLowerCase = nameFromReq.toLowerCase().trim();
-    return validator.escape(nameParsedToLowerCase);
+    return sanitizeSimbols(nameParsedToLowerCase);
+    // return validator.escape(nameParsedToLowerCase);
   }
   throw new Error(`El nombre en el documento "${nameFromReq} no es válido.`);
 }
@@ -158,7 +161,8 @@ function checkBlurredImgs(blurredImgsFromReq: any): string[] {
     let blurredImgs = blurredImgsFromReq.map((image) => {
       // aplicar fn que blurrea imágenes...
       if (isValidURLImage(image)) {
-        return validator.escape(image);
+        return xss(image);
+        // return validator.escape(image);
       } else {
         throw new Error("La imagen no tiene un formato válido.");
       }
@@ -177,7 +181,8 @@ function checkComments(commentsFromReq: any): string | undefined {
     if (stringContainsURLs(commentsFromReq)) {
       throw new Error(`URLs are not allowed.`);
     }
-    return validator.escape(commentsFromReq);
+    return xss(commentsFromReq);
+    // return validator.escape(commentsFromReq);
   }
   throw new Error(
     `The comment entered is invalid. Please, enter a text of no more than ${maxLength} characters long or leave the input empty.`
@@ -205,9 +210,7 @@ function checkUserPosting(
       throw new Error("The additional contact information has URLs.");
     }
     if (isStringBetween1AndXCharsLong(150, additional_contact_info)) {
-      userPostingObj.additional_contact_info = validator.escape(
-        additional_contact_info
-      );
+      userPostingObj.additional_contact_info = xss(additional_contact_info);
     }
   }
 
