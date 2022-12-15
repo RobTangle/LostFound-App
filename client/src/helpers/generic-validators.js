@@ -40,6 +40,12 @@ export function isValidURLImage(argumento) {
   if (typeof argumento !== "string") {
     return false;
   }
+  if (argumento.length > 1000) {
+    console.log(
+      "Error en isValidURLImage. El string ingresado es demasiado largo."
+    );
+    return false;
+  }
   const imageURLRegex = new RegExp(
     /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif)$/
   );
