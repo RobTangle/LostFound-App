@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkCountry = exports.parseNumberOnDoc = exports.checkAndParseNumberOnDoc = exports.checkAndParseNameOnDoc = exports.validatePost = exports.validateUpdatePostData = void 0;
 const genericValidators_1 = require("./genericValidators");
 const CountiesArrays_1 = require("../miscellanea/CountiesArrays");
+const validator_1 = __importDefault(require("validator"));
 // VALIDATE UPDATE POST DATA :
 function validateUpdatePostData(bodyFromReq) {
     const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, additional_contact_info, } = bodyFromReq;
@@ -39,7 +43,7 @@ function checkAdditionalContactInfo(addContactInfoFromReq) {
         return undefined;
     }
     if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(150, addContactInfoFromReq)) {
-        return addContactInfoFromReq;
+        return validator_1.default.escape(addContactInfoFromReq);
     }
     throw new Error(`La información de contacto adicional '${addContactInfoFromReq}' no es válida. Ingrese una cadena de texto de hasta 150 caracteres de largo.`);
 }
@@ -49,7 +53,7 @@ function checkAndParseNameOnDoc(nameFromReq) {
             throw new Error(`URLs are not allowed.`);
         }
         let nameParsedToLowerCase = nameFromReq.toLowerCase().trim();
-        return nameParsedToLowerCase;
+        return validator_1.default.escape(nameParsedToLowerCase);
     }
     throw new Error(`El nombre en el documento "${nameFromReq} no es válido.`);
 }
@@ -107,7 +111,7 @@ function checkBlurredImgs(blurredImgsFromReq) {
         let blurredImgs = blurredImgsFromReq.map((image) => {
             // aplicar fn que blurrea imágenes...
             if ((0, genericValidators_1.isValidURLImage)(image)) {
-                return image;
+                return validator_1.default.escape(image);
             }
             else {
                 throw new Error("La imagen no tiene un formato válido.");
@@ -126,7 +130,7 @@ function checkComments(commentsFromReq) {
         if ((0, genericValidators_1.stringContainsURLs)(commentsFromReq)) {
             throw new Error(`URLs are not allowed.`);
         }
-        return commentsFromReq;
+        return validator_1.default.escape(commentsFromReq);
     }
     throw new Error(`The comment entered is invalid. Please, enter a text of no more than ${maxLength} characters long or leave the input empty.`);
 }
@@ -144,9 +148,9 @@ function checkUserPosting(userPosting, additional_contact_info) {
         if ((0, genericValidators_1.stringContainsURLs)(additional_contact_info)) {
             throw new Error("The additional contact information has URLs.");
         }
-    }
-    if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(150, additional_contact_info)) {
-        userPostingObj.additional_contact_info = additional_contact_info;
+        if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(150, additional_contact_info)) {
+            userPostingObj.additional_contact_info = validator_1.default.escape(additional_contact_info);
+        }
     }
     return userPostingObj;
 }

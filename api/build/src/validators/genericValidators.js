@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkValidUserIdFormatOrThrowError = exports.sanitizeID = exports.sanitizeHTML = exports.checkAndParseDate = exports.checkObjectId = exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+exports.sanitizeSimbols = exports.checkValidUserIdFormatOrThrowError = exports.sanitizeID = exports.escapeHTML = exports.checkAndParseDate = exports.checkObjectId = exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
 const luxon_1 = require("luxon");
 const mongoose_1 = require("mongoose");
 // IS STRING:
@@ -89,10 +89,12 @@ exports.isStringBetween1AndXCharsLong = isStringBetween1AndXCharsLong;
 function isStringBetweenXAndYCharsLong(x, y, argumento) {
     let error = `The argument "x" must be a positive number`;
     if (!x || typeof x !== "number" || x < 1) {
+        console.log(`The argument "x" must be a positive integer number`);
         throw new Error(`The argument "x" must be a positive integer number`);
     }
     let minCharsLong = x;
     if (!y || typeof y !== "number" || y < 1) {
+        console.log(`The argument "y" must be a positive integer number.`);
         throw new Error(`The argument "y" must be a positive integer number.`);
     }
     let maxCharsLong = y;
@@ -148,9 +150,9 @@ function isEmail(argumento) {
         console.log("Error en fn val isEmail. El argumento es demasiado largo.");
         throw new Error("The email length is too long");
     }
-    let argTrimmed = argumento.trim();
+    // let argTrimmed = argumento.trim();
     let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])");
-    return regex.test(argTrimmed);
+    return regex.test(argumento);
 }
 exports.isEmail = isEmail;
 // IS VALID URL IMAGE :
@@ -162,8 +164,8 @@ function isValidURLImage(argumento) {
         console.log("Error en val fn isValidURLImage. El argumento es demasiado largo.");
         throw new Error("The length of the url image is too long.");
     }
-    let argTrimmed = argumento.trim();
-    return (argTrimmed.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
+    // let argTrimmed = argumento.trim();
+    return (argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
         null);
 }
 exports.isValidURLImage = isValidURLImage;
@@ -188,8 +190,8 @@ function stringContainsURLs(argumento) {
         console.log("Error en fn val stringContainsURLs: El argumento es demasiado largo.");
         throw new Error("El argumento es demasiado largo.");
     }
-    let argTrimmed = argumento.trim();
-    if (new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(argTrimmed)) {
+    // let argTrimmed = argumento.trim();
+    if (new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.)?").test(argumento)) {
         return true;
     }
     else {
@@ -224,7 +226,7 @@ exports.checkAndParseDate = checkAndParseDate;
 // let fromInputSmall = DateTime.fromISO(dateInputFormat);
 // console.log(fromInputSmall.toJSDate());
 // SANITIZE STRING TO PROTECT HTML CODE
-function sanitizeHTML(string) {
+function escapeHTML(string) {
     const map = {
         "&": "&amp;",
         "<": "&lt;",
@@ -236,7 +238,7 @@ function sanitizeHTML(string) {
     const reg = /[&<>"'/]/gi;
     return string.replace(reg, (match) => map[match]);
 }
-exports.sanitizeHTML = sanitizeHTML;
+exports.escapeHTML = escapeHTML;
 // SANITIZE ID by replacing ilegal caracters
 function sanitizeID(string) {
     if (typeof string !== "string") {
@@ -282,3 +284,37 @@ function checkValidUserIdFormatOrThrowError(user_id) {
     throw new Error("User id inválido");
 }
 exports.checkValidUserIdFormatOrThrowError = checkValidUserIdFormatOrThrowError;
+function sanitizeSimbols(string) {
+    if (typeof string !== "string") {
+        console.log(`Error en sanitizeID. El typeof del id no es un string.`);
+        throw new Error("El id debe ser un string.");
+    }
+    if (string.length > 50) {
+        console.log("Error en sanitizeID. El string es demasiado largo.");
+        throw new Error("El id es demasiado largo.");
+    }
+    const map = {
+        "{": "",
+        "}": "",
+        "<": "",
+        ">": "",
+        "/": "",
+        ".": "",
+        ",": "",
+        $: "",
+        "%": "",
+        "(": "",
+        ")": "",
+        "!": "",
+        "|": "",
+        "[": "",
+        "]": "",
+        "´": "",
+        "`": "",
+        "&": "",
+        "'": "",
+    };
+    const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
+    return string.replace(reg, (match) => map[match]);
+}
+exports.sanitizeSimbols = sanitizeSimbols;
