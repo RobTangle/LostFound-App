@@ -57,6 +57,7 @@ TIPS:
 
 - Use npm safe-regex to check if the regex you are using is safe or not.
 - Whenever you can, use a regex check created by some trusty package in stead of create your owns.
+- En el front-end puedo darme el lujo de usar regexp no completamente seguras, ya que si intentan un ataque DoS, se bloquearía en navegador del usuario y no el servidor.
 
 4. **XSS (Cross Site Scripting):** we should always perform data validation and sanitization. This means that for every incoming request we should check that the input parameters given by the user are in the correct format, the one that the server and the database expect to be. Another useful tip is to set the cookie httpOnly value to true because it prevents cookies from being accessed by browser JS scripts.
    Also, we should always HTML Escape data before inserting it into HTML Elements (ex: convert & to &amp ; and < to &lt ; ,etc). This will probably neutralize some XSS threats.
@@ -116,6 +117,8 @@ npm express-rate-limit
 npm validator
 
 npm safe-regex
+
+npm xss
 
 custom functions: sanitize & escape
 
@@ -240,4 +243,7 @@ function sanitizeHTMLAndJSSimbols(string) {
   const reg = /[&<{}>|?\[\]'"\/]/gi;
   return string.replace(reg, (match) => map[match]);
 }
+</pre>
+
+<pre>const safeURLImageRegExp = new RegExp(/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/);
 </pre>

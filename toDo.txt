@@ -1,0 +1,5 @@
+
+- Modularizar mejor nodemailer
+- Hacer emails según idioma
+
+- Hacer paginacion
