@@ -25,7 +25,8 @@
     "nodemailer": "^6.8.0",
     "safe-regex": "^2.1.1",
     "ts-node": "^10.9.1",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",

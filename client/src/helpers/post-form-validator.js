@@ -25,7 +25,7 @@ export function postFormValidator(post, t) {
       throw new Error(t("searchForm.errorNameInvalid"));
     }
     if (
-      number &&
+      number_on_doc &&
       !isStringBetweenXAndYCharsLong(
         validAttr.number_on_doc?.minLength,
         validAttr.number_on_doc?.maxLength,
