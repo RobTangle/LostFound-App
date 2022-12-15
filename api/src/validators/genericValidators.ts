@@ -300,11 +300,13 @@ export function checkValidUserIdFormatOrThrowError(
 
 export function sanitizeSimbols(string: unknown) {
   if (typeof string !== "string") {
-    console.log(`Error en sanitizeID. El typeof del id no es un string.`);
-    throw new Error("El id debe ser un string.");
+    console.log(
+      `Error en sanitizeSimbols. El typeof del argumento no es un string.`
+    );
+    throw new Error("Something went wrong.");
   }
   if (string.length > 50) {
-    console.log("Error en sanitizeID. El string es demasiado largo.");
+    console.log("Error en sanitizeSimbols. El string es demasiado largo.");
 
     throw new Error("El id es demasiado largo.");
   }
