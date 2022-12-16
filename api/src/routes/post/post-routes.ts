@@ -1,5 +1,6 @@
 import { Router } from "express";
 import jwtCheck from "../../config/jwtMiddleware";
+
 import {
   findAllPostsResponse,
   handleNewPostRequest,
@@ -9,6 +10,7 @@ import {
   handleDeletePostRequest,
   handleContactUserRequest,
 } from "./post-middlewares";
+import { handlePaginatedPostResultsRequest } from "./post-pagination";
 
 const router = Router();
 
@@ -18,8 +20,8 @@ router.get("/findAll", findAllPostsResponse);
 // CREATE A NEW POST :
 router.post("/newPost", jwtCheck, handleNewPostRequest);
 
-// SEARCH POSTS BY QUERY :
-router.get("/search", jwtCheck, handleSearchByQueryRequest);
+// SEARCH POSTS BY QUERY WITH PAGINATION :
+router.get("/search", jwtCheck, handlePaginatedPostResultsRequest);
 
 // UPDATE A POST :
 router.patch("/:_id", jwtCheck, handleUpdateRequest);
@@ -32,5 +34,8 @@ router.delete("/:_id", jwtCheck, handleDeletePostRequest);
 
 // CONTACT POST OWNER :
 router.post("/contact/:post_id", jwtCheck, handleContactUserRequest);
+
+// SEARCH POSTS BY QUERY //? ruta vieja, antes de implementar paginado:
+// router.get("/search", jwtCheck, handleSearchByQueryRequest);
 
 export default router;

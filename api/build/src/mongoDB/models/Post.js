@@ -8,12 +8,14 @@ exports.postSchema = new mongoose_1.Schema({
         maxlength: 100,
         required: true,
         lowercase: true,
+        trim: true,
     },
     number_on_doc: {
         type: String,
         maxlength: 100,
         required: false,
         lowercase: true,
+        trim: true,
     },
     country_found: { type: String, required: true, lowercase: true },
     date_found: { type: Date, required: true },
@@ -22,12 +24,13 @@ exports.postSchema = new mongoose_1.Schema({
     user_posting: {
         _id: { type: String, required: true },
         name: { type: String, required: true },
-        email: { type: String, required: true },
+        email: { type: String, required: true, trim: true },
         profile_img: { type: String, required: false },
         additional_contact_info: {
             type: String,
             required: false,
             maxlength: 150,
+            trim: true,
         },
     },
 }, { timestamps: true });

@@ -6,17 +6,25 @@ const Post_1 = require("./Post");
 const Subscription_1 = require("./Subscription");
 exports.userSchema = new mongoose_1.Schema({
     _id: { type: String, required: true },
-    name: { type: String, required: true, minlength: 2, maxlength: 50 },
+    name: {
+        type: String,
+        required: true,
+        minlength: 2,
+        maxlength: 50,
+        trim: true,
+    },
     email: {
         type: String,
         required: true,
         lowercase: true,
         minlength: 6,
+        trim: true,
     },
     profile_img: {
         type: String,
         required: false,
         default: "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
+        trim: true,
     },
     contacts: {
         type: [Number],
