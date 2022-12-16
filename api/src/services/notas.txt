@@ -1,0 +1,8 @@
+Esta carpeta contiene lo que yo llamo "auxiliares", pero con fines generales. Por ejemplo, el ir a buscar a una database tal cosa. Es la función que usa el middleware de la ruta. 
+
+ Un "service" usa varias funciones auxiliares más pequeñas para lograr un fin más grande.
+
+ Services usados por Controllers:
+ - getUserByIdLeanOrThrowError
+
+ -  registerNewUser : hacerla.

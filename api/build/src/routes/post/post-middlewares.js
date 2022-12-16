@@ -1,183 +1,165 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleContactUserRequest = exports.handleDeletePostRequest = exports.handleGetPostByIdRequest = exports.handleUpdateRequest = exports.handleSearchByQueryRequest = exports.handleNewPostRequest = exports.findAllPostsResponse = void 0;
-const mongoDB_1 = require("../../mongoDB");
-const post_validators_1 = require("../../validators/post-validators");
-const nodemailer_1 = require("../subscription/nodemailer");
-const user_auxiliaries_1 = require("../user/user-auxiliaries");
-const post_r_auxiliary_1 = require("./post-r-auxiliary");
-const nodemailer_fns_1 = require("./nodemailer-fns");
-function findAllPostsResponse(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const allPostsFromDB = yield mongoDB_1.Post.find().lean().exec();
-            return res.status(200).send(allPostsFromDB);
-        }
-        catch (error) {
-            console.log(`Error en ruta /allPosts. ${error.message}`);
-        }
-    });
-}
-exports.findAllPostsResponse = findAllPostsResponse;
-// CREATE A NEW POST :
-function handleNewPostRequest(req, res) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            console.log("REQ.BODY = ", req.body);
-            let userPostingId = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            const userInDB = yield (0, user_auxiliaries_1.getUserByIdOrThrowError)(userPostingId);
-            console.log("User In DB = ", userInDB);
-            const newPostToValidate = Object.assign(Object.assign({}, req.body), { user_posting: userInDB });
-            const validatedPost = (0, post_validators_1.validatePost)(newPostToValidate);
-            const newPost = yield mongoDB_1.Post.create(validatedPost);
-            userInDB.posts.push(newPost);
-            yield userInDB.save();
-            res.status(201).send(newPost);
-            // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
-            let resultOfSendingAlerts = yield (0, nodemailer_1.handleAlertAfterNewPost)(newPost);
-            console.log(resultOfSendingAlerts);
-        }
-        catch (error) {
-            console.log(`Error en POST '/newPost. ${error.message}`);
-            return res.status(400).send({ error: error.message });
-        }
-    });
-}
-exports.handleNewPostRequest = handleNewPostRequest;
-// SEARCH POSTS BY QUERY :
-function handleSearchByQueryRequest(req, res) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            console.log("REQ.QUERY = ", req.query);
-            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            yield (0, user_auxiliaries_1.throwErrorIfUserIsNotRegisteredOrVoid)(user_id);
-            const postsFound = yield (0, post_r_auxiliary_1.searchPostsByQuery)(req.query);
-            console.log("postsFound.length = ", postsFound.length);
-            return res.status(200).send(postsFound);
-        }
-        catch (error) {
-            console.log(`Error en GET "/". ${error.message}`);
-            return res.status(400).send({ error: error.message });
-        }
-    });
-}
-exports.handleSearchByQueryRequest = handleSearchByQueryRequest;
-// UPDATE A POST :
-function handleUpdateRequest(req, res) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            const post_id = req.params._id;
-            if (!post_id || !user_id) {
-                throw new Error(`El id de la publicación y el id del usuario deben ser válidos.`);
-            }
-            const updateResponse = yield (0, post_r_auxiliary_1.handleUpdatePost)(post_id, req.body, user_id);
-            return res.status(updateResponse.status).send(updateResponse);
-        }
-        catch (error) {
-            console.log(`Error en ruta PUT "/post/:_id. ${error.message}`);
-            return res.status(400).send({ error: error.message });
-        }
-    });
-}
-exports.handleUpdateRequest = handleUpdateRequest;
-// GET POST BY POST_ID IN PARAMS :
-function handleGetPostByIdRequest(req, res) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            yield (0, user_auxiliaries_1.throwErrorIfUserIsNotRegisteredOrVoid)(user_id);
-            const post_id = req.params._id;
-            const postFoundById = yield mongoDB_1.Post.findById(post_id, {
-                "user_posting.additional_contact_info": 0,
-            })
-                .lean()
-                .exec();
-            if (postFoundById === null) {
-                return res
-                    .status(404)
-                    .send("Post con id '" +
-                    encodeURI(post_id) +
-                    "' no encontrado en la base de datos.");
-            }
-            return res.status(200).send(postFoundById);
-        }
-        catch (error) {
-            console.log(`Error en ruta GET "post/:_id. ${error.message}`);
-            return res.status(400).send({ error: error.message });
-        }
-    });
-}
-exports.handleGetPostByIdRequest = handleGetPostByIdRequest;
-// DELETE POST BY POST_ID IN PARAMS :
-function handleDeletePostRequest(req, res) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            const post_id = req.params._id;
-            if (!post_id || !user_id) {
-                throw new Error(`El id de la publicación y el id del usuario deben ser válidos.`);
-            }
-            const deleteResults = yield (0, post_r_auxiliary_1.findPostByIdAndDeleteIt)(post_id, user_id);
-            return res.status(deleteResults.status).send(deleteResults);
-        }
-        catch (error) {
-            console.log(`Error en ruta DELETE "post/:_id". ${error.message}`);
-            return res.status(400).send({ error: error.message });
-        }
-    });
-}
-exports.handleDeletePostRequest = handleDeletePostRequest;
-// CONTACT USER :
-function handleContactUserRequest(req, res) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            const post_id = req.params.post_id;
-            const user_contacting = yield mongoDB_1.User.findById(user_id).exec();
-            if (!user_contacting) {
-                throw new Error("Usuario no encontrado en la base de datos.");
-            }
-            const userInDBPosting = yield mongoDB_1.Post.findById(post_id, {
-                user_posting: 1,
-                _id: 0,
-            })
-                .lean()
-                .exec();
-            if (!userInDBPosting) {
-                throw new Error("No se han encontrado los datos del creador del aviso.");
-            }
-            const user_posting = userInDBPosting.user_posting;
-            // Chequear si excedió los 5 contactos en las últimas 24hs. throw Error || void :
-            (0, post_r_auxiliary_1.checkContactsDate)(user_contacting);
-            yield (0, nodemailer_fns_1.sendContactInfoEmailToBothUsers)(user_posting, user_contacting);
-            res.status(202).send({ msg: "Processing request. Check your email." });
-            // add new contact to user_contacting_contacts:
-            (0, post_r_auxiliary_1.addContactDateToUserContacting)(user_contacting).then(function (succ) {
-                console.log("addContactDateToUserContacting: OK");
-            }, function (error) {
-                console.log("addContactDateToUserContacting: ERROR = ", error);
-            });
-        }
-        catch (error) {
-            console.log(`Error en ruta POST "contact/:_id". ${error.message}`);
-            return res.status(400).send({ error: error.message });
-        }
-    });
-}
-exports.handleContactUserRequest = handleContactUserRequest;
+// import { Request as JWTRequest } from "express-jwt";
+// import { Response } from "express";
+// import { Post, User } from "../../mongoDB";
+// import { IPost } from "../../mongoDB/models/Post";
+// import { validatePost } from "../../validators/post-validators";
+// import { handleAlertAfterNewPost } from "../subscription/nodemailer";
+// import {
+//   getUserByIdOrThrowError,
+//   throwErrorIfUserIsNotRegisteredOrVoid,
+// } from "../user/user-auxiliaries";
+// import {
+//   searchPostsByQuery,
+//   handleUpdatePost,
+//   findPostByIdAndDeleteIt,
+//   addContactDateToUserContacting,
+//   checkContactsDate,
+// } from "./post-r-auxiliary";
+// import { sendContactInfoEmailToBothUsers } from "./nodemailer-fns";
+// export async function findAllPostsResponse(req: JWTRequest, res: Response) {
+//   try {
+//     const allPostsFromDB = await Post.find().lean().exec();
+//     return res.status(200).send(allPostsFromDB);
+//   } catch (error: any) {
+//     console.log(`Error en ruta /allPosts. ${error.message}`);
+//   }
+// }
+// // CREATE A NEW POST :
+// export async function handleNewPostRequest(req: JWTRequest, res: Response) {
+//   try {
+//     console.log("REQ.BODY = ", req.body);
+//     let userPostingId = req.auth?.sub;
+//     const userInDB = await getUserByIdOrThrowError(userPostingId);
+//     console.log("User In DB = ", userInDB);
+//     const newPostToValidate: IPost = {
+//       ...req.body,
+//       user_posting: userInDB,
+//     };
+//     const validatedPost = validatePost(newPostToValidate);
+//     const newPost = await Post.create(validatedPost);
+//     userInDB.posts.push(newPost);
+//     await userInDB.save();
+//     res.status(201).send(newPost);
+//     // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
+//     let resultOfSendingAlerts = await handleAlertAfterNewPost(newPost);
+//     console.log(resultOfSendingAlerts);
+//   } catch (error: any) {
+//     console.log(`Error en POST '/newPost. ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// }
+// // SEARCH POSTS BY QUERY :
+// export async function handleSearchByQueryRequest(
+//   req: JWTRequest,
+//   res: Response
+// ) {
+//   try {
+//     console.log("REQ.QUERY = ", req.query);
+//     const user_id = req.auth?.sub;
+//     await throwErrorIfUserIsNotRegisteredOrVoid(user_id);
+//     const postsFound = await searchPostsByQuery(req.query);
+//     console.log("postsFound.length = ", postsFound.length);
+//     return res.status(200).send(postsFound);
+//   } catch (error: any) {
+//     console.log(`Error en GET "/". ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// }
+// // UPDATE A POST :
+// export async function handleUpdateRequest(req: JWTRequest, res: Response) {
+//   try {
+//     const user_id = req.auth?.sub;
+//     const post_id = req.params._id;
+//     if (!post_id || !user_id) {
+//       throw new Error(
+//         `El id de la publicación y el id del usuario deben ser válidos.`
+//       );
+//     }
+//     const updateResponse = await handleUpdatePost(post_id, req.body, user_id);
+//     return res.status(updateResponse.status).send(updateResponse);
+//   } catch (error: any) {
+//     console.log(`Error en ruta PUT "/post/:_id. ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// }
+// // GET POST BY POST_ID IN PARAMS :
+// export async function handleGetPostByIdRequest(req: JWTRequest, res: Response) {
+//   try {
+//     const user_id = req.auth?.sub;
+//     await throwErrorIfUserIsNotRegisteredOrVoid(user_id);
+//     const post_id = req.params._id;
+//     const postFoundById = await Post.findById(post_id, {
+//       "user_posting.additional_contact_info": 0,
+//     })
+//       .lean()
+//       .exec();
+//     if (postFoundById === null) {
+//       return res
+//         .status(404)
+//         .send(
+//           "Post con id '" +
+//             encodeURI(post_id) +
+//             "' no encontrado en la base de datos."
+//         );
+//     }
+//     return res.status(200).send(postFoundById);
+//   } catch (error: any) {
+//     console.log(`Error en ruta GET "post/:_id. ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// }
+// // DELETE POST BY POST_ID IN PARAMS :
+// export async function handleDeletePostRequest(req: JWTRequest, res: Response) {
+//   try {
+//     const user_id = req.auth?.sub;
+//     const post_id = req.params._id;
+//     if (!post_id || !user_id) {
+//       throw new Error(
+//         `El id de la publicación y el id del usuario deben ser válidos.`
+//       );
+//     }
+//     const deleteResults = await findPostByIdAndDeleteIt(post_id, user_id);
+//     return res.status(deleteResults.status).send(deleteResults);
+//   } catch (error: any) {
+//     console.log(`Error en ruta DELETE "post/:_id". ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// }
+// // CONTACT USER :
+// export async function handleContactUserRequest(req: JWTRequest, res: Response) {
+//   try {
+//     const user_id = req.auth?.sub;
+//     const post_id = req.params.post_id;
+//     const user_contacting = await User.findById(user_id).exec();
+//     if (!user_contacting) {
+//       throw new Error("Usuario no encontrado en la base de datos.");
+//     }
+//     const userInDBPosting = await Post.findById(post_id, {
+//       user_posting: 1,
+//       _id: 0,
+//     })
+//       .lean()
+//       .exec();
+//     if (!userInDBPosting) {
+//       throw new Error("No se han encontrado los datos del creador del aviso.");
+//     }
+//     const user_posting = userInDBPosting.user_posting;
+//     // Chequear si excedió los 5 contactos en las últimas 24hs. throw Error || void :
+//     checkContactsDate(user_contacting);
+//     await sendContactInfoEmailToBothUsers(user_posting, user_contacting);
+//     res.status(202).send({ msg: "Processing request. Check your email." });
+//     // add new contact to user_contacting_contacts:
+//     addContactDateToUserContacting(user_contacting).then(
+//       function (succ) {
+//         console.log("addContactDateToUserContacting: OK");
+//       },
+//       function (error) {
+//         console.log("addContactDateToUserContacting: ERROR = ", error);
+//       }
+//     );
+//   } catch (error: any) {
+//     console.log(`Error en ruta POST "contact/:_id". ${error.message}`);
+//     return res.status(400).send({ error: error.message });
+//   }
+// }

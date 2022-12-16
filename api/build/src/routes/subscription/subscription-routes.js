@@ -5,15 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const jwtMiddleware_1 = __importDefault(require("../../config/jwtMiddleware"));
-const subscription_middlewares_1 = require("./subscription-middlewares");
+const subscription_1 = __importDefault(require("../../controllers/subscription"));
 const router = (0, express_1.Router)();
-router.get("/findAll", subscription_middlewares_1.handleFindAllSubscriptionsRequest);
+router.get("/findAll", subscription_1.default.handleFindAllSubscriptionsRequest);
 // CREATE NEW SUBSCRIPTION :
-router.post("/", jwtMiddleware_1.default, subscription_middlewares_1.handleCreateNewSubscriptionRequest);
+router.post("/", jwtMiddleware_1.default, subscription_1.default.handleCreateNewSubscriptionRequest);
 // DELETE SUBSCRIPTION :
-router.delete("/:subscription_id", jwtMiddleware_1.default, subscription_middlewares_1.handleDeleteSubscriptionByIdRequest);
+router.delete("/:subscription_id", jwtMiddleware_1.default, subscription_1.default.handleDeleteSubscriptionByIdRequest);
 // UPDATE SUBSCRIPTION :
-router.patch("/:subscription_id", jwtMiddleware_1.default, subscription_middlewares_1.handleUpdateSubscriptionByIdRequest);
+router.patch("/:subscription_id", jwtMiddleware_1.default, subscription_1.default.handleUpdateSubscriptionByIdRequest);
 // GET ALL USER SUBSCRIPTIONS :
-router.get("/userSubs", jwtMiddleware_1.default, subscription_middlewares_1.handleGetUserSubscriptionsRequest);
+router.get("/userSubs", jwtMiddleware_1.default, subscription_1.default.handleGetUserSubscriptionsRequest);
 exports.default = router;

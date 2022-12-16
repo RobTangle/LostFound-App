@@ -1,39 +1,37 @@
 import { Router } from "express";
 import jwtCheck from "../../config/jwtMiddleware";
-
-import {
-  findAllPostsResponse,
-  handleNewPostRequest,
-  handleSearchByQueryRequest,
-  handleUpdateRequest,
-  handleGetPostByIdRequest,
-  handleDeletePostRequest,
-  handleContactUserRequest,
-} from "./post-middlewares";
-import { handlePaginatedPostResultsRequest } from "./post-pagination";
+import postControllers from "../../controllers/post";
 
 const router = Router();
 
 // FIND ALL POSTS (JUST FOR TESTING. NOT FOR PRODUCTION) :
-router.get("/findAll", findAllPostsResponse);
+router.get("/findAll", postControllers.findAllPostsResponse);
 
 // CREATE A NEW POST :
-router.post("/newPost", jwtCheck, handleNewPostRequest);
+router.post("/newPost", jwtCheck, postControllers.handleNewPostRequest);
 
 // SEARCH POSTS BY QUERY WITH PAGINATION :
-router.get("/search", jwtCheck, handlePaginatedPostResultsRequest);
+router.get(
+  "/search",
+  jwtCheck,
+  postControllers.handlePaginatedPostResultsRequest
+);
 
 // UPDATE A POST :
-router.patch("/:_id", jwtCheck, handleUpdateRequest);
+router.patch("/:_id", jwtCheck, postControllers.handleUpdateRequest);
 
 // GET POST BY POST_ID IN PARAMS :
-router.get("/:_id", jwtCheck, handleGetPostByIdRequest);
+router.get("/:_id", jwtCheck, postControllers.handleGetPostByIdRequest);
 
 // DELETE POST BY POST_ID IN PARAMS :
-router.delete("/:_id", jwtCheck, handleDeletePostRequest);
+router.delete("/:_id", jwtCheck, postControllers.handleDeletePostRequest);
 
 // CONTACT POST OWNER :
-router.post("/contact/:post_id", jwtCheck, handleContactUserRequest);
+router.post(
+  "/contact/:post_id",
+  jwtCheck,
+  postControllers.handleContactUserRequest
+);
 
 // SEARCH POSTS BY QUERY //? ruta vieja, antes de implementar paginado:
 // router.get("/search", jwtCheck, handleSearchByQueryRequest);
