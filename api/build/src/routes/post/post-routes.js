@@ -12,8 +12,8 @@ const router = (0, express_1.Router)();
 router.get("/findAll", post_middlewares_1.findAllPostsResponse);
 // CREATE A NEW POST :
 router.post("/newPost", jwtMiddleware_1.default, post_middlewares_1.handleNewPostRequest);
-// SEARCH POSTS BY QUERY :
-router.get("/search", jwtMiddleware_1.default, post_middlewares_1.handleSearchByQueryRequest);
+// SEARCH POSTS BY QUERY WITH PAGINATION :
+router.get("/search", jwtMiddleware_1.default, post_pagination_1.handlePaginatedPostResultsRequest);
 // UPDATE A POST :
 router.patch("/:_id", jwtMiddleware_1.default, post_middlewares_1.handleUpdateRequest);
 // GET POST BY POST_ID IN PARAMS :
@@ -22,6 +22,6 @@ router.get("/:_id", jwtMiddleware_1.default, post_middlewares_1.handleGetPostByI
 router.delete("/:_id", jwtMiddleware_1.default, post_middlewares_1.handleDeletePostRequest);
 // CONTACT POST OWNER :
 router.post("/contact/:post_id", jwtMiddleware_1.default, post_middlewares_1.handleContactUserRequest);
-// //! PAGINATION : --------------------------------
-router.get("/pagi/test", post_pagination_1.handlePaginatedPostResultsRequest);
+// SEARCH POSTS BY QUERY //? ruta vieja, antes de implementar paginado:
+// router.get("/search", jwtCheck, handleSearchByQueryRequest);
 exports.default = router;

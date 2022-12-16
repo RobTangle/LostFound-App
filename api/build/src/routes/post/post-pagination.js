@@ -13,17 +13,23 @@ exports.handlePaginatedPostResultsRequest = void 0;
 const genericValidators_1 = require("../../validators/genericValidators");
 const post_validators_1 = require("../../validators/post-validators");
 const mongoDB_1 = require("../../mongoDB");
-// Hacer función que recibe como argumentos (model, filter, options).
-// filter: sería lo que paso en la ruta que hago un search por query.
-// options:  sería el :  sortby, limit, page
-//  retorno un objeto queryResult.
+const user_auxiliaries_1 = require("../user/user-auxiliaries");
+const pagination_aux_1 = require("./pagination-aux");
+// HANDLE PAGINATED POST RESULTS REQUEST :
 function handlePaginatedPostResultsRequest(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let { pag, lim } = req.query;
-            console.log(req.query);
+            //chequeo si el usuario está registrado en la db, o tira error :
+            (0, user_auxiliaries_1.throwErrorIfUserIsNotRegisteredOrVoid)((_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub);
+            // setup inicial de paginado :
+            let { pag, lim, sortBy } = req.query;
             let page = 1;
             let limit = 5;
+            let sort = "desc";
+            if (sortBy === "asc") {
+                sort = sortBy;
+            }
             if (typeof pag === "string") {
                 page = parseInt(pag) || 1;
             }
@@ -34,39 +40,32 @@ function handlePaginatedPostResultsRequest(req, res) {
             if (startIndex < 0) {
                 startIndex = 0;
             }
-            //! query / filter:
-            const queryParsedValues = parseReqQuery(req.query);
-            // Parseo de inputs:
+            // Parseo y validación de inputs :
+            const queryParsedValues = (0, pagination_aux_1.parseReqQuery)(req.query);
             let nameOnDocParsed = (0, post_validators_1.checkAndParseNameOnDoc)(queryParsedValues.name);
-            let countryParsed = queryParsedValues.country.toLowerCase();
             let numberOnDocParsed = (0, post_validators_1.checkAndParseNumberOnDoc)(queryParsedValues.number);
+            let countryParsed = queryParsedValues.country.toLowerCase();
             let verifiedDate = (0, genericValidators_1.checkAndParseDate)(queryParsedValues.date_lost);
-            const filterObj = {
-                $and: [
-                    {
-                        $or: [
-                            { name_on_doc: { $eq: nameOnDocParsed } },
-                            { number_on_doc: { $eq: numberOnDocParsed } },
-                        ],
-                    },
-                    { country_found: { $eq: countryParsed } },
-                    { date_found: { $gte: verifiedDate } },
-                ],
-            };
+            // [filter, projection, sort]  query objs :
+            const filterObj = (0, pagination_aux_1.setFilterObj)(nameOnDocParsed, numberOnDocParsed, countryParsed, verifiedDate);
             const projectionObj = {
                 "user_posting.posts": 0,
                 "user_posting.createdAt": 0,
                 "user_posting.updatedAt": 0,
                 "user_posting.additional_contact_info": 0,
             };
-            const allTheDocs = {};
+            const sortObj = {
+                createdAt: sort,
+            };
+            // find in the db :
             const countTotal = yield mongoDB_1.Post.find(filterObj).countDocuments().exec();
             const docsFound = yield mongoDB_1.Post.find(filterObj, projectionObj)
+                .sort(sortObj)
                 .skip(startIndex)
                 .limit(limit)
                 .lean()
                 .exec();
-            //! ---------------
+            // setup the response obj with the query results :
             const results = {
                 results: docsFound,
                 page,
@@ -83,31 +82,3 @@ function handlePaginatedPostResultsRequest(req, res) {
     });
 }
 exports.handlePaginatedPostResultsRequest = handlePaginatedPostResultsRequest;
-// PARSE REQ QUERY TYPEOF VALUES :
-function parseReqQuery(reqQuery) {
-    let { name, number, country, date_lost } = reqQuery;
-    if (typeof name !== "string" ||
-        typeof country !== "string" ||
-        typeof date_lost !== "string") {
-        console.log("Algún valor por query no es string.");
-        throw new Error("Invalid query inputs");
-    }
-    if (typeof number === "string" && number.length) {
-        const queryParsed = {
-            name,
-            number,
-            country,
-            date_lost,
-        };
-        return queryParsed;
-    }
-    else {
-        const queryParsed = {
-            name,
-            number: Math.random() + "",
-            country,
-            date_lost,
-        };
-        return queryParsed;
-    }
-}
