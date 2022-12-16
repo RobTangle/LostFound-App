@@ -83,11 +83,31 @@ TIPS:
 
    https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/security/ormodmusage.md
 
-6. **NoSQL injections:** Especial cuidado cuando paso valores al argumento "filter". Una buena práctica que usar la opción sanitizeFilter de Mongoose, o el operador $eq.
+6. **NoSQL injections:** Especial cuidado cuando paso valores al argumento "filter". Una buena práctica que usar la opción **sanitizeFilter** de Mongoose, o el operador **$eq**. También, la opción **runValidators** es una buena idea en caso de usar métodos como findByIdAndUpdate, ya que estos métodos, por default, ignoran las validaciones del schema.
 
-   http://thecodebarbarian.com/whats-new-in-mongoose-6-sanitizefilter.html
+- Here's an interesting idea to consider: why are there no update selector injections in MongoDB? The answer is that update operators are top-level properties in the update object.
 
-   https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/security/ormodmusage.md
+This means **it is safe to do const update = { $set: req.body }** (using Mongoose to validate data of course) because you specified that you're $set-ing all the properties of req.body. There's no way for a malicious user to overwrite the $set.
+
+- By default, the methods like Model.findOneAndUpdate() **ignore the schema validations**. To counter this, we can use the "**runValidators**" option.
+
+<pre>
+<code>
+  const userToUpdate = await User.findByIdAndUpdate(
+    user_id,
+    { $set: bodyFromReq },
+    {
+      sanitizeFilter: true,
+      returnOriginal: false,
+      runValidators: true,
+    }
+  ).exec();
+  </code>
+</pre>
+
+- http://thecodebarbarian.com/whats-new-in-mongoose-6-sanitizefilter.html
+
+  https://github.com/goldbergyoni/nodebestpractices/blob/master/sections/security/ormodmusage.md
 
 7. **Server side JS injection:** Also known as SSJS.
    It is the case where user input is directly passed in native JS functions like eval(),setTimeout(), setInterval() or Function(). So we should simply avoid using these functions at any cost. These functions consist a bad practice even if we validate and sanitize user input data. In order to prevent it just use JSON.parse(), it is much safer.
@@ -126,7 +146,7 @@ generic/custom error messages
 
 GitHub CodeQL Analysis
 
-NoSQL Injections considerations: Use "sanitizeFilter" option, or $eq operator.
+NoSQL Injections considerations: Use options { sanitizeFilter: true, runValidators: true} , or $eq operator.
 
 SQL Injection considerations.
 
