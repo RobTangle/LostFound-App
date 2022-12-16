@@ -15,7 +15,7 @@ const nodemailer = require("nodemailer");
 // (Tercero),  y por cada elemento (subscription) iterado se va a invocar a la fn sendMailWithNodeMailer la cual va a enviar un email al {subscription.user_subscribed.email} invocando a la función interna transporter.sendMail.
 
 // HANDLE ALERT AFTER NEW POST :
-export async function handleAlertAfterNewPost(
+export async function alertUsersAfterNewPost(
   newPost: Document<
     unknown,
     any,
@@ -39,7 +39,7 @@ export async function handleAlertAfterNewPost(
 }
 
 // FIND MATCHING SUSCRIPTIONS :
-export async function findMatchingSuscriptionsToNewPost(
+async function findMatchingSuscriptionsToNewPost(
   newPost: Document<
     unknown,
     any,
@@ -91,7 +91,7 @@ export async function findMatchingSuscriptionsToNewPost(
 }
 
 // ALERT MATCHING SUBSCRIPTIONS :
-export async function alertMatchingSubscriptions(
+async function alertMatchingSubscriptions(
   arrayOfMatchingSubscriptions:
     | LeanDocument<
         {
@@ -252,11 +252,3 @@ async function sendMailWithNodeMailer(
     `Función sendEmailWithNodeMailer ejecutada al email ${subscription.user_subscribed.email}.`
   );
 }
-
-const nmServices = {
-  handleAlertAfterNewPost,
-  findMatchingSuscriptionsToNewPost,
-  alertMatchingSubscriptions,
-};
-
-export default nmServices;

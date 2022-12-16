@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.alertMatchingSubscriptions = exports.findMatchingSuscriptionsToNewPost = exports.handleAlertAfterNewPost = void 0;
+exports.alertUsersAfterNewPost = void 0;
 const mongoDB_1 = require("../../mongoDB");
 const validator_1 = __importDefault(require("validator"));
 require("dotenv").config();
@@ -27,14 +27,14 @@ const nodemailer = require("nodemailer");
 // - Segundo, ese arreglo de los matches se los va a pasar como argumento a la fn alertMatchingSubscriptions, la cual va a iterar el arreglo...
 // (Tercero),  y por cada elemento (subscription) iterado se va a invocar a la fn sendMailWithNodeMailer la cual va a enviar un email al {subscription.user_subscribed.email} invocando a la función interna transporter.sendMail.
 // HANDLE ALERT AFTER NEW POST :
-function handleAlertAfterNewPost(newPost) {
+function alertUsersAfterNewPost(newPost) {
     return __awaiter(this, void 0, void 0, function* () {
         const matchingSubscriptions = yield findMatchingSuscriptionsToNewPost(newPost);
         const alertedMatchingSubs = yield alertMatchingSubscriptions(matchingSubscriptions, newPost._id);
         return alertedMatchingSubs;
     });
 }
-exports.handleAlertAfterNewPost = handleAlertAfterNewPost;
+exports.alertUsersAfterNewPost = alertUsersAfterNewPost;
 // FIND MATCHING SUSCRIPTIONS :
 function findMatchingSuscriptionsToNewPost(newPost) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -75,7 +75,6 @@ function findMatchingSuscriptionsToNewPost(newPost) {
         }
     });
 }
-exports.findMatchingSuscriptionsToNewPost = findMatchingSuscriptionsToNewPost;
 // ALERT MATCHING SUBSCRIPTIONS :
 function alertMatchingSubscriptions(arrayOfMatchingSubscriptions, post_id) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -95,7 +94,6 @@ function alertMatchingSubscriptions(arrayOfMatchingSubscriptions, post_id) {
         }
     });
 }
-exports.alertMatchingSubscriptions = alertMatchingSubscriptions;
 // SEND MAIL WITH NODE MAILER :
 function sendMailWithNodeMailer(subscription, post_id) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -209,9 +207,3 @@ function sendMailWithNodeMailer(subscription, post_id) {
         console.log(`Función sendEmailWithNodeMailer ejecutada al email ${subscription.user_subscribed.email}.`);
     });
 }
-const nmServices = {
-    handleAlertAfterNewPost,
-    findMatchingSuscriptionsToNewPost,
-    alertMatchingSubscriptions,
-};
-exports.default = nmServices;

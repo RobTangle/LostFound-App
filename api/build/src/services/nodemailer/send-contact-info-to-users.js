@@ -250,7 +250,3 @@ function sendContactInfoMailToUserContacting(user_posting, user_contacting) {
         console.log(`Función sendContactInfoMailToUserContacting ejecutada al email ${user_contacting.email}.`);
     });
 }
-const nmServices = {
-    sendContactInfoEmailToBothUsers
-};
-exports.default = nmServices;

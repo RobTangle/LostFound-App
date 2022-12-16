@@ -261,8 +261,3 @@ async function sendContactInfoMailToUserContacting(
     `Función sendContactInfoMailToUserContacting ejecutada al email ${user_contacting.email}.`
   );
 }
-
-const nmServices = {
-  sendContactInfoEmailToBothUsers
-}
-export default nmServices
