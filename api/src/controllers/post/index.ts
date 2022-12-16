@@ -16,8 +16,7 @@ import {
 import { checkAndParseDate } from "../../validators/genericValidators";
 import userServices from "../../services/user";
 import postServices from "../../services/post";
-import nmPostServices from "../../services/nodemailer/send-contact-info-to-users";
-import nmSubscriptionServices from "../../services/nodemailer/alert-after-new-post";
+import nodeMailerServices from "../../services/nodemailer/";
 
 export async function findAllPostsResponse(req: JWTRequest, res: Response) {
   try {
@@ -47,8 +46,9 @@ export async function handleNewPostRequest(req: JWTRequest, res: Response) {
     await userInDB.save();
     res.status(201).send(newPost);
     // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
-    let resultOfSendingAlerts =
-      await nmSubscriptionServices.handleAlertAfterNewPost(newPost);
+    let resultOfSendingAlerts = await nodeMailerServices.alertUsersAfterNewPost(
+      newPost
+    );
     console.log(resultOfSendingAlerts);
   } catch (error: any) {
     console.log(`Error en POST '/newPost. ${error.message}`);
@@ -170,7 +170,7 @@ export async function handleContactUserRequest(req: JWTRequest, res: Response) {
     const user_posting = userInDBPosting.user_posting;
     // Chequear si excedió los 5 contactos en las últimas 24hs. throw Error || void :
     postServices.checkContactsDate(user_contacting);
-    await nmPostServices.sendContactInfoEmailToBothUsers(
+    await nodeMailerServices.sendContactInfoEmailToBothUsers(
       user_posting,
       user_contacting
     );

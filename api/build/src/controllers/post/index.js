@@ -19,8 +19,7 @@ const post_1 = require("../../services/post");
 const genericValidators_1 = require("../../validators/genericValidators");
 const user_1 = __importDefault(require("../../services/user"));
 const post_2 = __importDefault(require("../../services/post"));
-const send_contact_info_to_users_1 = __importDefault(require("../../services/nodemailer/send-contact-info-to-users"));
-const alert_after_new_post_1 = __importDefault(require("../../services/nodemailer/alert-after-new-post"));
+const nodemailer_1 = __importDefault(require("../../services/nodemailer/"));
 function findAllPostsResponse(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -49,7 +48,7 @@ function handleNewPostRequest(req, res) {
             yield userInDB.save();
             res.status(201).send(newPost);
             // CHEQUEO DE SUBSCRIPTIONS CON EL NEW POST:
-            let resultOfSendingAlerts = yield alert_after_new_post_1.default.handleAlertAfterNewPost(newPost);
+            let resultOfSendingAlerts = yield nodemailer_1.default.alertUsersAfterNewPost(newPost);
             console.log(resultOfSendingAlerts);
         }
         catch (error) {
@@ -170,7 +169,7 @@ function handleContactUserRequest(req, res) {
             const user_posting = userInDBPosting.user_posting;
             // Chequear si excedió los 5 contactos en las últimas 24hs. throw Error || void :
             post_2.default.checkContactsDate(user_contacting);
-            yield send_contact_info_to_users_1.default.sendContactInfoEmailToBothUsers(user_posting, user_contacting);
+            yield nodemailer_1.default.sendContactInfoEmailToBothUsers(user_posting, user_contacting);
             res.status(202).send({ msg: "Processing request. Check your email." });
             // add new contact to user_contacting_contacts:
             post_2.default.addContactDateToUserContacting(user_contacting).then(function (succ) {
