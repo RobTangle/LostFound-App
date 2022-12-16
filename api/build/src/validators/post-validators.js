@@ -7,6 +7,7 @@ exports.checkCountry = exports.parseNumberOnDoc = exports.checkAndParseNumberOnD
 const genericValidators_1 = require("./genericValidators");
 const CountiesArrays_1 = require("../miscellanea/CountiesArrays");
 const validator_1 = __importDefault(require("validator"));
+const xss_1 = __importDefault(require("xss"));
 // VALIDATE UPDATE POST DATA :
 function validateUpdatePostData(bodyFromReq) {
     const { name_on_doc, number_on_doc, country_found, date_found, blurred_imgs, comments, additional_contact_info, } = bodyFromReq;
@@ -53,7 +54,8 @@ function checkAndParseNameOnDoc(nameFromReq) {
             throw new Error(`URLs are not allowed.`);
         }
         let nameParsedToLowerCase = nameFromReq.toLowerCase().trim();
-        return validator_1.default.escape(nameParsedToLowerCase);
+        return (0, genericValidators_1.sanitizeSimbols)(nameParsedToLowerCase);
+        // return validator.escape(nameParsedToLowerCase);
     }
     throw new Error(`El nombre en el documento "${nameFromReq} no es válido.`);
 }
@@ -111,7 +113,8 @@ function checkBlurredImgs(blurredImgsFromReq) {
         let blurredImgs = blurredImgsFromReq.map((image) => {
             // aplicar fn que blurrea imágenes...
             if ((0, genericValidators_1.isValidURLImage)(image)) {
-                return validator_1.default.escape(image);
+                return (0, xss_1.default)(image);
+                // return validator.escape(image);
             }
             else {
                 throw new Error("La imagen no tiene un formato válido.");
@@ -130,7 +133,8 @@ function checkComments(commentsFromReq) {
         if ((0, genericValidators_1.stringContainsURLs)(commentsFromReq)) {
             throw new Error(`URLs are not allowed.`);
         }
-        return validator_1.default.escape(commentsFromReq);
+        return (0, xss_1.default)(commentsFromReq);
+        // return validator.escape(commentsFromReq);
     }
     throw new Error(`The comment entered is invalid. Please, enter a text of no more than ${maxLength} characters long or leave the input empty.`);
 }
@@ -149,7 +153,7 @@ function checkUserPosting(userPosting, additional_contact_info) {
             throw new Error("The additional contact information has URLs.");
         }
         if ((0, genericValidators_1.isStringBetween1AndXCharsLong)(150, additional_contact_info)) {
-            userPostingObj.additional_contact_info = validator_1.default.escape(additional_contact_info);
+            userPostingObj.additional_contact_info = (0, xss_1.default)(additional_contact_info);
         }
     }
     return userPostingObj;
