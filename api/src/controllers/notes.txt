@@ -1,0 +1,4 @@
+- Acá van a estar los controllers / fns que reciben req, res, next, separados en carpetas según su uso.
+
+NOTA: Los "controllers" serían lo que yo llamo "middlewares"/ "handlers" para las rutas.
+

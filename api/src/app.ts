@@ -4,10 +4,10 @@ import express, { Request, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
 import cors from "cors";
 
-import userRouter from "./routes/user/user-routes";
-import postRouter from "./routes/post/post-routes";
-import countriesRouter from "./routes/countries/countries-routes";
-import subscriptionRouter from "./routes/subscription/subscription-routes";
+import userRouter from "./routes/user";
+import postRouter from "./routes/post";
+import countriesRouter from "./routes/countries";
+import subscriptionRouter from "./routes/subscription";
 import jwtCheck from "./config/jwtMiddleware";
 import { limiter } from "./config/rateLimiter";
 
