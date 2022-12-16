@@ -1,5 +1,6 @@
 import { Router } from "express";
 import jwtCheck from "../../config/jwtMiddleware";
+
 import {
   findAllPostsResponse,
   handleNewPostRequest,
@@ -9,6 +10,7 @@ import {
   handleDeletePostRequest,
   handleContactUserRequest,
 } from "./post-middlewares";
+import { handlePaginatedPostResultsRequest } from "./post-pagination";
 
 const router = Router();
 
@@ -32,5 +34,8 @@ router.delete("/:_id", jwtCheck, handleDeletePostRequest);
 
 // CONTACT POST OWNER :
 router.post("/contact/:post_id", jwtCheck, handleContactUserRequest);
+
+// //! PAGINATION : --------------------------------
+router.get("/pagi/test", handlePaginatedPostResultsRequest);
 
 export default router;
