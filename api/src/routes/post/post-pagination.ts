@@ -1,56 +1,36 @@
-//! PAGINATION : --------------------------------
-import mongoose, { Document, LeanDocument } from "mongoose";
 import { checkAndParseDate } from "../../validators/genericValidators";
 import {
   checkAndParseNameOnDoc,
   checkAndParseNumberOnDoc,
 } from "../../validators/post-validators";
-import { ParsedQs } from "qs";
-import { Request, Response } from "express";
+import { Response } from "express";
+import { Request as JWTRequest } from "express-jwt";
 import { Post } from "../../mongoDB";
-import { IPost } from "../../mongoDB/models/Post";
-/**
- * @typedef {Object} QueryResult
- * @property {Document[]} results - Results found
- * @property {number} page - Current page
- * @property {number} limit - Maximum number of results per page
- * @property {number} totalPages - Total number of pages
- * @property {number} totalResults - Total number of documents
- */
-/**
- * Query for documents with pagination
- * @param {Object} [filter] - Mongo filter
- * @param {Object} [options] - Query options
- * @param {string} [options.sortBy] - Sorting criteria using the format: sortField:(desc|asc). Multiple sorting criteria should be separated by commas (,)
- * @param {string} [options.populate] - Populate data fields. Hierarchy of fields should be separated by (.). Multiple populating criteria should be separated by commas (,)
- * @param {number} [options.limit] - Maximum number of results per page (default = 10)
- * @param {number} [options.page] - Current page (default = 1)
- * @returns {Promise<QueryResult>}
- */
+import { throwErrorIfUserIsNotRegisteredOrVoid } from "../user/user-auxiliaries";
+import {
+  TSort,
+  parseReqQuery,
+  setFilterObj,
+  QueryResult,
+} from "./pagination-aux";
 
-type QueryResult = {
-  results: LeanDocument<IPost & Required<{ _id: string }>>[];
-  page: number;
-  limit: number;
-  totalPages: number;
-  totalResults: number;
-};
-
-// Hacer función que recibe como argumentos (model, filter, options).
-// filter: sería lo que paso en la ruta que hago un search por query.
-// options:  sería el :  sortby, limit, page
-//  retorno un objeto queryResult.
-
+// HANDLE PAGINATED POST RESULTS REQUEST :
 export async function handlePaginatedPostResultsRequest(
-  req: Request,
+  req: JWTRequest,
   res: Response
 ) {
   try {
-    let { pag, lim } = req.query;
-    console.log(req.query);
+    //chequeo si el usuario está registrado en la db, o tira error :
+    throwErrorIfUserIsNotRegisteredOrVoid(req.auth?.sub);
 
+    // setup inicial de paginado :
+    let { pag, lim, sortBy } = req.query;
     let page = 1;
     let limit = 5;
+    let sort: TSort = "desc";
+    if (sortBy === "asc") {
+      sort = sortBy;
+    }
     if (typeof pag === "string") {
       page = parseInt(pag) || 1;
     }
@@ -63,28 +43,21 @@ export async function handlePaginatedPostResultsRequest(
       startIndex = 0;
     }
 
-    //! query / filter:
-
+    // Parseo y validación de inputs :
     const queryParsedValues = parseReqQuery(req.query);
-
-    // Parseo de inputs:
     let nameOnDocParsed = checkAndParseNameOnDoc(queryParsedValues.name);
-    let countryParsed = queryParsedValues.country.toLowerCase();
     let numberOnDocParsed = checkAndParseNumberOnDoc(queryParsedValues.number);
+    let countryParsed = queryParsedValues.country.toLowerCase();
     let verifiedDate = checkAndParseDate(queryParsedValues.date_lost);
 
-    const filterObj = {
-      $and: [
-        {
-          $or: [
-            { name_on_doc: { $eq: nameOnDocParsed } },
-            { number_on_doc: { $eq: numberOnDocParsed } },
-          ],
-        },
-        { country_found: { $eq: countryParsed } },
-        { date_found: { $gte: verifiedDate } },
-      ],
-    };
+    // [filter, projection, sort]  query objs :
+
+    const filterObj = setFilterObj(
+      nameOnDocParsed,
+      numberOnDocParsed,
+      countryParsed,
+      verifiedDate
+    );
 
     const projectionObj = {
       "user_posting.posts": 0,
@@ -92,16 +65,21 @@ export async function handlePaginatedPostResultsRequest(
       "user_posting.updatedAt": 0,
       "user_posting.additional_contact_info": 0,
     };
-    const allTheDocs = {};
+
+    const sortObj = {
+      createdAt: sort,
+    };
+
+    // find in the db :
     const countTotal = await Post.find(filterObj).countDocuments().exec();
     const docsFound = await Post.find(filterObj, projectionObj)
+      .sort(sortObj)
       .skip(startIndex)
       .limit(limit)
       .lean()
       .exec();
 
-    //! ---------------
-
+    // setup the response obj with the query results :
     const results: QueryResult = {
       results: docsFound,
       page,
@@ -113,41 +91,5 @@ export async function handlePaginatedPostResultsRequest(
   } catch (error: any) {
     console.log(`Error en paginado. ${error.message}`);
     return res.status(400).send({ error: "Something went wrong :( " });
-  }
-}
-
-// PARSE REQ QUERY TYPEOF VALUES :
-function parseReqQuery(reqQuery: ParsedQs): {
-  name: string;
-  number: string | undefined;
-  country: string;
-  date_lost: string;
-} {
-  let { name, number, country, date_lost } = reqQuery;
-  if (
-    typeof name !== "string" ||
-    typeof country !== "string" ||
-    typeof date_lost !== "string"
-  ) {
-    console.log("Algún valor por query no es string.");
-    throw new Error("Invalid query inputs");
-  }
-
-  if (typeof number === "string" && number.length) {
-    const queryParsed = {
-      name,
-      number,
-      country,
-      date_lost,
-    };
-    return queryParsed;
-  } else {
-    const queryParsed = {
-      name,
-      number: Math.random() + "",
-      country,
-      date_lost,
-    };
-    return queryParsed;
   }
 }

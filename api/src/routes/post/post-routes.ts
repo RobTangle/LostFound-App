@@ -20,8 +20,8 @@ router.get("/findAll", findAllPostsResponse);
 // CREATE A NEW POST :
 router.post("/newPost", jwtCheck, handleNewPostRequest);
 
-// SEARCH POSTS BY QUERY :
-router.get("/search", jwtCheck, handleSearchByQueryRequest);
+// SEARCH POSTS BY QUERY WITH PAGINATION :
+router.get("/search", jwtCheck, handlePaginatedPostResultsRequest);
 
 // UPDATE A POST :
 router.patch("/:_id", jwtCheck, handleUpdateRequest);
@@ -35,7 +35,7 @@ router.delete("/:_id", jwtCheck, handleDeletePostRequest);
 // CONTACT POST OWNER :
 router.post("/contact/:post_id", jwtCheck, handleContactUserRequest);
 
-// //! PAGINATION : --------------------------------
-router.get("/pagi/test", handlePaginatedPostResultsRequest);
+// SEARCH POSTS BY QUERY //? ruta vieja, antes de implementar paginado:
+// router.get("/search", jwtCheck, handleSearchByQueryRequest);
 
 export default router;
