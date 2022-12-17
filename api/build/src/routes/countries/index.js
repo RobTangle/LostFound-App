@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const CountiesArrays_1 = require("../../miscellanea/CountiesArrays");
+const CountiesArrays_1 = require("../../utils/miscellanea/CountiesArrays");
 const router = (0, express_1.Router)();
 // GET ARRAY OF COUNTRIES BY LANGUAGE :
 router.get("/", (req, res) => {
