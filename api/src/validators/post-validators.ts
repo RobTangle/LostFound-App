@@ -7,7 +7,7 @@ import {
   sanitizeSimbols,
   stringContainsURLs,
 } from "./genericValidators";
-import { arrayOfCountriesTwoChars } from "../miscellanea/CountiesArrays";
+import { arrayOfCountriesTwoChars } from "../utils/miscellanea/CountiesArrays";
 import { IUserPosting } from "../mongoDB/models/Post";
 import validator from "validator";
 import xss from "xss";

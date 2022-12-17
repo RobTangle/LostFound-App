@@ -1,4 +1,4 @@
-import LogWithColors from "../miscellanea/LogWithColor";
+import LogWithColors from "../utils/miscellanea/LogWithColor";
 
 //* - - - - - - - CONNECT TO MongoDB - - - - - - - -
 import mongoose from "mongoose";

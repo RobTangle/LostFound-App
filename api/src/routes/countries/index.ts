@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import {
   arrayOfArraysKeyValuesEN,
   arrayOfArraysKeyValuesES,
-} from "../../miscellanea/CountiesArrays";
+} from "../../utils/miscellanea/CountiesArrays";
 const router = Router();
 
 // GET ARRAY OF COUNTRIES BY LANGUAGE :
