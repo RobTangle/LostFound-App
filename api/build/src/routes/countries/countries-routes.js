@@ -13,6 +13,7 @@ router.get("/", (req, res) => {
         if (lang === "es") {
             return res.status(200).send(CountiesArrays_1.arrayOfArraysKeyValuesES);
         }
+        throw new Error("You must enter in the query a lang: 'es' or 'en'");
     }
     catch (error) {
         console.log(`Error en "/countries". ${error.message}`);

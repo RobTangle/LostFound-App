@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkCountry = exports.parseNumberOnDoc = exports.checkAndParseNumberOnDoc = exports.checkAndParseNameOnDoc = exports.validatePost = exports.validateUpdatePostData = void 0;
 const genericValidators_1 = require("./genericValidators");
-const CountiesArrays_1 = require("../miscellanea/CountiesArrays");
+const CountiesArrays_1 = require("../utils/miscellanea/CountiesArrays");
 const validator_1 = __importDefault(require("validator"));
 const xss_1 = __importDefault(require("xss"));
 // VALIDATE UPDATE POST DATA :

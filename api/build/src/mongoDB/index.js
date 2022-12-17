@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Subscription = exports.Post = exports.User = void 0;
-const LogWithColor_1 = __importDefault(require("../miscellanea/LogWithColor"));
+const LogWithColor_1 = __importDefault(require("../utils/miscellanea/LogWithColor"));
 //* - - - - - - - CONNECT TO MongoDB - - - - - - - -
 const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = require("../config/config");
