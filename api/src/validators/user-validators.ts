@@ -5,9 +5,36 @@ import {
   isStringBetween1AndXCharsLong,
   isStringBetweenXAndYCharsLong,
   isValidURLImage,
+  returnArgOrUndefinedIfFalsy,
+  sanitizeID,
+  sanitizeNameSimbols,
   sanitizeSimbols,
   stringContainsURLs,
 } from "./genericValidators";
+
+import { z } from "zod";
+
+const newUserZSchema = z.object({
+  _id: z.string().trim().min(1, { message: "Invalid id." }).max(50),
+  name: z.string().trim().min(2).max(50),
+  email: z.string().trim().email(),
+  profile_img: z.string().url().optional(),
+  // contacts: z.array(z.number()).max(5),
+});
+
+export function validateNewUserWithZod(
+  objFromReq: any,
+  _id: string | undefined
+): INewUser {
+  const { name, email, profile_img } = objFromReq;
+  const newUserToValidate = {
+    _id: sanitizeID(_id),
+    name: sanitizeNameSimbols(name),
+    email,
+    profile_img: returnArgOrUndefinedIfFalsy(profile_img),
+  };
+  return newUserZSchema.parse(newUserToValidate);
+}
 
 export function validateNewUser(
   objFromReq: any,
