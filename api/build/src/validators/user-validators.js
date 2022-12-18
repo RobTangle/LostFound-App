@@ -1,7 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkUserProfileImg = exports.checkUserEmail = exports.validateNewUser = void 0;
+exports.checkUserProfileImg = exports.checkUserEmail = exports.validateNewUser = exports.validateNewUserWithZod = void 0;
 const genericValidators_1 = require("./genericValidators");
+const zod_1 = require("zod");
+const newUserZSchema = zod_1.z.object({
+    _id: zod_1.z.string().trim().min(1, { message: "Invalid id." }).max(50),
+    name: zod_1.z.string().trim().min(2).max(50),
+    email: zod_1.z.string().trim().email(),
+    profile_img: zod_1.z.string().url().optional(),
+    // contacts: z.array(z.number()).max(5),
+});
+function validateNewUserWithZod(objFromReq, _id) {
+    const { name, email, profile_img } = objFromReq;
+    const newUserToValidate = {
+        _id: (0, genericValidators_1.sanitizeID)(_id),
+        name: (0, genericValidators_1.sanitizeNameSimbols)(name),
+        email,
+        profile_img: (0, genericValidators_1.returnArgOrUndefinedIfFalsy)(profile_img),
+    };
+    return newUserZSchema.parse(newUserToValidate);
+}
+exports.validateNewUserWithZod = validateNewUserWithZod;
 function validateNewUser(objFromReq, _id) {
     const { name, email, profile_img } = objFromReq;
     const validatedUser = {

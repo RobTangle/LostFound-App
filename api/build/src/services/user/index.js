@@ -22,15 +22,16 @@ function registerNewUser(reqBody, reqAuth) {
     return __awaiter(this, void 0, void 0, function* () {
         const user_id = reqAuth === null || reqAuth === void 0 ? void 0 : reqAuth.sub;
         const email_verified = reqAuth.email_verified;
-        if (!user_id) {
-            console.log("Error en registerNewUser: user_id falsy");
+        if (!user_id || typeof user_id !== "string") {
+            console.log("Error en registerNewUser: user_id falsy o no es typeof string.");
             throw new Error("Something went wrong :( ");
         }
         if (email_verified !== true) {
             console.log("Error: El email del usuario no está verificado.");
             throw new Error("Email must be verified before registering.");
         }
-        const validatedNewUser = (0, user_validators_1.validateNewUser)(reqBody, user_id);
+        const validatedNewUser = (0, user_validators_1.validateNewUserWithZod)(reqBody, user_id);
+        // const validatedNewUser: INewUser = validateNewUser(reqBody, user_id);
         yield throwErrorIfEmailExistsInDB(validatedNewUser.email);
         const newUser = yield mongoDB_1.User.create(validatedNewUser);
         return newUser;
