@@ -5,3 +5,7 @@
 - La respuesta de UnauthorizedError brinda DEMASIADA información sobre los archivos del servidor. Arreglar esto.
 
 - Implementar Swagger
+
+- Implementar Zod
+
+- Sacar a "contacts" de las proyecciones.
