@@ -3,20 +3,26 @@ import isEmail from "validator/lib/isEmail";
 import { User, Post, Subscription } from "../../mongoDB";
 import { INewUser } from "../../mongoDB/models/User";
 import { checkValidUserIdFormatOrThrowError } from "../../validators/genericValidators";
-import { validateNewUser } from "../../validators/user-validators";
+import {
+  validateNewUser,
+  validateNewUserWithZod,
+} from "../../validators/user-validators";
 
 export async function registerNewUser(reqBody: any, reqAuth: any) {
   const user_id = reqAuth?.sub;
   const email_verified = reqAuth.email_verified;
-  if (!user_id) {
-    console.log("Error en registerNewUser: user_id falsy");
+  if (!user_id || typeof user_id !== "string") {
+    console.log(
+      "Error en registerNewUser: user_id falsy o no es typeof string."
+    );
     throw new Error("Something went wrong :( ");
   }
   if (email_verified !== true) {
     console.log("Error: El email del usuario no está verificado.");
     throw new Error("Email must be verified before registering.");
   }
-  const validatedNewUser: INewUser = validateNewUser(reqBody, user_id);
+  const validatedNewUser = validateNewUserWithZod(reqBody, user_id);
+  // const validatedNewUser: INewUser = validateNewUser(reqBody, user_id);
   await throwErrorIfEmailExistsInDB(validatedNewUser.email);
   const newUser = await User.create(validatedNewUser);
   return newUser;
