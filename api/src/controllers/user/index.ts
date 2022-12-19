@@ -32,7 +32,7 @@ export async function getUserInfoHandler(req: JWTRequest, res: Response) {
 // CREATE/REGISTER NEW USER :
 export async function registerNewUserHandler(req: JWTRequest, res: Response) {
   try {
-    const newUser = await registerNewUser(req.body, req.auth);
+    const newUser = await registerNewUser(req);
 
     return res.status(201).send(newUser);
   } catch (error: any) {
