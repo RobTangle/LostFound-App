@@ -11,6 +11,10 @@ import subscriptionRouter from "./routes/subscription";
 import jwtCheck from "./config/jwtMiddleware";
 import { limiter } from "./config/rateLimiter";
 
+// Swagger
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./utils/swagger-docs.json");
+
 const app = express();
 
 app.use(helmet());
@@ -24,6 +28,10 @@ app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/countries", countriesRouter);
 app.use("/subscription", subscriptionRouter);
+
+// swagger for documenting API:
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // for testing:
 app.get("/ping", (req: Request, res: Response) => {
   return res.send("PONG!");
