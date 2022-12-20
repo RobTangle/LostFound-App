@@ -6,7 +6,6 @@ import {
   isStringBetweenXAndYCharsLong,
   isValidURLImage,
   returnArgOrUndefinedIfFalsy,
-  sanitizeID,
   sanitizeNameSimbols,
   sanitizeSimbols,
   stringContainsURLs,
@@ -28,7 +27,7 @@ export function validateNewUserWithZod(
 ): INewUser {
   const { name, email, profile_img } = objFromReq;
   const newUserToValidate = {
-    _id: sanitizeID(_id),
+    _id,
     name: sanitizeNameSimbols(name),
     email,
     profile_img: returnArgOrUndefinedIfFalsy(profile_img),
