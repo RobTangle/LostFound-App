@@ -274,7 +274,6 @@ export function sanitizeID(string: any) {
     "(": "",
     ")": "",
     "!": "",
-    "|": "",
     "[": "",
     "]": "",
     "´": "",
