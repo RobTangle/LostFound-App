@@ -7,10 +7,12 @@ import {
   validateNewUser,
   validateNewUserWithZod,
 } from "../../validators/user-validators";
+import { Request as JWTRequest } from "express-jwt";
 
-export async function registerNewUser(reqBody: any, reqAuth: any) {
-  const user_id = reqAuth?.sub;
-  const email_verified = reqAuth.email_verified;
+// REGISTER NEW USER :
+export async function registerNewUser(req: JWTRequest) {
+  const user_id = req.auth?.sub;
+  const email_verified = req.auth?.email_verified;
   if (!user_id || typeof user_id !== "string") {
     console.log(
       "Error en registerNewUser: user_id falsy o no es typeof string."
@@ -21,13 +23,14 @@ export async function registerNewUser(reqBody: any, reqAuth: any) {
     console.log("Error: El email del usuario no está verificado.");
     throw new Error("Email must be verified before registering.");
   }
-  const validatedNewUser = validateNewUserWithZod(reqBody, user_id);
+  const validatedNewUser = validateNewUserWithZod(req.body, user_id);
   // const validatedNewUser: INewUser = validateNewUser(reqBody, user_id);
   await throwErrorIfEmailExistsInDB(validatedNewUser.email);
   const newUser = await User.create(validatedNewUser);
   return newUser;
 }
 
+// GET USER BY ID OR THROW ERROR :
 export async function getUserByIdOrThrowError(userId: string | undefined) {
   if (!userId) {
     throw new Error(`El user id '${userId}' no es válido.`);
@@ -40,6 +43,7 @@ export async function getUserByIdOrThrowError(userId: string | undefined) {
   }
 }
 
+// GET USER BY ID LEAN OR THROW ERROR :
 export async function getUserByIdLeanOrThrowError(userId: string | undefined) {
   if (!userId) {
     throw new Error(`El user id '${userId}' no es válido.`);
@@ -52,6 +56,7 @@ export async function getUserByIdLeanOrThrowError(userId: string | undefined) {
   }
 }
 
+// USER IS REGISTERED IN DB? :
 export async function userIsRegisteredInDB(reqAuthSub: any): Promise<boolean> {
   if (!reqAuthSub) {
     throw new Error(`El req.auth.sub no puede ser falso.`);
@@ -72,6 +77,7 @@ export async function userIsRegisteredInDB(reqAuthSub: any): Promise<boolean> {
   }
 }
 
+// THROW ERROR IF EMAIL EXISTS IN DB :
 export async function throwErrorIfEmailExistsInDB(
   emailFromReq: any
 ): Promise<void> {
@@ -95,6 +101,7 @@ export async function throwErrorIfEmailExistsInDB(
   }
 }
 
+// USER EXISTS IN DB? :
 export async function userExistsInDBBoolean(
   user_id: string | undefined
 ): Promise<boolean> {
@@ -109,6 +116,7 @@ export async function userExistsInDBBoolean(
   }
 }
 
+// THROW ERROR IF USER IS NOT REGISTERED OR VOID :
 export async function throwErrorIfUserIsNotRegisteredOrVoid(
   user_id: string | undefined
 ) {
@@ -148,7 +156,7 @@ export async function updateUserProfileSanitizing(
   }
 }
 
-// HANDLE DELETE ALL DATA FROM USER :
+// DELETE ALL DATA FROM USER :
 export async function deleteAllDataFromUser(user_id: string | undefined) {
   let responseObj: any = {
     status: 200,

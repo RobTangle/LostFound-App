@@ -13,7 +13,7 @@ const newUserZSchema = zod_1.z.object({
 function validateNewUserWithZod(objFromReq, _id) {
     const { name, email, profile_img } = objFromReq;
     const newUserToValidate = {
-        _id: (0, genericValidators_1.sanitizeID)(_id),
+        _id,
         name: (0, genericValidators_1.sanitizeNameSimbols)(name),
         email,
         profile_img: (0, genericValidators_1.returnArgOrUndefinedIfFalsy)(profile_img),

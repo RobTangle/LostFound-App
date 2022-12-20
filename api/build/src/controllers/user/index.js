@@ -49,7 +49,7 @@ exports.getUserInfoHandler = getUserInfoHandler;
 function registerNewUserHandler(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const newUser = yield (0, user_1.registerNewUser)(req.body, req.auth);
+            const newUser = yield (0, user_1.registerNewUser)(req);
             return res.status(201).send(newUser);
         }
         catch (error) {
