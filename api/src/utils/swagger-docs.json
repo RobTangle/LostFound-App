@@ -489,6 +489,24 @@
           "profile_img": {
             "type": "string",
             "example": "https://images.com/icons/mifoto.jpg"
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "posts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Post"
+            }
+          },
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewSubscriptionBody"
+            }
           }
         },
         "xml": {
@@ -565,6 +583,26 @@
           "comments": {
             "type": "string",
             "example": "Encontré estos documentos tirados en la calle San Lorenzo al 1200 aproximadamente. Tiene dinero, y varias tarjetas más."
+          },
+          "user_posting": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "profile_img": {
+                "type": "string"
+              },
+              "additional_contact_info": {
+                "type": "string"
+              }
+            }
           }
         }
       },
