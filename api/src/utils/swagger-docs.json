@@ -73,6 +73,16 @@
         "tags": ["User"],
         "summary": "Updated a user information",
         "description": "Updates a document in the User collection",
+        "requestBody": {
+          "description": "Request body to update the user data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserBody"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Document updated"
@@ -507,6 +517,19 @@
         },
         "xml": {
           "name": "NewUserBody"
+        }
+      },
+      "UpdateUserBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Juancho"
+          },
+          "profile_img": {
+            "type": "string",
+            "example": "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png"
+          }
         }
       },
       "Post": {
