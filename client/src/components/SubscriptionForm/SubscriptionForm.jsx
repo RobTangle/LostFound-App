@@ -3,9 +3,11 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
+import { createSubscription } from "../../redux/features/subscription/subscriptionThunk";
 import { subscriptionFormValidator } from "../../helpers/subscriptionFormValidator";
 import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
+import accessTokenName from "../../constants/accessToken";
 
 const SubscriptionForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -31,7 +33,7 @@ const SubscriptionForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validation = subscriptionFormValidator(suscription, t);
     if (validation.error) {
@@ -39,8 +41,15 @@ const SubscriptionForm = () => {
       errorMessage = validation.error;
     }
     if (validation === true) {
+      let accessToken = localStorage.getItem(accessTokenName);
+      if (!accessToken) {
+        console.log(
+          "AccessToken no encontrado en localStorage. Usando getAccessTokenSilently Hook..."
+        );
+        accessToken = await getAccessTokenSilently();
+      }
       console.log("Despachando createSuscription !", suscription);
-      // dispatch(createSuscription(subscription));
+      dispatch(createSubscription(suscription, accessToken));
     }
   };
 
