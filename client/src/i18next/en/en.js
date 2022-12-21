@@ -9,6 +9,7 @@ import { profile } from "./profile";
 import { error } from "./error404";
 import { about } from "./about";
 import { services } from "./services";
+import { us } from "./us";
 
 export const eng = {
   landing: landing,
@@ -22,4 +23,5 @@ export const eng = {
   error: error,
   about: about,
   services: services,
+  us: us,
 };
