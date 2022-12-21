@@ -22,6 +22,10 @@
     {
       "name": "Subscription",
       "description": "Lo relacionado a las suscripciones para alertas de nuevas publicaciones"
+    },
+    {
+      "name": "Countires",
+      "description": "Endpoint que retorna un arreglo con la lista de todos los países permitidos."
     }
   ],
   "paths": {
@@ -449,6 +453,30 @@
         "tags": ["Subscription"],
         "summary": "Get all the user subscription",
         "description": "Find in the db all the subscription that belogs to the user making the request",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/countries": {
+      "get": {
+        "tags": ["Countries"],
+        "summary": "Gets countries.",
+        "description": "Gets an array of all the countries",
+        "parameters": [
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "Idioma inglés(en) o español(es).",
+            "example": "en",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
