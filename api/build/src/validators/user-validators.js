@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkUserProfileImg = exports.checkUserEmail = exports.validateNewUser = exports.validateNewUserWithZod = void 0;
+exports.checkUserProfileImg = exports.checkUserEmail = exports.checkUserName = exports.validateNewUser = exports.validateNewUserWithZod = void 0;
 const genericValidators_1 = require("./genericValidators");
 const zod_1 = require("zod");
 const newUserZSchema = zod_1.z.object({
@@ -53,8 +53,9 @@ function checkUserName(nameFromReq) {
             return (0, genericValidators_1.sanitizeSimbols)(nameFromReq);
         }
     }
-    throw new Error(`El nombre ingresado '${nameFromReq}' es inválido.`);
+    throw new Error(`El nombre ingresado es inválido.`);
 }
+exports.checkUserName = checkUserName;
 //CHECK USER EMAIL :
 function checkUserEmail(emailFromReq) {
     if ((0, genericValidators_1.isEmail)(emailFromReq)) {

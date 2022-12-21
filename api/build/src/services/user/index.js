@@ -12,12 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAllDataFromUser = exports.updateUserProfileSanitizing = exports.throwErrorIfUserIsNotRegisteredOrVoid = exports.userExistsInDBBoolean = exports.throwErrorIfEmailExistsInDB = exports.userIsRegisteredInDB = exports.getUserByIdLeanOrThrowError = exports.getUserByIdOrThrowError = exports.registerNewUser = void 0;
+exports.deleteAllDataFromUser = exports.updateUserNameAndProfileImg = exports.throwErrorIfUserIsNotRegisteredOrVoid = exports.userExistsInDBBoolean = exports.throwErrorIfEmailExistsInDB = exports.userIsRegisteredInDB = exports.getUserByIdLeanOrThrowError = exports.getUserByIdOrThrowError = exports.registerNewUser = void 0;
 const mongoose_1 = require("mongoose");
 const isEmail_1 = __importDefault(require("validator/lib/isEmail"));
 const mongoDB_1 = require("../../mongoDB");
 const genericValidators_1 = require("../../validators/genericValidators");
 const user_validators_1 = require("../../validators/user-validators");
+const validator_1 = __importDefault(require("validator"));
 // REGISTER NEW USER :
 function registerNewUser(req) {
     var _a, _b;
@@ -142,25 +143,83 @@ function throwErrorIfUserIsNotRegisteredOrVoid(user_id) {
     });
 }
 exports.throwErrorIfUserIsNotRegisteredOrVoid = throwErrorIfUserIsNotRegisteredOrVoid;
-// UPDATE USER PROFILE WITH VALIDATE AND SANITIZE MONGOOSE FNS:
-function updateUserProfileSanitizing(bodyFromReq, user_idFromReq) {
+// UPDATE USER NAME AND/OR PROFILE_IMG :
+function updateUserNameAndProfileImg(bodyFromReq, user_idFromReq) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user_id = (0, genericValidators_1.checkValidUserIdFormatOrThrowError)(user_idFromReq);
-        const userToUpdate = yield mongoDB_1.User.findByIdAndUpdate(user_id, { $set: bodyFromReq }, {
-            sanitizeFilter: true,
-            returnOriginal: false,
-            runValidators: true,
-        }).exec();
-        if (userToUpdate) {
-            console.log("Usuario actualizado");
-            return userToUpdate;
+        try {
+            const user_id = (0, genericValidators_1.checkValidUserIdFormatOrThrowError)(user_idFromReq);
+            const userToUpdate = yield getUserByIdOrThrowError(user_id);
+            // response object :
+            let responseObj = {
+                name: 0,
+                profile_img: 0,
+                msg: "",
+                doc: {},
+            };
+            // Check name :
+            if (bodyFromReq.name && bodyFromReq.name !== userToUpdate.name) {
+                let newName = (0, user_validators_1.checkUserName)(bodyFromReq.name);
+                userToUpdate.name = newName;
+                responseObj.name = 1;
+                responseObj.msg = "Name updated. ";
+            }
+            // Check profile_img :
+            if (bodyFromReq.profile_img &&
+                bodyFromReq.profile_img !== userToUpdate.profile_img) {
+                if (validator_1.default.isURL(bodyFromReq.profile_img)) {
+                    userToUpdate.profile_img = bodyFromReq.profile_img;
+                    responseObj.profile_img = 1;
+                    responseObj.msg = responseObj.msg + "Profile image updated.";
+                }
+                else {
+                    responseObj.msg = responseObj.msg + "Invalid profile image. ";
+                }
+            }
+            if (bodyFromReq.profile_img === "") {
+                userToUpdate.profile_img =
+                    "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png";
+                responseObj.profile_img = 1;
+                responseObj.msg = "Profile image set to default. ";
+            }
+            if (responseObj.name + responseObj.profile_img === 0) {
+                console.log("Ningún input fue actualizado.");
+                throw new Error("Invalid inputs. Nothing was updated");
+            }
+            // save document :
+            const updatedDoc = yield userToUpdate.save();
+            responseObj.doc = updatedDoc;
+            return responseObj;
         }
-        else {
-            throw new Error("Usuario no encontrado y no actualizado.");
+        catch (error) {
+            console.log(`Error en fn updateUserNameAndProfileImg. ${error.message}`);
+            throw new Error(`Something went wrong: ${error.message}`);
         }
     });
 }
-exports.updateUserProfileSanitizing = updateUserProfileSanitizing;
+exports.updateUserNameAndProfileImg = updateUserNameAndProfileImg;
+// UPDATE USER PROFILE WITH VALIDATE AND SANITIZE MONGOOSE FNS: //! FUNCIÓN PELIGROSA YA QUE EN EL BODY ME PODRÍAN ENVIAR PROPIEDADES QUE NO SE DEBERÍAN PODER EDITAR, COMO CONTACTS, SUBSCRIPTIONS, ID, EMAIL, ETC.
+//! Prestar atención a setear las propiedades específicas que yo quiero.
+// export async function updateUserProfileSanitizing(
+//   bodyFromReq: any,
+//   user_idFromReq: string | undefined
+// ) {
+//   const user_id = checkValidUserIdFormatOrThrowError(user_idFromReq);
+//   const userToUpdate = await User.findByIdAndUpdate(
+//     user_id,
+//     { $set: { name: bodyFromReq.name, profile_img: bodyFromReq.profile_img } },
+//     {
+//       sanitizeFilter: true,
+//       returnOriginal: false,
+//       runValidators: true,
+//     }
+//   ).exec();
+//   if (userToUpdate) {
+//     console.log("Usuario actualizado");
+//     return userToUpdate;
+//   } else {
+//     throw new Error("Usuario no encontrado y no actualizado.");
+//   }
+// }
 // DELETE ALL DATA FROM USER :
 function deleteAllDataFromUser(user_id) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -202,7 +261,7 @@ const userServices = {
     throwErrorIfEmailExistsInDB,
     userExistsInDBBoolean,
     throwErrorIfUserIsNotRegisteredOrVoid,
-    updateUserProfileSanitizing,
+    updateUserNameAndProfileImg,
     deleteAllDataFromUser,
 };
 exports.default = userServices;
