@@ -61,7 +61,7 @@ export async function updateUserSanitizingHandler(
 ) {
   try {
     const user_id = req.auth?.sub;
-    const response = await userServices.updateUserProfileSanitizing(
+    const response = await userServices.updateUserNameAndProfileImg(
       req.body,
       user_id
     );
