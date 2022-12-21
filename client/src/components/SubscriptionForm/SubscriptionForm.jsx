@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { getCountries } from "../../redux/features/user/userThunk";
+import { getCountries, getUserInfo } from "../../redux/features/user/userThunk";
 import { createSubscription } from "../../redux/features/subscription/subscriptionThunk";
 import { subscriptionFormValidator } from "../../helpers/subscriptionFormValidator";
 import { validAttr } from "../../helpers/validAttributesObj";
@@ -50,6 +50,9 @@ const SubscriptionForm = () => {
       }
       console.log("Despachando createSuscription !", suscription);
       dispatch(createSubscription(suscription, accessToken));
+      setTimeout(() => {
+        dispatch(getUserInfo(accessToken));
+      }, 700);
     }
   };
 
