@@ -1,4 +1,5 @@
 import { Schema, Types } from "mongoose";
+import validator from "validator";
 import { IPost, postSchema } from "./Post";
 import { ISubscription, subscriptionSchema } from "./Subscription";
 
@@ -35,6 +36,12 @@ export const userSchema: Schema = new Schema<IUser>(
       lowercase: true,
       minlength: 6,
       trim: true,
+      validate: {
+        validator: (value: string) => {
+          return validator.isEmail(value);
+        },
+        message: "The email entered doesn't have a valid email format.",
+      },
     },
     profile_img: {
       type: String,
@@ -42,6 +49,12 @@ export const userSchema: Schema = new Schema<IUser>(
       default:
         "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
       trim: true,
+      validate: {
+        validator: (value: string) => {
+          return validator.isURL(value);
+        },
+        message: "The profile image must be a valid URL.",
+      },
     },
     contacts: {
       type: [Number],
