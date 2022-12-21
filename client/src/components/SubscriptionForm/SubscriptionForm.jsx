@@ -8,6 +8,7 @@ import { subscriptionFormValidator } from "../../helpers/subscriptionFormValidat
 import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import accessTokenName from "../../constants/accessToken";
+import Swal from "sweetalert2";
 
 const SubscriptionForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -39,6 +40,14 @@ const SubscriptionForm = () => {
     if (validation.error) {
       console.log(`Error en la validación: ${validation.error}`);
       errorMessage = validation.error;
+      // RENDER ERROR MESSAGE
+      Swal.fire({
+        title: "Error",
+        text: `${validation.error}`,
+        icon: "warning",
+        confirmButtonColor: "#2676fc",
+        confirmButtonText: "OK",
+      });
     }
     if (validation === true) {
       let accessToken = localStorage.getItem(accessTokenName);
@@ -50,6 +59,9 @@ const SubscriptionForm = () => {
       }
       console.log("Despachando createSuscription !", suscription);
       dispatch(createSubscription(suscription, accessToken));
+      // setTimeout(() => {
+      //   dispatch(getUserInfo(accessToken));
+      // }, 700);
     }
   };
 

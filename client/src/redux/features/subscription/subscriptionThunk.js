@@ -1,8 +1,8 @@
-import { setNewSubscription } from "./subscriptionSlice";
 import axios from "axios";
 import { URL_S_D_DELETE_SUB, URL_S_PO_NEW_SUB } from "../../../constants/url";
 import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
+import { getUserInfo } from "../user/userThunk";
 
 export function createSubscription(obj, token) {
   return async function (dispatch) {
@@ -18,10 +18,11 @@ export function createSubscription(obj, token) {
             timer: 5000,
           })
         : null;
-      return dispatch(setNewSubscription(response.data));
+      // Si se crea una nueva suscripción, fetcheo los datos del usuario actualizados para que se re-renderice el componente de suscripciones automáticamente.
+      return dispatch(getUserInfo(token));
     } catch (error) {
       console.log(error);
-      Swal.fire({
+      return Swal.fire({
         position: "center",
         icon: "error",
         title: `Ups, algo salió mal: ${
@@ -29,7 +30,6 @@ export function createSubscription(obj, token) {
         }`,
         showConfirmButton: true,
       });
-      return dispatch(setNewSubscription({ error: error.message }));
     }
   };
 }
@@ -41,15 +41,17 @@ export function deleteSubscription(subs_id, token) {
         URL_S_D_DELETE_SUB + subs_id,
         header(token)
       );
-      response.status === 200
-        ? Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Suscripción eliminada.",
-            showConfirmButton: true,
-            timer: 5000,
-          })
-        : null;
+      if (response.status === 200) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Suscripción eliminada.",
+          showConfirmButton: true,
+          timer: 5000,
+        });
+        // Si se elimina una suscripción, fetcheo los datos del usuario actualizados para que se actualice sólo el componente de suscripciones.
+        return dispatch(getUserInfo(token));
+      }
     } catch (error) {
       Swal.fire({
         position: "center",
