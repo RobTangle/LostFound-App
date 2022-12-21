@@ -9,3 +9,5 @@ export { Error404 } from "./Error404";
 export { About } from "./About";
 export { Services } from "./Services";
 export { Us } from "./Us";
+export { Contact } from "./Contact";
+

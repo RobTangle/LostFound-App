@@ -10,10 +10,11 @@ import { error } from "./error404";
 import { about } from "./about";
 import { services } from "./services";
 import { us } from "./us";
+import { contact } from "./contact";
 
 export const esp = {
-  home: home,
   landing: landing,
+  home: home,
   searchForm: searchForm,
   postForm: postForm,
   registerForm: registerForm,
@@ -24,4 +25,5 @@ export const esp = {
   about: about,
   services: services,
   us: us,
+  contact: contact,
 };

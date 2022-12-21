@@ -10,6 +10,7 @@ import { error } from "./error404";
 import { about } from "./about";
 import { services } from "./services";
 import { us } from "./us";
+import { contact } from "./contact";
 
 export const eng = {
   landing: landing,
@@ -24,4 +25,5 @@ export const eng = {
   about: about,
   services: services,
   us: us,
+  contact: contact,
 };
