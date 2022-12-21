@@ -7,6 +7,7 @@ import { subscriptionForm } from "./subscriptionForm";
 import { navbar } from "./navbar";
 import { profile } from "./profile";
 import { error } from "./error404";
+import { about } from "./about";
 
 export const eng = {
   landing: landing,
@@ -17,5 +18,6 @@ export const eng = {
   subscriptionForm: subscriptionForm,
   navbar: navbar,
   profile: profile,
-  error: error
+  error: error,
+  about: about,
 };

@@ -6,3 +6,4 @@ export { Search } from "./Search";
 export { Found } from "./Found";
 export { Profile } from "./Profile";
 export { Error404 } from "./Error404";
+export { About } from "./About";
