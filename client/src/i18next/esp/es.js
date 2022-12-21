@@ -8,6 +8,7 @@ import { navbar } from "./navbar";
 import { profile } from "./profile";
 import { error } from "./error404";
 import { about } from "./about";
+import { services } from "./services";
 
 export const esp = {
   home: home,
@@ -20,4 +21,5 @@ export const esp = {
   profile: profile,
   error: error,
   about: about,
+  services: services,
 };

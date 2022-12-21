@@ -8,6 +8,7 @@ import { navbar } from "./navbar";
 import { profile } from "./profile";
 import { error } from "./error404";
 import { about } from "./about";
+import { services } from "./services";
 
 export const eng = {
   landing: landing,
@@ -20,4 +21,5 @@ export const eng = {
   profile: profile,
   error: error,
   about: about,
+  services: services,
 };
