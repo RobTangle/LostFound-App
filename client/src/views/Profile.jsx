@@ -9,6 +9,7 @@ import Footer from "../components/Footer/Footer";
 
 import accessTokenName from "../constants/accessToken";
 import SubscriptionForm from "../components/SubscriptionForm/SubscriptionForm";
+import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -156,11 +157,9 @@ export const Profile = () => {
         </div>
         <div hidden={!tab.link4} className="border border-indigo-200 mx-auto">
           <SubscriptionForm />
-          <div>USER SUBSCRIPTIONS :</div>
-          <div>User has {userProfile?.subscriptions?.length} subscriptions</div>
+          <div>You have {userProfile?.subscriptions?.length} subscriptions</div>
           <div>
-            RENDERIZAR LAS SUBSCRIPCIONES DEL USUARIO, CON SU BOTÓN PARA
-            MODIFICAR O ELIMINAR CADA UNA.
+            <Subscriptions />
           </div>
         </div>
       </section>
