@@ -65,13 +65,13 @@ function checkUserId(userId: string | undefined): string {
 }
 
 // CHECK USER NAME :
-function checkUserName(nameFromReq: any): string {
+export function checkUserName(nameFromReq: any): string {
   if (isStringBetweenXAndYCharsLong(2, 50, nameFromReq)) {
     if (!stringContainsURLs(nameFromReq)) {
       return sanitizeSimbols(nameFromReq);
     }
   }
-  throw new Error(`El nombre ingresado '${nameFromReq}' es inválido.`);
+  throw new Error(`El nombre ingresado es inválido.`);
 }
 
 //CHECK USER EMAIL :
