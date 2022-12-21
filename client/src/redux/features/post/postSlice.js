@@ -34,6 +34,13 @@ export const postSlice = createSlice({
   },
 });
 // Action creators are generated for each case reducer function
-export const { getSearch, postDocument } = postSlice.actions;
+export const {
+  setSearchResults,
+  setNewPost,
+  setPostDetail,
+  setUpdatePost,
+  setDeletedPost,
+  setContactPostOwner,
+} = postSlice.actions;
 
 export default postSlice.reducer;
