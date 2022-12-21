@@ -274,7 +274,6 @@ export function sanitizeID(string: any) {
     "(": "",
     ")": "",
     "!": "",
-    "|": "",
     "[": "",
     "]": "",
     "´": "",
@@ -333,4 +332,46 @@ export function sanitizeSimbols(string: unknown) {
   };
   const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
   return string.replace(reg, (match) => map[match]);
+}
+
+export function sanitizeNameSimbols(string: unknown) {
+  if (typeof string !== "string") {
+    console.log(
+      `Error en sanitizeNameSimbols. El typeof del argumento no es un string.`
+    );
+    throw new Error("Something went wrong.");
+  }
+  if (string.length > 50) {
+    console.log("Error en sanitizeNameSimbols. El string es demasiado largo.");
+    throw new Error("Name too long.");
+  }
+  const map: any = {
+    "{": "",
+    "}": "",
+    "<": "",
+    ">": "",
+    "/": "",
+    ".": "",
+    ",": "",
+    $: "",
+    "%": "",
+    "(": "",
+    ")": "",
+    "!": "",
+    "|": "",
+    "[": "",
+    "]": "",
+    "`": "",
+    "&": "",
+  };
+  const reg = /[&<>{},.$%()!`\[\]/]/gi;
+  return string.replace(reg, (match) => map[match]);
+}
+
+export function returnArgOrUndefinedIfFalsy(argument: string | undefined) {
+  if (isFalsyArgument(argument)) {
+    return undefined;
+  } else {
+    return argument;
+  }
 }

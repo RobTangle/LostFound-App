@@ -1,7 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkUserProfileImg = exports.checkUserEmail = exports.validateNewUser = void 0;
+exports.checkUserProfileImg = exports.checkUserEmail = exports.checkUserName = exports.validateNewUser = exports.validateNewUserWithZod = void 0;
 const genericValidators_1 = require("./genericValidators");
+const zod_1 = require("zod");
+const newUserZSchema = zod_1.z.object({
+    _id: zod_1.z.string().trim().min(1, { message: "Invalid id." }).max(50),
+    name: zod_1.z.string().trim().min(2).max(50),
+    email: zod_1.z.string().trim().email(),
+    profile_img: zod_1.z.string().url().optional(),
+    // contacts: z.array(z.number()).max(5),
+});
+function validateNewUserWithZod(objFromReq, _id) {
+    const { name, email, profile_img } = objFromReq;
+    const newUserToValidate = {
+        _id,
+        name: (0, genericValidators_1.sanitizeNameSimbols)(name),
+        email,
+        profile_img: (0, genericValidators_1.returnArgOrUndefinedIfFalsy)(profile_img),
+    };
+    return newUserZSchema.parse(newUserToValidate);
+}
+exports.validateNewUserWithZod = validateNewUserWithZod;
 function validateNewUser(objFromReq, _id) {
     const { name, email, profile_img } = objFromReq;
     const validatedUser = {
@@ -34,8 +53,9 @@ function checkUserName(nameFromReq) {
             return (0, genericValidators_1.sanitizeSimbols)(nameFromReq);
         }
     }
-    throw new Error(`El nombre ingresado '${nameFromReq}' es inválido.`);
+    throw new Error(`El nombre ingresado es inválido.`);
 }
+exports.checkUserName = checkUserName;
 //CHECK USER EMAIL :
 function checkUserEmail(emailFromReq) {
     if ((0, genericValidators_1.isEmail)(emailFromReq)) {

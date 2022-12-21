@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sanitizeSimbols = exports.checkValidUserIdFormatOrThrowError = exports.sanitizeID = exports.escapeHTML = exports.checkAndParseDate = exports.checkObjectId = exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
+exports.returnArgOrUndefinedIfFalsy = exports.sanitizeNameSimbols = exports.sanitizeSimbols = exports.checkValidUserIdFormatOrThrowError = exports.sanitizeID = exports.escapeHTML = exports.checkAndParseDate = exports.checkObjectId = exports.stringContainsURLs = exports.stringToBoolean = exports.isValidURLImage = exports.isEmail = exports.isTypeofNumber = exports.isValidSenasaId = exports.isUndefinedOrNull = exports.isFalsyArgument = exports.isStringBetweenXAndYCharsLong = exports.isStringBetween1AndXCharsLong = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isStringXCharsLong = exports.isString = void 0;
 const luxon_1 = require("luxon");
 const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
@@ -259,7 +259,6 @@ function sanitizeID(string) {
         "(": "",
         ")": "",
         "!": "",
-        "|": "",
         "[": "",
         "]": "",
         "´": "",
@@ -315,3 +314,44 @@ function sanitizeSimbols(string) {
     return string.replace(reg, (match) => map[match]);
 }
 exports.sanitizeSimbols = sanitizeSimbols;
+function sanitizeNameSimbols(string) {
+    if (typeof string !== "string") {
+        console.log(`Error en sanitizeNameSimbols. El typeof del argumento no es un string.`);
+        throw new Error("Something went wrong.");
+    }
+    if (string.length > 50) {
+        console.log("Error en sanitizeNameSimbols. El string es demasiado largo.");
+        throw new Error("Name too long.");
+    }
+    const map = {
+        "{": "",
+        "}": "",
+        "<": "",
+        ">": "",
+        "/": "",
+        ".": "",
+        ",": "",
+        $: "",
+        "%": "",
+        "(": "",
+        ")": "",
+        "!": "",
+        "|": "",
+        "[": "",
+        "]": "",
+        "`": "",
+        "&": "",
+    };
+    const reg = /[&<>{},.$%()!`\[\]/]/gi;
+    return string.replace(reg, (match) => map[match]);
+}
+exports.sanitizeNameSimbols = sanitizeNameSimbols;
+function returnArgOrUndefinedIfFalsy(argument) {
+    if (isFalsyArgument(argument)) {
+        return undefined;
+    }
+    else {
+        return argument;
+    }
+}
+exports.returnArgOrUndefinedIfFalsy = returnArgOrUndefinedIfFalsy;

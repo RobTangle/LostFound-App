@@ -49,7 +49,7 @@ exports.getUserInfoHandler = getUserInfoHandler;
 function registerNewUserHandler(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const newUser = yield (0, user_1.registerNewUser)(req.body, req.auth);
+            const newUser = yield (0, user_1.registerNewUser)(req);
             return res.status(201).send(newUser);
         }
         catch (error) {
@@ -82,7 +82,7 @@ function updateUserSanitizingHandler(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
-            const response = yield user_2.default.updateUserProfileSanitizing(req.body, user_id);
+            const response = yield user_2.default.updateUserNameAndProfileImg(req.body, user_id);
             return res.status(200).send(response);
         }
         catch (error) {

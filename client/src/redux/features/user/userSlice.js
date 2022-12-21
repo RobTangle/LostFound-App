@@ -5,6 +5,9 @@ const initialState = {
   allUsers: [],
   countries: [],
   userProfile: {},
+  userIsRegistered: { pure: true },
+  registerUser: { pure: true },
+  isUserRegistered: { pure: true },
 };
 
 export const userSlice = createSlice({
@@ -23,10 +26,26 @@ export const userSlice = createSlice({
     setUserProfile: (state, action) => {
       state.userProfile = action.payload;
     },
+    setUserIsRegistered: (state, action) => {
+      state.userIsRegistered = action.payload;
+    },
+    setRegisterUser: (state, action) => {
+      state.registerUser = action.payload;
+    },
+    setIsUserRegistered: (state, action) => {
+      state.isUserRegistered = action.payload;
+    },
   },
 });
 // Action creators are generated for each case reducer function
-export const { setUserInfo, setAllUsers, setCountries, setUserProfile } =
-  userSlice.actions;
+export const {
+  setUserInfo,
+  setAllUsers,
+  setCountries,
+  setUserProfile,
+  setRegisterUser,
+  setIsUserRegistered,
+  setUserIsRegistered,
+} = userSlice.actions;
 
 export default userSlice.reducer;

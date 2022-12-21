@@ -1,11 +1,14 @@
 import { Router } from "express";
 import jwtCheck from "../../config/jwtMiddleware";
 import userControllers from "../../controllers/user";
+import { config } from "../../config/config";
 
 const router = Router();
 
-// FIND ALL USERS (JUST FOR TESTING. NOT FOR PRODUCTION) :
-router.get("/findAll", userControllers.findAllUsersHandler);
+// FIND ALL USERS (JUST FOR TESTING IN DEVELOPMENT. NOT FOR PRODUCTION) :
+if (config.environment.env === config.environment.development) {
+  router.get("/findAll", userControllers.findAllUsersHandler);
+}
 
 // GET USER INFO :
 router.get("/userInfo", jwtCheck, userControllers.getUserInfoHandler);
