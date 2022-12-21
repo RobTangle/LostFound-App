@@ -4,10 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const config_1 = require("../../config/config");
 const jwtMiddleware_1 = __importDefault(require("../../config/jwtMiddleware"));
 const subscription_1 = __importDefault(require("../../controllers/subscription"));
 const router = (0, express_1.Router)();
-router.get("/findAll", subscription_1.default.handleFindAllSubscriptionsRequest);
+// FIND ALL SUBSCRIPTION. FOR DEVELOPMENT, NOT PRODUCTION! :
+if (config_1.config.environment.env === config_1.config.environment.development) {
+    router.get("/findAll", subscription_1.default.handleFindAllSubscriptionsRequest);
+}
 // CREATE NEW SUBSCRIPTION :
 router.post("/", jwtMiddleware_1.default, subscription_1.default.handleCreateNewSubscriptionRequest);
 // DELETE SUBSCRIPTION :
