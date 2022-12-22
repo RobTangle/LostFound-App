@@ -14,7 +14,6 @@ export function SubCardRow({ subscription }) {
     if (!token) {
       token = await getAccessTokenSilently();
     }
-    console.log(`e.id = ${e.target.id}`);
     dispatch(deleteSubscription(e.target.id, token));
   }
 

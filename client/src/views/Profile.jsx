@@ -10,6 +10,8 @@ import Footer from "../components/Footer/Footer";
 import accessTokenName from "../constants/accessToken";
 import SubscriptionForm from "../components/SubscriptionForm/SubscriptionForm";
 import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
+import PostForm from "../components/PostForm/PostForm";
+import { Posts } from "../components/PostCard/Posts";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -22,6 +24,7 @@ export const Profile = () => {
     link2: false,
     link3: false,
     link4: false,
+    link5: false,
   });
 
   useEffect(() => {
@@ -66,7 +69,8 @@ export const Profile = () => {
         </div>
         <nav className="flex justify-center text-sm font-medium">
           <a
-            href="#"
+            href="#1"
+            id="1"
             className={
               tab.link1
                 ? "-mb-px border-b border-current p-4 text-indigo-500"
@@ -79,6 +83,7 @@ export const Profile = () => {
                 link2: false,
                 link3: false,
                 link4: false,
+                link5: false,
               })
             }
           >
@@ -86,7 +91,8 @@ export const Profile = () => {
           </a>
 
           <a
-            href="#"
+            href="#2"
+            id="2"
             className={
               !tab.link2
                 ? "-mb-px border-b border-transparent p-4 hover:text-indigo-500"
@@ -99,6 +105,7 @@ export const Profile = () => {
                 link2: true,
                 link3: false,
                 link4: false,
+                link5: false,
               })
             }
           >
@@ -106,7 +113,8 @@ export const Profile = () => {
           </a>
 
           <a
-            href="#"
+            href="#3"
+            id="3"
             className={
               !tab.link3
                 ? "-mb-px border-b border-transparent p-4 hover:text-indigo-500"
@@ -119,14 +127,15 @@ export const Profile = () => {
                 link2: false,
                 link3: true,
                 link4: false,
+                link5: false,
               })
             }
           >
             {t("profile.link3")}
           </a>
-
           <a
-            href="#"
+            href="#4"
+            id="4"
             className={
               !tab.link4
                 ? "-mb-px border-b border-transparent p-4 hover:text-indigo-500"
@@ -139,10 +148,32 @@ export const Profile = () => {
                 link2: false,
                 link3: false,
                 link4: true,
+                link5: false,
               })
             }
           >
             {t("profile.link4")}
+          </a>
+          <a
+            href="#5"
+            id="5"
+            className={
+              !tab.link5
+                ? "-mb-px border-b border-transparent p-4 hover:text-indigo-500"
+                : "-mb-px border-b border-current p-4 text-indigo-500"
+            }
+            onClick={() =>
+              setTab({
+                ...tab,
+                link1: false,
+                link2: false,
+                link3: false,
+                link4: false,
+                link5: true,
+              })
+            }
+          >
+            {t("profile.link5")}
           </a>
         </nav>
 
@@ -150,12 +181,18 @@ export const Profile = () => {
           <h1>GENERAL</h1>
         </div>
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">
-          POSTS
+          <PostForm />
+          <div>You have {userProfile?.posts?.length} posts</div>
+          <Posts />
         </div>
         <div hidden={!tab.link3} className="border border-indigo-200 mx-auto">
           <SearchForm />
         </div>
         <div hidden={!tab.link4} className="border border-indigo-200 mx-auto">
+          <div>You have {userProfile?.posts?.length} posts</div>
+          <Posts />
+        </div>
+        <div hidden={!tab.link5} className="border border-indigo-200 mx-auto">
           <SubscriptionForm />
           <div>You have {userProfile?.subscriptions?.length} subscriptions</div>
           <div>

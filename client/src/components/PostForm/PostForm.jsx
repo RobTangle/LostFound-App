@@ -75,17 +75,7 @@ const PostForm = () => {
     if (validation === true) {
       const accessToken = await getAccessTokenSilently();
       console.log("Despachando createPost !", post);
-      dispatch(createPost(post, header(accessToken))).then(() =>
-        setPost({
-          name_on_doc: "",
-          number_on_doc: "",
-          country_found: "",
-          date_found: "",
-          blurred_imgs: [],
-          comments: "",
-          additional_contact_info: "",
-        })
-      );
+      dispatch(createPost(post, accessToken, setPost, t));
     }
   };
 
@@ -110,7 +100,7 @@ const PostForm = () => {
         <div className="flex flex-wrap  mb-1 gap-2 w-full md:grid md:grid-cols-2">
           <div className="w-full  px-3">
             <label
-              className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
+              className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid "
               htmlFor="grid-last-name"
             >
               {t("postForm.nameLabel")}

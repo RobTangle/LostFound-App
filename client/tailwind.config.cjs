@@ -10,12 +10,15 @@ module.exports = {
         dark: "#202424 ",
         light: "#fcf7f6",
         gray: "#53595D",
+        yellow: "#ffd700", //gold
+        deepskyblue: "#00bfff",
+        goldenrod: "#daa520",
       },
       backgroundImage: {
         home: "url('../public/bg.svg')",
         search:
           "url('https://res.cloudinary.com/dyzge4vha/image/upload/v1669352622/Untitled_1-1525x709_18_g27g3f.png')",
-        home2:"url('../public/blob-haikei.svg')",
+        home2: "url('../public/blob-haikei.svg')",
       },
     },
   },
