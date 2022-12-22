@@ -72,7 +72,7 @@ const SubscriptionForm = () => {
   // console.log("ACAAA", countries);
   return (
     <div className="grid md:flex font-sans md:min-h-[80vh]">
-      <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-green ">
+      <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-goldenrod ">
         <h1 className="text-2xl text-white md:text-5xl md:mt-6 md:ml-8 w-full text-center md:text-start p-2 md:p-0 lg:w-3/4">
           {t("subscriptionForm.title")}
         </h1>
@@ -178,7 +178,7 @@ const SubscriptionForm = () => {
         </div>
 
         <div className="w-full lg:w-1/2 px-3 mt-2">
-          <button className="w-full bg-gray-200 hover:bg-green hover:text-white px-3 border-b-2 border-green py-2 text-slate-500 transition-all duration-300">
+          <button className="w-full bg-gray-200 hover:bg-goldenrod hover:text-white px-3 border-b-2 border-goldenrod py-2 text-slate-500 transition-all duration-300">
             {t("subscriptionForm.submitButton")}
           </button>
         </div>
