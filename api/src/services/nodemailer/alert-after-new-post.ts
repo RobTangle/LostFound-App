@@ -1,4 +1,4 @@
-import { LeanDocument, Document } from "mongoose";
+import { LeanDocument, Document, ObjectId } from "mongoose";
 import { Subscription } from "../../mongoDB";
 import validator from "validator";
 require("dotenv").config();
@@ -130,7 +130,7 @@ async function sendMailWithNodeMailer(
       _id: unknown;
     }>
   >,
-  post_id: string | undefined
+  post_id: string | ObjectId
 ): Promise<void> {
   console.log(GMAIL_PASS, GMAIL_USER);
   const transporter = nodemailer.createTransport({
@@ -146,7 +146,7 @@ async function sendMailWithNodeMailer(
 
     throw new Error("Invalid post id");
   }
-
+  const post_idString = post_id.toString();
   const msgMail = `Hola, ${subscription.user_subscribed.name}! Tenes buenas noticias! Alguien ha posteado un nuevo anuncio que coincide con tu suscripción! Acá te dejamos el link a la publicación. Asegúrate de estar logueado con tu cuenta registrada para poder acceder. Mucha suerte!!!!  https://www.lostfound-app.com/found/${post_id}`;
 
   const mailOptions = {
@@ -218,7 +218,7 @@ async function sendMailWithNodeMailer(
         )}! Queremos avisarte que se ha publicado documentación perdida que podría ser la que estás buscando.
         Te dejamos un link para que la veas. Asegúrate de estar logueado con tu cuenta registrada de LostFound para poder verla. ¡Buena suerte!
         <a href="https://www.lostfound.app/found/${validator.escape(
-          post_id
+          post_idString
         )} target="_blank">Ir a la publicación </a> </p>
 </br>
         Acá te brindamos unos consejos a tener en cuenta para la recuperación de tus documentos. ¡Asegúrate de leerla! 
