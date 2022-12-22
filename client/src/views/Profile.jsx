@@ -11,6 +11,7 @@ import accessTokenName from "../constants/accessToken";
 import SubscriptionForm from "../components/SubscriptionForm/SubscriptionForm";
 import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
 import PostForm from "../components/PostForm/PostForm";
+import { Posts } from "../components/PostCard/Posts";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -181,12 +182,15 @@ export const Profile = () => {
         </div>
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">
           <PostForm />
+          <div>You have {userProfile?.posts?.length} posts</div>
+          <Posts />
         </div>
         <div hidden={!tab.link3} className="border border-indigo-200 mx-auto">
           <SearchForm />
         </div>
         <div hidden={!tab.link4} className="border border-indigo-200 mx-auto">
-          TUS PUBLICACIONES
+          <div>You have {userProfile?.posts?.length} posts</div>
+          <Posts />
         </div>
         <div hidden={!tab.link5} className="border border-indigo-200 mx-auto">
           <SubscriptionForm />

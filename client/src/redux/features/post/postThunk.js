@@ -1,9 +1,7 @@
 import {
   setSearchResults,
-  setNewPost,
   setPostDetail,
   setUpdatePost,
-  setDeletedPost,
   setContactPostOwner,
 } from "./postSlice";
 import axios from "axios";
@@ -15,11 +13,12 @@ import {
 } from "../../../constants/url";
 import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
+import { getUserInfo } from "../user/userThunk";
 
 export function createPost(post, token, setPost, t) {
-  return async function () {
+  return async function (dispatch) {
     try {
-      const response = await axios.post(URL_P_PO_NEW_POST, post, token);
+      const response = await axios.post(URL_P_PO_NEW_POST, post, header(token));
       if (response.status === 201) {
         Swal.fire({
           position: "center",
@@ -38,6 +37,7 @@ export function createPost(post, token, setPost, t) {
           additional_contact_info: "",
         });
       }
+      return dispatch(getUserInfo(token));
     } catch (error) {
       console.log(error.message);
       Swal.fire({
@@ -110,9 +110,26 @@ export function deletePost(post_id, token) {
         URL_P_D_DELETE_POST + post_id,
         header(token)
       );
-      return dispatch(setDeletedPost(response.data));
+      if (response.status === 200) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Publicación borrada",
+          text: `Total borrados: ${response.data.total}: UserPosts: ${response.data.userPosts}. postCollection: ${response.data.postCollection}.`,
+          showConfirmButton: true,
+          timer: 5000,
+        });
+      }
+      return dispatch(getUserInfo(token));
     } catch (error) {
-      return dispatch(setDeletedPost({ error: error.message }));
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `Ups, algo salió mal: ${
+          error?.response?.data?.error || error.message
+        }`,
+        showConfirmButton: true,
+      });
     }
   };
 }

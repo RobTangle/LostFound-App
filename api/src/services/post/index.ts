@@ -182,21 +182,16 @@ export async function findPostByIdAndDeleteIt(
 
   try {
     // buscar y borrar post de User.posts:
-    let userPostRemoved = await userInDB.posts.id(post_id)?.remove();
-    if (userPostRemoved) {
-      console.log(
-        "chequeo si el post ya fue removido antes de hacer el await userInDB.save() = ",
-        userInDB
-      );
-
+    let doc = userInDB.posts.id(post_id);
+    if (doc) {
+      doc.remove();
       await userInDB.save();
-      console.log(
-        "después del userInDB.save(), consologueo el userInDB = ",
-        userInDB
-      );
-
       response.userPosts++;
       response.total++;
+    } else {
+      console.log(
+        `Documento con ${post_id} no encontrado adentro del arreglo posts del usuario.`
+      );
     }
     // buscar y borrar documento en collection Post:
     const deletedPost = await Post.findByIdAndDelete(post_id).exec();
