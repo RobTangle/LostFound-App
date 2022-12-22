@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import NavBar from "../components/NavBar/Navbar";
 import Footer from "../components/Footer/Footer";
-import SearchForm from "../components/SearchForm/SearchForm";
+import { SearchComp } from "../components/SearchComp/SearchComp";
 
 export function Search() {
+  const results = useSelector((state) => state.post.searchResults?.results);
   const [search, setSearch] = useState({
     name: "",
     dni: "",
@@ -14,7 +16,7 @@ export function Search() {
     <div>
       <NavBar />
       <div className="mx-auto relative">
-        <SearchForm />
+        <SearchComp />
       </div>
       <Footer />
     </div>

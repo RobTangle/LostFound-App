@@ -8,7 +8,6 @@ import { postFormValidator } from "../../helpers/post-form-validator";
 import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
-import { header } from "../../constants/header";
 import Swal from "sweetalert2";
 
 const PostForm = () => {

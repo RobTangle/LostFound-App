@@ -12,7 +12,7 @@ import { validAttr } from "../../helpers/validAttributesObj";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
-  const results = useSelector((state) => state.post.searchResults);
+  // const results = useSelector((state) => state.post.searchResults);
   const dispatch = useDispatch();
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
@@ -60,7 +60,7 @@ const SearchForm = () => {
   }, [dispatch]);
 
   return (
-    <div className="grid md:flex font-sans md:min-h-[80vh]">
+    <div className="grid md:flex font-sans md:min-h-[50vh]">
       <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-green ">
         <h1 className="text-2xl text-white md:text-5xl md:mt-6 md:ml-8 w-full text-center md:text-start p-2 md:p-0 lg:w-3/4">
           {t("searchForm.title")}

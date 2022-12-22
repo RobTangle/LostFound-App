@@ -12,6 +12,7 @@ import SubscriptionForm from "../components/SubscriptionForm/SubscriptionForm";
 import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
 import PostForm from "../components/PostForm/PostForm";
 import { Posts } from "../components/PostCard/Posts";
+import { SearchComp } from "../components/SearchComp/SearchComp";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -186,7 +187,8 @@ export const Profile = () => {
           <Posts />
         </div>
         <div hidden={!tab.link3} className="border border-indigo-200 mx-auto">
-          <SearchForm />
+          <SearchComp />
+          {/* <SearchForm /> */}
         </div>
         <div hidden={!tab.link4} className="border border-indigo-200 mx-auto">
           <div>You have {userProfile?.posts?.length} posts</div>
