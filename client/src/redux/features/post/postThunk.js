@@ -17,7 +17,7 @@ import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
 
 export function createPost(post, token, setPost, t) {
-  return async function (dispatch) {
+  return async function () {
     try {
       const response = await axios.post(URL_P_PO_NEW_POST, post, token);
       if (response.status === 201) {
