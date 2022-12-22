@@ -1,13 +1,14 @@
 export const subscriptionForm = {
-  title: "Suscribirse a alerta",
+  title: "Suscribirse a alertas automáticas",
   subtitle:
-    "Completá el formulario para suscribirte a una alerta en caso de que alguien encuentre tus documentos. Si alguien publica que encontró documentación perdida que coincide con los datos de tu subscripción, automáticamente se te enviará un email avisándote.",
+    "Completá el formulario para suscribirte a una alerta en caso de que alguien encuentre tus documentos. Si alguien publica que encontró documentación perdida que coincide con los datos de tu suscripción, automáticamente se te enviará un email avisándote.",
   nameLabel: "Nombre completo",
   namePlaceholder: "Juan Pérez",
   numberLabel: "DNI / Número de Tarjeta",
   numberPlaceholder: "34.523.110 / 65-39201/04",
   countryLabel: "País donde los perdiste",
-  selectCountry: "Seleccion un país",
+  countryLostLabel: "País donde los perdiste",
+  selectCountry: "Selecciona un país",
   dateLabel: "Fecha en que los perdiste",
   submitButton: "Crear subscripción",
   //errors:
