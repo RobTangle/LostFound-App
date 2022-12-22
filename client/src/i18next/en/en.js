@@ -11,6 +11,7 @@ import { about } from "./about";
 import { services } from "./services";
 import { us } from "./us";
 import { contact } from "./contact";
+import { swal } from "../esp/swal";
 
 export const eng = {
   landing: landing,
@@ -26,4 +27,5 @@ export const eng = {
   services: services,
   us: us,
   contact: contact,
+  swal: swal,
 };

@@ -16,37 +16,38 @@ import {
 import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
 
-export function createPost(post, token) {
-  return async function (dispatch) {
+export function createPost(post, token, setPost, t) {
+  return async function () {
     try {
       const response = await axios.post(URL_P_PO_NEW_POST, post, token);
-      response.status === 201
-        ? Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Publicación creada con éxito",
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        : response.status >= 400 &&
-          Swal.fire({
-            position: "center",
-            icon: "error",
-            title: "Ups, algo salió mal! Intente nuevamente.",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-      return dispatch(setNewPost(response.data));
+      if (response.status === 201) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: t("swal.createPostTitleSuccess"),
+          showConfirmButton: true,
+          timer: 4000,
+        });
+        setPost({
+          name_on_doc: "",
+          number_on_doc: "",
+          country_found: "",
+          date_found: "",
+          blurred_imgs: [],
+          comments: "",
+          additional_contact_info: "",
+        });
+      }
     } catch (error) {
       console.log(error.message);
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Ups, algo salió mal! Intente nuevamente.",
-        showConfirmButton: false,
-        timer: 1500,
+        title: t("swal.createPostTitleError"),
+        text: error.message,
+        showConfirmButton: true,
+        timer: 8000,
       });
-      return dispatch(setNewPost({ error: error.message }));
     }
   };
 }
@@ -64,7 +65,11 @@ export function searchPost(
       );
       return dispatch(setSearchResults(response.data));
     } catch (error) {
-      return dispatch(setSearchResults({ error: error.response?.data?.error }));
+      return dispatch(
+        setSearchResults({
+          error: error.response?.data?.error || error.message,
+        })
+      );
     }
   };
 }
