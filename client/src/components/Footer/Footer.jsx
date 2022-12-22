@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const Footer = ({ fixed}) => {
+  const { t } = useTranslation();
   return (
     <div
       className={
@@ -12,16 +14,16 @@ const Footer = ({ fixed}) => {
       <div className="flex mt-24 mb-4 flex-row justify-between">
         <div className=""></div>
         <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
-          About
+        {t("navbar.about")}
         </a>
         <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
-          Services
+        {t("navbar.services")}
         </a>
         <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
-          Why us
+        {t("navbar.why_us")}
         </a>
         <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
-          Contact
+        {t("navbar.contact")}
         </a>
         <div className="flex flex-row space-x-8 items-center justify-between">
           <a>
