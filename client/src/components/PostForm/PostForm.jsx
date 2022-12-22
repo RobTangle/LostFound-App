@@ -75,7 +75,7 @@ const PostForm = () => {
     if (validation === true) {
       const accessToken = await getAccessTokenSilently();
       console.log("Despachando createPost !", post);
-      dispatch(createPost(post, header(accessToken), setPost, t));
+      dispatch(createPost(post, accessToken, setPost, t));
     }
   };
 
