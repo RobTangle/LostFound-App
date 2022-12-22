@@ -5,8 +5,10 @@ import Footer from "../components/Footer/Footer";
 import Wallet3d from "../components/Wallet3d/Wallet3d";
 import Banner from "../components/Banner/Banner";
 import InfoBlock from "../components/info-block/InfoBlock";
+import { useTranslation } from "react-i18next";
 
 export function Home() {
+  const { t } = useTranslation();
   const [lostTip, setLostTip] = useState(true);
   const [foundTip, setFoundTip] = useState(true);
 
@@ -41,30 +43,29 @@ export function Home() {
         </div>
         <div className="font-sans flex flex-col gap-5 font-semibold ">
           <div className="flex flex-col gap-1  hover:scale-[1.02] transition-all duration-300">
-            <p className=" text-xl md:text-3xl text-green">Lost your docs? </p>
+            <p className=" text-xl md:text-3xl text-green">   {t("home.titleFind")} </p>
             <p className="text-lg font-normal">
-              Don't worry, we've got you covered. We are here to help you find
-              your lost documents.
+            {t("home.subtitleFind")}
             </p>
             <Link
               to="/search"
               className="bg-green w-fit text-white px-3 py-2 rounded-md"
             >
-              Find them
+               {t("home.btnFind")}
             </Link>
           </div>
           <div className="flex flex-col gap-1 hover:scale-[1.02] transition-all duration-300">
             <p className=" text-xl md:text-3xl text-blue">
-              Found any documents?
+            {t("home.titlePost")}
             </p>
             <p className="text-lg font-normal">
-              We are here to help you find the owner of the documents you found.
+            {t("home.subtitlePost")}
             </p>
             <Link
               to="/post"
               className="bg-blue w-fit text-white px-3 py-2 rounded-md "
             >
-              Post them
+              {t("home.btnPost")}
             </Link>
           </div>
         </div>

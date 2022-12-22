@@ -10,5 +10,13 @@ export const home = {
   foundTips1: "LostFound offers a safe, secure way to post your found items here. We will do our best to find the owner as quickly as possible.",
   foundTips2: "Please make sure that you write a detailed description of the item you found. This will help us to find the owner.",
   foundTips3: "It is mandatory to provide a valid email address to post your found item. We will not share your email address with anyone.",
-
-};
+  // toltip1: "Lost your docs?",
+  // toltip2: "Don't worry, we've got you covered. We are here to help you find your lost documents.",
+  
+  titleFind: "Lost your documents?",
+  subtitleFind: "Don't worry, we've got you covered. We are here to help you find your lost documents.",
+  btnFind: "Find Them",
+  titlePost: "Did you find documents and want to publish them?",
+  subtitlePost: "We are here to help you find the owner of the documents you found.",
+  btnPost: "Post Them",
+ };

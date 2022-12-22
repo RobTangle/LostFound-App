@@ -72,9 +72,9 @@ export function Landing() {
                 <li className="text-slate-600">{t("landing.list2")}</li>
               </motion.ul>
 
-              <div className="flex flex-col gap-5 space-y-4  items-end justify-center md:flex-row  md:justify-start">
+              <div className="flex flex-col gap-5 space-y-4  items-center justify-center md:flex-row  md:justify-start">
                 <LangButton />
-                <LoginButton style="border-solid border-b-2 text-green px-3 py-2  " />
+                <LoginButton style="text-black " />
               </div>
             </div>
             <div className="flex w-full mx-5 items-center justify-center mt-8 lg:mt-0 h-72 sm:h-80 max-w-[550px]">
