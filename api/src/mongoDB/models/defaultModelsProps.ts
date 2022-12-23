@@ -23,6 +23,7 @@ const defaultProps = {
   },
   post: {
     name_on_doc: {
+      minlength: 3,
       maxlength: 100,
     },
     number_on_doc: {
