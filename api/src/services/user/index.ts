@@ -300,8 +300,8 @@ export async function updateUserName(
   const userPostsInPostCollection = await Post.where({
     "user_posting._id": user_id,
   })
-    .setOptions({ multi: true, runValidators: true })
-    .update({ $set: { "user_posting.name": validatedName } })
+    .setOptions({ runValidators: true })
+    .updateMany({ $set: { "user_posting.name": validatedName } })
     .exec();
   console.log("userPostsInPostCollection = ", userPostsInPostCollection);
 
@@ -355,8 +355,8 @@ async function updateUserProfileImg(
   const userPostsInPostCollection = await Post.where({
     "user_posting._id": user_id,
   })
-    .setOptions({ multi: true, runValidators: true })
-    .update({ $set: { "user_posting.profile_img": newProfileImage } })
+    .setOptions({ runValidators: true })
+    .updateMany({ $set: { "user_posting.profile_img": newProfileImage } })
     .exec();
   console.log("userPostsInPostCollection = ", userPostsInPostCollection);
 
