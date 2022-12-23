@@ -14,10 +14,10 @@ export default function LoginButton({ style }) {
     // </button>
 
     <button
-      className={style + 'inline-block rounded-full bg-gradient-to-r from-emerald-400 via-indigo-400 to-indigo-700 p-[2px] hover:text-white hover:scale-110 cursor-pointer focus:outline-none focus:ring active:text-opacity-75 hover:shadow-lg active:scale-90 transition duration-150 active:outline-none'}
+      className={style + 'inline-block rounded-full bg-gradient-to-r from-emerald-400 via-indigo-400 to-indigo-700 p-[2px] hover:text-black hover:scale-110 cursor-pointer focus:outline-none active:text-opacity-75 hover:shadow-lg active:scale-90 transition duration-150 active:outline-none'}
       onClick={loginWithRedirect}
     >
-      <span className='block rounded-full bg-white px-8 py-3 text-sm font-medium hover:bg-transparent'>
+      <span className='block rounded-full bg-white px-8 py-3 text-sm font-medium hover:bg-transparent hover:text-white'>
       {t("landing.login")}
       </span>
     </button>
