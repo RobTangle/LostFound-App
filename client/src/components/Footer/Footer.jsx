@@ -11,7 +11,7 @@ const Footer = ({ fixed}) => {
           : "flex flex-col text-xs  w-full max-w-[1200px]") +
             " w-full max-w-[1200px]"
       }>
-      <div className="flex mt-24 mb-4 flex-row justify-between">
+      {/* <div className="flex mt-24 mb-4 flex-row justify-between">
         <div className=""></div>
         <a className="hidden md:block cursor-pointer text-slate-600 hover:text-blue uppercase">
         {t("navbar.about")}
@@ -74,7 +74,7 @@ const Footer = ({ fixed}) => {
             </svg>
           </a>
         </div>
-      </div>
+      </div> */}
       <hr className="border-slate-400" />
       <p className="w-full text-center my-12 text-slate-600">
         Copyright © 2022 LOSTFOUND App
