@@ -10,7 +10,8 @@ import {
   sanitizeSimbols,
   stringContainsURLs,
 } from "./genericValidators";
-
+import validator from "validator";
+import modelsProps from "../mongoDB/models/defaultModelsProps";
 import { z } from "zod";
 
 const newUserZSchema = z.object({
@@ -89,9 +90,12 @@ export function checkUserProfileImg(
   if (isFalsyArgument(profileImgFromReq)) {
     return undefined;
   }
+  if (profileImgFromReq.length > modelsProps.user.profile_img.maxlength) {
+    throw new Error(`Profile image string is too long`);
+  }
   if (
     isValidURLImage(profileImgFromReq) ||
-    stringContainsURLs(profileImgFromReq)
+    validator.isURL(profileImgFromReq)
   ) {
     return profileImgFromReq;
   }
