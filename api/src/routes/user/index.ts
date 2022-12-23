@@ -32,4 +32,11 @@ router.delete(
 // UPDATE USER NAME :
 router.patch("/updateName", jwtCheck, userControllers.updateUserNameHandler);
 
+// UPDATE USER PROFILE IMG :
+router.patch(
+  "/updateProfileImg",
+  jwtCheck,
+  userControllers.updateUserProfileImgHandler
+);
+
 export default router;

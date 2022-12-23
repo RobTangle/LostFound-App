@@ -7,10 +7,12 @@ import {
 } from "../../validators/genericValidators";
 import {
   checkUserName,
+  checkUserProfileImg,
   validateNewUserWithZod,
 } from "../../validators/user-validators";
 import { Request as JWTRequest } from "express-jwt";
 import validator from "validator";
+import validProps from "../../mongoDB/models/defaultModelsProps";
 
 // REGISTER NEW USER :
 export async function registerNewUser(req: JWTRequest) {
@@ -307,6 +309,61 @@ export async function updateUserName(
   return userUpdated;
 }
 
+async function updateUserProfileImg(
+  user_id: string | undefined,
+  newProfile_img: unknown
+) {
+  if (!user_id) {
+    console.log("Error en updateUserName. El user_id es falsy");
+    throw new Error("Invalid user id");
+  }
+
+  // validate new profile img, or use default img if falsy arg:
+  const newProfileImage =
+    checkUserProfileImg(newProfile_img) ||
+    validProps.user.profile_img.defaultImage;
+
+  // find User in DB:
+  const userInDB = await User.findById(user_id);
+  if (!userInDB) {
+    console.log(
+      "Error en fn updateUserName: Usuario no encontrado en la base de datos"
+    );
+    throw new Error("User not found in the DB");
+  }
+
+  // actualizo la profile_img en el documento del usuario:
+  userInDB.profile_img = newProfileImage;
+
+  //* si el usuario no tiene posts, entonces retorno el usuario actualizado
+  if (userInDB.posts.length === 0) {
+    const userUpdated = await userInDB.save();
+    return userUpdated;
+  }
+  //* si el usuario tiene posts, entonces los busco y actualizo:
+  // En los subdocs del doc del user en coll User:
+  let subDocsEdited = 0;
+  userInDB.posts.forEach((post) => {
+    post.user_posting.profile_img = newProfileImage;
+    subDocsEdited++;
+  });
+  // guardo los cambios en el doc del User:
+  const userUpdated = await userInDB.save();
+  console.log(`subDocsEdited = ${subDocsEdited}`);
+
+  // actualizo los documentos del usuario en la Coll Posts:
+  const userPostsInPostCollection = await Post.where({
+    "user_posting._id": user_id,
+  })
+    .setOptions({ multi: true, runValidators: true })
+    .update({ $set: { "user_posting.profile_img": newProfileImage } })
+    .exec();
+  console.log("userPostsInPostCollection = ", userPostsInPostCollection);
+
+  // retorno el User document actualizado:
+  return userUpdated;
+}
+
 const userServices = {
   registerNewUser,
   getUserByIdOrThrowError,
@@ -318,6 +375,7 @@ const userServices = {
   updateUserNameAndProfileImg,
   deleteAllDataFromUser,
   updateUserName,
+  updateUserProfileImg,
 };
 
 export default userServices;
