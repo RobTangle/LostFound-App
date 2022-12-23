@@ -92,6 +92,20 @@ export async function deleteAllUserDataHandler(req: JWTRequest, res: Response) {
   }
 }
 
+export async function updateUserNameHandler(req: JWTRequest, res: Response) {
+  try {
+    const user_id = req.auth?.sub;
+    const { name } = req.body;
+    const updatedUser = await userServices.updateUserName(user_id, name);
+    return res.status(200).send(updatedUser);
+  } catch (error: any) {
+    console.log(
+      `Error en updateUserNameHandler 'user/updateName'. ${error.message}`
+    );
+    return res.status(400).send({ error: error.message });
+  }
+}
+
 const userControllers = {
   findAllUsersHandler,
   getUserInfoHandler,
@@ -99,6 +113,7 @@ const userControllers = {
   userExistsInDBHandler,
   updateUserSanitizingHandler,
   deleteAllUserDataHandler,
+  updateUserNameHandler,
 };
 
 export default userControllers;

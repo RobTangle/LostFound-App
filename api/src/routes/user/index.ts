@@ -29,4 +29,7 @@ router.delete(
   userControllers.deleteAllUserDataHandler
 );
 
+// UPDATE USER NAME :
+router.patch("/updateName", jwtCheck, userControllers.updateUserNameHandler);
+
 export default router;

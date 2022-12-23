@@ -253,6 +253,60 @@ export async function deleteAllDataFromUser(user_id: string | undefined) {
   }
 }
 
+export async function updateUserName(
+  user_id: string | undefined,
+  name: unknown
+) {
+  if (!user_id) {
+    console.log("Error en updateUserName. El user_id es falsy");
+    throw new Error("Invalid user id");
+  }
+  if (!name) {
+    console.log("Error en updateUserName. El name es falsy");
+    throw new Error("Invalid name.");
+  }
+  // validar nuevo nombre:
+  const validatedName = checkUserName(name);
+  const userInDB = await User.findById(user_id);
+  if (!userInDB) {
+    console.log(
+      "Error en fn updateUserName: Usuario no encontrado en la base de datos"
+    );
+    throw new Error("User not found in the DB");
+  }
+
+  // actualizo el nombre en el documento del usuario:
+  userInDB.name = validatedName;
+
+  //* si el usuario no tiene posts, entonces retorno el usuario actualizado
+  if (userInDB.posts.length === 0) {
+    const userUpdated = await userInDB.save();
+    return userUpdated;
+  }
+  //* si el usuario tiene posts, entonces los busco y actualizo:
+  // En los subdocs del doc del user en coll User:
+  let subDocsEdited = 0;
+  userInDB.posts.forEach((post) => {
+    post.user_posting.name = validatedName;
+    subDocsEdited++;
+  });
+  // guardo los cambios en el doc del User:
+  const userUpdated = await userInDB.save();
+  console.log(`subDocsEdited = ${subDocsEdited}`);
+
+  // actualizo los documentos del usuario en la Coll Posts:
+  const userPostsInPostCollection = await Post.where({
+    "user_posting._id": user_id,
+  })
+    .setOptions({ multi: true, runValidators: true })
+    .update({ $set: { "user_posting.name": validatedName } })
+    .exec();
+  console.log("userPostsInPostCollection = ", userPostsInPostCollection);
+
+  // retorno el User document actualizado:
+  return userUpdated;
+}
+
 const userServices = {
   registerNewUser,
   getUserByIdOrThrowError,
@@ -263,6 +317,7 @@ const userServices = {
   throwErrorIfUserIsNotRegisteredOrVoid,
   updateUserNameAndProfileImg,
   deleteAllDataFromUser,
+  updateUserName,
 };
 
 export default userServices;
