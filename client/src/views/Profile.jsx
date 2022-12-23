@@ -11,7 +11,7 @@ import accessTokenName from "../constants/accessToken";
 import SubscriptionForm from "../components/SubscriptionForm/SubscriptionForm";
 import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
 import PostForm from "../components/PostForm/PostForm";
-import { Posts } from "../components/PostCard/Posts";
+import { UserPosts } from "../components/PostCard/UserPosts";
 import { SearchComp } from "../components/SearchComp/SearchComp";
 
 export const Profile = () => {
@@ -184,7 +184,7 @@ export const Profile = () => {
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">
           <PostForm />
           <div>You have {userProfile?.posts?.length} posts</div>
-          <Posts />
+          <UserPosts />
         </div>
         <div hidden={!tab.link3} className="border border-indigo-200 mx-auto">
           <SearchComp />
@@ -192,7 +192,7 @@ export const Profile = () => {
         </div>
         <div hidden={!tab.link4} className="border border-indigo-200 mx-auto">
           <div>You have {userProfile?.posts?.length} posts</div>
-          <Posts />
+          <UserPosts />
         </div>
         <div hidden={!tab.link5} className="border border-indigo-200 mx-auto">
           <SubscriptionForm />

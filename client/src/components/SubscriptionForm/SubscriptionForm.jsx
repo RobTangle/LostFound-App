@@ -58,7 +58,7 @@ const SubscriptionForm = () => {
         accessToken = await getAccessTokenSilently();
       }
       console.log("Despachando createSuscription !", suscription);
-      dispatch(createSubscription(suscription, accessToken));
+      dispatch(createSubscription(suscription, accessToken, setSuscription));
       // setTimeout(() => {
       //   dispatch(getUserInfo(accessToken));
       // }, 700);
@@ -101,6 +101,7 @@ const SubscriptionForm = () => {
               type="text"
               placeholder={t("subscriptionForm.namePlaceholder")}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="w-full  px-3">

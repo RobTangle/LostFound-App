@@ -5,6 +5,8 @@
 // En la ruta "newPost", luego de crear el nuevo posteo y res.status(200) (sin return!), invocar una función que realiza una query por la tabla de subscripciones, buscando como query el objeto newPost que se acaba de crear. Esta función va a enviar un email a todos los matches que encuentre.
 
 import { Schema } from "mongoose";
+import modelsProps from "./defaultModelsProps";
+const subsProps = modelsProps.subscription;
 
 export interface ISubscription {
   name_on_doc: string;
@@ -17,14 +19,15 @@ export interface ISubscription {
 export const subscriptionSchema: Schema = new Schema<ISubscription>({
   name_on_doc: {
     type: String,
-    maxlength: 100,
+    maxlength: subsProps.name_on_doc.maxlength,
+    minlength: subsProps.name_on_doc.minlength,
     required: true,
     lowercase: true,
     trim: true,
   },
   number_on_doc: {
     type: String,
-    maxlength: 100,
+    maxlength: subsProps.number_on_doc.maxlength,
     required: false,
     lowercase: true,
     trim: true,

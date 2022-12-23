@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAllDataFromUser = exports.updateUserNameAndProfileImg = exports.throwErrorIfUserIsNotRegisteredOrVoid = exports.userExistsInDBBoolean = exports.throwErrorIfEmailExistsInDB = exports.userIsRegisteredInDB = exports.getUserByIdLeanOrThrowError = exports.getUserByIdOrThrowError = exports.registerNewUser = void 0;
+exports.updateUserName = exports.deleteAllDataFromUser = exports.updateUserNameAndProfileImg = exports.throwErrorIfUserIsNotRegisteredOrVoid = exports.userExistsInDBBoolean = exports.throwErrorIfEmailExistsInDB = exports.userIsRegisteredInDB = exports.getUserByIdLeanOrThrowError = exports.getUserByIdOrThrowError = exports.registerNewUser = void 0;
 const mongoose_1 = require("mongoose");
 const isEmail_1 = __importDefault(require("validator/lib/isEmail"));
 const mongoDB_1 = require("../../mongoDB");
 const genericValidators_1 = require("../../validators/genericValidators");
 const user_validators_1 = require("../../validators/user-validators");
 const validator_1 = __importDefault(require("validator"));
+const defaultModelsProps_1 = __importDefault(require("../../mongoDB/models/defaultModelsProps"));
 // REGISTER NEW USER :
 function registerNewUser(req) {
     var _a, _b;
@@ -253,6 +254,97 @@ function deleteAllDataFromUser(user_id) {
     });
 }
 exports.deleteAllDataFromUser = deleteAllDataFromUser;
+function updateUserName(user_id, name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!user_id) {
+            console.log("Error en updateUserName. El user_id es falsy");
+            throw new Error("Invalid user id");
+        }
+        if (!name) {
+            console.log("Error en updateUserName. El name es falsy");
+            throw new Error("Invalid name.");
+        }
+        // validar nuevo nombre:
+        const validatedName = (0, user_validators_1.checkUserName)(name);
+        const userInDB = yield mongoDB_1.User.findById(user_id);
+        if (!userInDB) {
+            console.log("Error en fn updateUserName: Usuario no encontrado en la base de datos");
+            throw new Error("User not found in the DB");
+        }
+        // actualizo el nombre en el documento del usuario:
+        userInDB.name = validatedName;
+        //* si el usuario no tiene posts, entonces retorno el usuario actualizado
+        if (userInDB.posts.length === 0) {
+            const userUpdated = yield userInDB.save();
+            return userUpdated;
+        }
+        //* si el usuario tiene posts, entonces los busco y actualizo:
+        // En los subdocs del doc del user en coll User:
+        let subDocsEdited = 0;
+        userInDB.posts.forEach((post) => {
+            post.user_posting.name = validatedName;
+            subDocsEdited++;
+        });
+        // guardo los cambios en el doc del User:
+        const userUpdated = yield userInDB.save();
+        console.log(`subDocsEdited = ${subDocsEdited}`);
+        // actualizo los documentos del usuario en la Coll Posts:
+        const userPostsInPostCollection = yield mongoDB_1.Post.where({
+            "user_posting._id": user_id,
+        })
+            .setOptions({ runValidators: true })
+            .updateMany({ $set: { "user_posting.name": validatedName } })
+            .exec();
+        console.log("userPostsInPostCollection = ", userPostsInPostCollection);
+        // retorno el User document actualizado:
+        return userUpdated;
+    });
+}
+exports.updateUserName = updateUserName;
+function updateUserProfileImg(user_id, newProfile_img) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!user_id) {
+            console.log("Error en updateUserName. El user_id es falsy");
+            throw new Error("Invalid user id");
+        }
+        // validate new profile img, or use default img if falsy arg:
+        const newProfileImage = (0, user_validators_1.checkUserProfileImg)(newProfile_img) ||
+            defaultModelsProps_1.default.user.profile_img.defaultImage;
+        // find User in DB:
+        const userInDB = yield mongoDB_1.User.findById(user_id);
+        if (!userInDB) {
+            console.log("Error en fn updateUserName: Usuario no encontrado en la base de datos");
+            throw new Error("User not found in the DB");
+        }
+        // actualizo la profile_img en el documento del usuario:
+        userInDB.profile_img = newProfileImage;
+        //* si el usuario no tiene posts, entonces retorno el usuario actualizado
+        if (userInDB.posts.length === 0) {
+            const userUpdated = yield userInDB.save();
+            return userUpdated;
+        }
+        //* si el usuario tiene posts, entonces los busco y actualizo:
+        // En los subdocs del doc del user en coll User:
+        let subDocsEdited = 0;
+        userInDB.posts.forEach((post) => {
+            post.user_posting.profile_img = newProfileImage;
+            subDocsEdited++;
+        });
+        // guardo los cambios en el doc del User:
+        const userUpdated = yield userInDB.save();
+        console.log(`subDocsEdited = ${subDocsEdited}`);
+        // actualizo los documentos del usuario en la Coll Posts:
+        const userPostsInPostCollection = yield mongoDB_1.Post.where({
+            "user_posting._id": user_id,
+        })
+            .setOptions({ runValidators: true })
+            .updateMany({ $set: { "user_posting.profile_img": newProfileImage } })
+            .exec();
+        console.log("userPostsInPostCollection = ", userPostsInPostCollection);
+        // retorno el User document actualizado:
+        return userUpdated;
+    });
+}
 const userServices = {
     registerNewUser,
     getUserByIdOrThrowError,
@@ -263,5 +355,7 @@ const userServices = {
     throwErrorIfUserIsNotRegisteredOrVoid,
     updateUserNameAndProfileImg,
     deleteAllDataFromUser,
+    updateUserName,
+    updateUserProfileImg,
 };
 exports.default = userServices;

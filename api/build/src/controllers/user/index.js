@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAllUserDataHandler = exports.updateUserSanitizingHandler = exports.userExistsInDBHandler = exports.registerNewUserHandler = exports.getUserInfoHandler = exports.findAllUsersHandler = void 0;
+exports.updateUserProfileImgHandler = exports.updateUserNameHandler = exports.deleteAllUserDataHandler = exports.updateUserSanitizingHandler = exports.userExistsInDBHandler = exports.registerNewUserHandler = exports.getUserInfoHandler = exports.findAllUsersHandler = void 0;
 const mongoDB_1 = require("../../mongoDB");
 const user_1 = require("../../services/user");
 const user_2 = __importDefault(require("../../services/user"));
@@ -114,6 +114,38 @@ function deleteAllUserDataHandler(req, res) {
     });
 }
 exports.deleteAllUserDataHandler = deleteAllUserDataHandler;
+function updateUserNameHandler(req, res) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
+            const { name } = req.body;
+            const updatedUser = yield user_2.default.updateUserName(user_id, name);
+            return res.status(200).send(updatedUser);
+        }
+        catch (error) {
+            console.log(`Error en updateUserNameHandler 'user/updateName'. ${error.message}`);
+            return res.status(400).send({ error: error.message });
+        }
+    });
+}
+exports.updateUserNameHandler = updateUserNameHandler;
+function updateUserProfileImgHandler(req, res) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const user_id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
+            const { profile_img } = req.body;
+            const updatedUser = yield user_2.default.updateUserProfileImg(user_id, profile_img);
+            return res.status(200).send(updatedUser);
+        }
+        catch (error) {
+            console.log(`Error en updateUserProfileImgHandler 'user/updateProfileImg'. ${error.message}`);
+            return res.status(400).send({ error: error.message });
+        }
+    });
+}
+exports.updateUserProfileImgHandler = updateUserProfileImgHandler;
 const userControllers = {
     findAllUsersHandler,
     getUserInfoHandler,
@@ -121,5 +153,7 @@ const userControllers = {
     userExistsInDBHandler,
     updateUserSanitizingHandler,
     deleteAllUserDataHandler,
+    updateUserNameHandler,
+    updateUserProfileImgHandler,
 };
 exports.default = userControllers;
