@@ -11,6 +11,7 @@ export const URL_U_G_USER_INFO = URL + "user/userinfo/";
 export const URL_U_PA_UPDATE = URL + "user/update";
 export const URL_U_PA_UPDATE_NAME = URL + "user/updateName";
 export const URL_U_D_DESTROY_ALL_USER = URL + "user/destroyAll/";
+export const URL_U_PA_UPDATE_PROFILE_IMG = URL + "user/updateProfileImg";
 
 //posts
 export const URL_P_G_FINDALL_POSTS = URL + "post/findAll";
