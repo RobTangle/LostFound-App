@@ -4,20 +4,27 @@ import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
 import { getUserInfo } from "../user/userThunk";
 
-export function createSubscription(obj, token) {
+export function createSubscription(obj, token, setSuscription) {
   return async function (dispatch) {
     try {
       const response = await axios.post(URL_S_PO_NEW_SUB, obj, header(token));
       console.log("reponse = ", response);
-      response.status === 201
-        ? Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Suscripción creada con éxito",
-            showConfirmButton: true,
-            timer: 5000,
-          })
-        : null;
+      if (response.status === 201) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Suscripción creada con éxito",
+          showConfirmButton: true,
+          timer: 5000,
+        });
+        setSuscription({
+          name_on_doc: "",
+          number_on_doc: "",
+          country_lost: "",
+          date_lost: "",
+        });
+      }
+
       // Si se crea una nueva suscripción, fetcheo los datos del usuario actualizados para que se re-renderice el componente de suscripciones automáticamente.
       return dispatch(getUserInfo(token));
     } catch (error) {
