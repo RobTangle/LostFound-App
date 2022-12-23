@@ -4,6 +4,7 @@ import { parseDateWithNoHours } from "../../helpers/dateParsers";
 import { deleteSubscription } from "../../redux/features/subscription/subscriptionThunk";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BiEditAlt } from "react-icons/bi";
+import { ButtonGroup } from "../ButtonGroup/ButtonGroup";
 
 export function SubCardRow({ subscription }) {
   const { getAccessTokenSilently } = useAuth0();
@@ -41,7 +42,7 @@ export function SubCardRow({ subscription }) {
         {parseDateWithNoHours(subscription.date_lost)}
       </td>
       <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-        <button
+        {/* <button
           className="mx-3"
           id={subscription._id}
           onClick={handleDeleteSubscription}
@@ -50,7 +51,12 @@ export function SubCardRow({ subscription }) {
         </button>
         <button id={subscription._id} onClick={handleEditSubscription}>
           <BiEditAlt />
-        </button>
+        </button> */}
+        <ButtonGroup
+          id={subscription._id}
+          handleDelete={handleDeleteSubscription}
+          handleEdit={handleEditSubscription}
+        />
       </td>
     </tr>
   );
