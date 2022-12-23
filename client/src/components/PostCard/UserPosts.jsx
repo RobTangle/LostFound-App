@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import { PostsCards } from "./PostsCards";
+import { UserPostsCards } from "./UserPostsCards";
 
-export function Posts() {
+export function UserPosts() {
   const userPosts = useSelector((state) => state.user?.userProfile?.posts);
 
   return (
@@ -12,7 +12,7 @@ export function Posts() {
         </div>
       ) : null}
       {Array.isArray(userPosts) && userPosts.length > 0 ? (
-        <PostsCards posts={userPosts} />
+        <UserPostsCards posts={userPosts} />
       ) : null}
     </>
   );

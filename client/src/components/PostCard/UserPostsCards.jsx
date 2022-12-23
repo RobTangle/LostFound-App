@@ -1,6 +1,6 @@
 import { PostCardRow } from "./PostCardRow";
 
-export function PostsCards({ posts }) {
+export function UserPostsCards({ posts }) {
   console.log("Soy el arg {posts} = ", posts);
   return (
     <>
@@ -20,10 +20,10 @@ export function PostsCards({ posts }) {
               <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                 Date found
               </th>
-              <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+              <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900 overflow-x-auto max-w-xs">
                 Comments
               </th>
-              <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+              <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900 overflow-x-auto max-w-xs">
                 Additional contact information
               </th>
               <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
