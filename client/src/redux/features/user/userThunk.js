@@ -11,6 +11,8 @@ import {
   URL_ALL_COUNTRIES,
   URL_U_G_USER_INFO,
   URL_U_G_EXISTS_IN_DB,
+  URL_U_PA_UPDATE_PROFILE_IMG,
+  URL_U_PA_UPDATE_NAME,
 } from "../../../constants/url";
 import { header } from "../../../constants/header";
 
@@ -73,6 +75,71 @@ export function isUserRegistered(token) {
       return dispatch(setIsUserRegistered(response.data));
     } catch (error) {
       return dispatch(setIsUserRegistered({ error: error.message }));
+    }
+  };
+}
+
+export function editUserProfileImg(obj, token) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.post(
+        URL_U_PA_UPDATE_PROFILE_IMG,
+        obj,
+        header(token)
+      );
+      if (response.status === 200) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Profile image updated",
+          showConfirmButton: true,
+          timer: 5000,
+          timerProgressBar: true,
+        });
+      }
+      dispatch(setUserProfile(response.data));
+    } catch (error) {
+      return Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `Ups, algo salió mal: ${
+          error?.response?.data?.error || error.message
+        }`,
+        showConfirmButton: true,
+      });
+    }
+  };
+}
+
+export function editUserName(obj, token) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.post(
+        URL_U_PA_UPDATE_NAME,
+        obj,
+        header(token)
+      );
+      if (response.status === 200) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Nombre actualizado",
+          showConfirmButton: true,
+          timer: 5000,
+          timerProgressBar: true,
+        });
+      }
+      // actualizo el userProfile con el usuario actualizado que me response la request:
+      dispatch(setUserProfile(response.data));
+    } catch (error) {
+      return Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `Ups, algo salió mal: ${
+          error?.response?.data?.error || error.message
+        }`,
+        showConfirmButton: true,
+      });
     }
   };
 }

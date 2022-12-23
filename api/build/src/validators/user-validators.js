@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkUserProfileImg = exports.checkUserEmail = exports.checkUserName = exports.validateNewUser = exports.validateNewUserWithZod = void 0;
 const genericValidators_1 = require("./genericValidators");
+const validator_1 = __importDefault(require("validator"));
+const defaultModelsProps_1 = __importDefault(require("../mongoDB/models/defaultModelsProps"));
 const zod_1 = require("zod");
 const newUserZSchema = zod_1.z.object({
     _id: zod_1.z.string().trim().min(1, { message: "Invalid id." }).max(50),
@@ -69,8 +74,11 @@ function checkUserProfileImg(profileImgFromReq) {
     if ((0, genericValidators_1.isFalsyArgument)(profileImgFromReq)) {
         return undefined;
     }
+    if (profileImgFromReq.length > defaultModelsProps_1.default.user.profile_img.maxlength) {
+        throw new Error(`Profile image string is too long`);
+    }
     if ((0, genericValidators_1.isValidURLImage)(profileImgFromReq) ||
-        (0, genericValidators_1.stringContainsURLs)(profileImgFromReq)) {
+        validator_1.default.isURL(profileImgFromReq)) {
         return profileImgFromReq;
     }
     throw new Error(`Error al validar profile image.`);

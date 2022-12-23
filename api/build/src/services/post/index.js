@@ -125,7 +125,6 @@ function handleUpdatePost(post_id, reqFromBody, user_id) {
 exports.handleUpdatePost = handleUpdatePost;
 // DELETE POST :
 function findPostByIdAndDeleteIt(post_id, user_id) {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         if (!post_id || !user_id) {
             throw new Error(`El id del Post y el id del usuario deben ser válidos.`);
@@ -151,13 +150,15 @@ function findPostByIdAndDeleteIt(post_id, user_id) {
         };
         try {
             // buscar y borrar post de User.posts:
-            let userPostRemoved = yield ((_a = userInDB.posts.id(post_id)) === null || _a === void 0 ? void 0 : _a.remove());
-            if (userPostRemoved) {
-                console.log("chequeo si el post ya fue removido antes de hacer el await userInDB.save() = ", userInDB);
+            let doc = userInDB.posts.id(post_id);
+            if (doc) {
+                doc.remove();
                 yield userInDB.save();
-                console.log("después del userInDB.save(), consologueo el userInDB = ", userInDB);
                 response.userPosts++;
                 response.total++;
+            }
+            else {
+                console.log(`Documento con ${post_id} no encontrado adentro del arreglo posts del usuario.`);
             }
             // buscar y borrar documento en collection Post:
             const deletedPost = yield mongoDB_1.Post.findByIdAndDelete(post_id).exec();

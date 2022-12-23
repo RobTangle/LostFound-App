@@ -22,4 +22,8 @@ router.get("/existsInDB", jwtMiddleware_1.default, user_1.default.userExistsInDB
 router.patch("/update", jwtMiddleware_1.default, user_1.default.updateUserSanitizingHandler);
 // DELETE ALL USER DATA FROM DB :
 router.delete("/destroyAll/:_id", jwtMiddleware_1.default, user_1.default.deleteAllUserDataHandler);
+// UPDATE USER NAME :
+router.patch("/updateName", jwtMiddleware_1.default, user_1.default.updateUserNameHandler);
+// UPDATE USER PROFILE IMG :
+router.patch("/updateProfileImg", jwtMiddleware_1.default, user_1.default.updateUserProfileImgHandler);
 exports.default = router;

@@ -34,16 +34,16 @@ export function PostFoundCard({ post }) {
       </div> */}
 
       <dl className="mt-6 flex">
-        <div className="flex flex-col-reverse">
+        <div className="flex flex-col">
           <dt className="text-sm font-medium text-gray-600">Date found</dt>
-          <dd className="text-xs text-gray-500">
+          <dd className="text-xs text-gray-800 font-bold">
             {parseDateWithNoHours(post?.date_found)}
           </dd>
         </div>
 
-        <div className="ml-3 flex flex-col-reverse sm:ml-6">
+        <div className="ml-3 flex flex-col sm:ml-6">
           <dt className="text-sm font-medium text-gray-600">Country Found</dt>
-          <dd className="uppercase text-xs text-gray-500">
+          <dd className="uppercase text-xs text-gray-800 font-bold">
             {post?.country_found}
           </dd>
         </div>
