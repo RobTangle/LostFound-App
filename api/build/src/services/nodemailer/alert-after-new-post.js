@@ -109,6 +109,7 @@ function sendMailWithNodeMailer(subscription, post_id) {
             console.log("Error en sendMailWithNodeMailer. El post_id es falsy.");
             throw new Error("Invalid post id");
         }
+        const post_idString = post_id.toString();
         const msgMail = `Hola, ${subscription.user_subscribed.name}! Tenes buenas noticias! Alguien ha posteado un nuevo anuncio que coincide con tu suscripción! Acá te dejamos el link a la publicación. Asegúrate de estar logueado con tu cuenta registrada para poder acceder. Mucha suerte!!!!  https://www.lostfound-app.com/found/${post_id}`;
         const mailOptions = {
             from: "lostfound.app.info@gmail.com",
@@ -175,7 +176,7 @@ function sendMailWithNodeMailer(subscription, post_id) {
         <h1>¡Se ha publicado documentación perdida que podría ser tuya! 🙌🙌🙌</h1>
         <p>¡Hola ${validator_1.default.escape(subscription.user_subscribed.name)}! Queremos avisarte que se ha publicado documentación perdida que podría ser la que estás buscando.
         Te dejamos un link para que la veas. Asegúrate de estar logueado con tu cuenta registrada de LostFound para poder verla. ¡Buena suerte!
-        <a href="https://www.lostfound.app/found/${validator_1.default.escape(post_id)} target="_blank">Ir a la publicación </a> </p>
+        <a href="https://www.lostfound.app/found/${validator_1.default.escape(post_idString)} target="_blank">Ir a la publicación </a> </p>
 </br>
         Acá te brindamos unos consejos a tener en cuenta para la recuperación de tus documentos. ¡Asegúrate de leerla! 
         <a href="https://lostfound.app/tips" target="_blank"> Tips a tener en cuenta </a> 
