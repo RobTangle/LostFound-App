@@ -77,7 +77,7 @@ const Footer = ({ fixed}) => {
       </div> */}
       <hr className="border-slate-400" />
       <p className="w-full text-center my-12 text-slate-600">
-        Copyright © 2022 LOSTFOUND App
+        Copyright © 2023 LOSTFOUND App
       </p>
     </div>
   );
