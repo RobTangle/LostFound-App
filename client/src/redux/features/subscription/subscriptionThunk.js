@@ -47,22 +47,39 @@ export function createSubscription(obj, token, setSuscription) {
 export function deleteSubscription(subs_id, token) {
   return async function (dispatch) {
     try {
-      const response = await axios.delete(
-        URL_S_D_DELETE_SUB + subs_id,
-        header(token)
-      );
-      if (response.status === 200) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Suscripción eliminada.",
-          showConfirmButton: true,
-          timer: 5000,
-          timerProgressBar: true,
-        });
-        // Si se elimina una suscripción, fetcheo los datos del usuario actualizados para que se actualice sólo el componente de suscripciones.
-        return dispatch(getUserInfo(token));
-      }
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await axios.delete(
+            URL_S_D_DELETE_SUB + subs_id,
+            header(token)
+          );
+          if (response.status === 200) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Suscripción eliminada.",
+              showConfirmButton: true,
+              timer: 5000,
+              timerProgressBar: true,
+            });
+            // Si se elimina una suscripción, fetcheo los datos del usuario actualizados para que se actualice sólo el componente de suscripciones.
+            Swal.fire(
+              "Deleted!",
+              "Your subscription has been deleted.",
+              "success"
+            );
+          }
+          return dispatch(getUserInfo(token));
+        }
+      });
     } catch (error) {
       Swal.fire({
         position: "center",
