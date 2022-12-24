@@ -56,34 +56,34 @@ function Navbar() {
           <NavbarLink
             path="/home"
             text={t("navbar.home")}
-            divStyle="hover:text-blue duration-300 transition-all"
+            divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current"
           />
 
           {!isLoading && isAuthenticated ? (
             <>
               <NavbarLink
                 path="/about"
-                divStyle="hover:text-blue duration-300 transition-all"
+                divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current "
                 text={t("navbar.about")}
               />
               <NavbarLink
                 path="/services"
-                divStyle="hover:text-blue duration-300 transition-all"
+                divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current "
                 text={t("navbar.services")}
               />
               <NavbarLink
                 path="/us"
-                divStyle="hover:text-blue duration-300 transition-all"
+                divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current "
                 text={t("navbar.why_us")}
               />
               <NavbarLink
                 path="/contact"
-                divStyle="hover:text-blue duration-300 transition-all"
+                divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current "
                 text={t("navbar.contact")}
               />
               <NavbarLink
                 path="/profile"
-                divStyle="hover:text-blue duration-300 transition-all"
+                divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current "
                 text={t("navbar.profile")}
               />
 
@@ -115,34 +115,34 @@ function Navbar() {
           <>
             <NavbarLink
               path="/about"
-              divStyle="hover:text-blue duration-300 transition-all"
+              divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:scale-110 "
               text={t("navbar.about")}
             />
             <NavbarLink
               path="/services"
-              divStyle="hover:text-blue duration-300 transition-all"
+              divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:scale-110 "
               text={t("navbar.services")}
             />
             <NavbarLink
               path="/us"
-              divStyle="hover:text-blue duration-300 transition-all"
+              divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:scale-110 "
               text={t("navbar.why_us")}
             />
             <NavbarLink
               path="/contact"
-              divStyle="hover:text-blue duration-300 transition-all"
+              divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:scale-110 "
               text={t("navbar.contact")}
             />
             <div className="flex gap-3 items-center">
               <NavbarLink
                 path="/profile"
-                divStyle="hover:text-blue text-xl duration-300 transition-all"
+                divStyle="hover:text-blue text-xl duration-300 transition-all hover:scale-150 "
                 text={<FaUserCircle />}
               />
               <div>
                 <Logout
                   icon={true}
-                  style="hover:text-blue duration-300 transition-all text-xl"
+                  style="hover:text-blue duration-300 transition-all text-xl hover:scale-150 "
                 />
               </div>
             </div>
