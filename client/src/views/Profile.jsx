@@ -196,7 +196,9 @@ export const Profile = () => {
         </div>
         <div hidden={!tab.link5} className="border border-indigo-200 mx-auto">
           <SubscriptionForm />
-          <div>You have {userProfile?.subscriptions?.length} subscriptions</div>
+          <div>
+            You have {userProfile?.subscriptions?.length || 0} subscriptions
+          </div>
           <div>
             <Subscriptions />
           </div>
