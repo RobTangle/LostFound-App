@@ -13,6 +13,10 @@ import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
 import PostForm from "../components/PostForm/PostForm";
 import { UserPosts } from "../components/PostCard/UserPosts";
 import { SearchComp } from "../components/SearchComp/SearchComp";
+import {
+  editUserNameWithSwal,
+  editUserProfileImgWithSwal,
+} from "../redux/features/user/userThunk";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -45,6 +49,24 @@ export const Profile = () => {
     }
     console.log("El userProfile existe...");
   }, []);
+
+  async function handleEditName() {
+    try {
+      const accessToken = localStorage.getItem(accessTokenName);
+      dispatch(editUserNameWithSwal(accessToken));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async function handleEditProfileImg() {
+    try {
+      const accessToken = localStorage.getItem(accessTokenName);
+      dispatch(editUserProfileImgWithSwal(accessToken));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   console.log("user =", user);
   console.log("userProfile = ", userProfile);
@@ -180,6 +202,25 @@ export const Profile = () => {
 
         <div hidden={!tab.link1} className="border border-indigo-200 mx-auto">
           <h1>GENERAL</h1>
+          <div>
+            <h3>Editar profile name :</h3>
+            <div>
+              <button
+                className="bg-green w-fit text-white px-3 py-2 rounded-md"
+                onClick={handleEditName}
+              >
+                Edit name
+              </button>
+            </div>
+            <div>
+              <button
+                className="bg-green w-fit text-white px-3 py-2 rounded-md my-1"
+                onClick={handleEditProfileImg}
+              >
+                Edit profile image
+              </button>
+            </div>
+          </div>
         </div>
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">
           <PostForm />
