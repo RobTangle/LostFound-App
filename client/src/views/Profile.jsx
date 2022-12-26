@@ -13,6 +13,7 @@ import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
 import PostForm from "../components/PostForm/PostForm";
 import { UserPosts } from "../components/PostCard/UserPosts";
 import { SearchComp } from "../components/SearchComp/SearchComp";
+import { editUserNameWithSwal } from "../redux/features/user/userThunk";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -180,6 +181,10 @@ export const Profile = () => {
 
         <div hidden={!tab.link1} className="border border-indigo-200 mx-auto">
           <h1>GENERAL</h1>
+          <div>
+            <h3>Editar profile name :</h3>
+            <button onClick={editUserNameWithSwal}>Edit name</button>
+          </div>
         </div>
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">
           <PostForm />

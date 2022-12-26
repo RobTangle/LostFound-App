@@ -15,6 +15,7 @@ import {
   URL_U_PA_UPDATE_NAME,
 } from "../../../constants/url";
 import { header } from "../../../constants/header";
+import accessToken from "../../../constants/accessToken";
 
 export function allUsers(token) {
   return async function (dispatch) {
@@ -141,5 +142,46 @@ export function editUserName(obj, token) {
         showConfirmButton: true,
       });
     }
+  };
+}
+
+export function editUserNameWithSwal() {
+  return async function () {
+    const accessToken = localStorage.getItem(accessToken);
+    Swal.fire({
+      title: "Enter your new username",
+      input: "text",
+      inputAttributes: {
+        autocapitalize: "off",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Look up",
+      showLoaderOnConfirm: true,
+      preConfirm: async (login) => {
+        try {
+          const obj = { name: login };
+          const response = await axios.post(
+            URL_U_PA_UPDATE_NAME,
+            obj,
+            header(accessToken)
+          );
+          if (!response.status === 200) {
+            throw new Error(response?.error?.message);
+          }
+          return await response.data;
+        } catch (error) {
+          Swal.showValidationMessage(`Request failed: ${error}`);
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    }).then((result) => {
+      console.log("RESULT = ", result);
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: `${result.value.login} is your user name.`,
+          // imageUrl: result.value.avatar_url,
+        });
+      }
+    });
   };
 }
