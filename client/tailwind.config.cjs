@@ -13,6 +13,7 @@ module.exports = {
         yellow: "#ffd700", //gold
         deepskyblue: "#00bfff",
         goldenrod: "#daa520",
+        purple: "#BA55D3",
       },
       backgroundImage: {
         home: "url('../public/bg.svg')",
