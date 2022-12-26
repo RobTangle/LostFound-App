@@ -190,3 +190,24 @@ export function editUserNameWithSwal(token) {
     }
   };
 }
+
+export function editUserProfileImgWithSwal(token) {
+  return async function (dispatch) {
+    try {
+      mixins
+        .editUserProfileImgMX(dispatch, token)
+        .fire()
+        .then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: `Your new profile image`,
+              imageUrl: result.value,
+            });
+          }
+        });
+    } catch (error) {
+      console.log("Error en editUserProfileImgWithSwal: ");
+      console.log(error.message);
+    }
+  };
+}

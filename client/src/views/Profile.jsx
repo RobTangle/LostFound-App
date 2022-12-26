@@ -13,7 +13,10 @@ import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
 import PostForm from "../components/PostForm/PostForm";
 import { UserPosts } from "../components/PostCard/UserPosts";
 import { SearchComp } from "../components/SearchComp/SearchComp";
-import { editUserNameWithSwal } from "../redux/features/user/userThunk";
+import {
+  editUserNameWithSwal,
+  editUserProfileImgWithSwal,
+} from "../redux/features/user/userThunk";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -51,6 +54,15 @@ export const Profile = () => {
     try {
       const accessToken = localStorage.getItem(accessTokenName);
       dispatch(editUserNameWithSwal(accessToken));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async function handleEditProfileImg() {
+    try {
+      const accessToken = localStorage.getItem(accessTokenName);
+      dispatch(editUserProfileImgWithSwal(accessToken));
     } catch (error) {
       console.log(error.message);
     }
@@ -192,12 +204,22 @@ export const Profile = () => {
           <h1>GENERAL</h1>
           <div>
             <h3>Editar profile name :</h3>
-            <button
-              className="bg-green w-fit text-white px-3 py-2 rounded-md"
-              onClick={handleEditName}
-            >
-              Edit name
-            </button>
+            <div>
+              <button
+                className="bg-green w-fit text-white px-3 py-2 rounded-md"
+                onClick={handleEditName}
+              >
+                Edit name
+              </button>
+            </div>
+            <div>
+              <button
+                className="bg-green w-fit text-white px-3 py-2 rounded-md my-1"
+                onClick={handleEditProfileImg}
+              >
+                Edit profile image
+              </button>
+            </div>
           </div>
         </div>
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">
