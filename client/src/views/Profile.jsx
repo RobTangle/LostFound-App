@@ -47,6 +47,15 @@ export const Profile = () => {
     console.log("El userProfile existe...");
   }, []);
 
+  async function handleEditName() {
+    try {
+      const accessToken = localStorage.getItem(accessTokenName);
+      dispatch(editUserNameWithSwal(accessToken));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   console.log("user =", user);
   console.log("userProfile = ", userProfile);
 
@@ -183,7 +192,12 @@ export const Profile = () => {
           <h1>GENERAL</h1>
           <div>
             <h3>Editar profile name :</h3>
-            <button onClick={editUserNameWithSwal}>Edit name</button>
+            <button
+              className="bg-green w-fit text-white px-3 py-2 rounded-md"
+              onClick={handleEditName}
+            >
+              Edit name
+            </button>
           </div>
         </div>
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">

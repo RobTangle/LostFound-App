@@ -15,7 +15,8 @@ import {
   URL_U_PA_UPDATE_NAME,
 } from "../../../constants/url";
 import { header } from "../../../constants/header";
-import accessToken from "../../../constants/accessToken";
+import Swal from "sweetalert2";
+import mixins from "../../../helpers/Swals/Mixins";
 
 export function allUsers(token) {
   return async function (dispatch) {
@@ -83,7 +84,7 @@ export function isUserRegistered(token) {
 export function editUserProfileImg(obj, token) {
   return async function (dispatch) {
     try {
-      const response = await axios.post(
+      const response = await axios.patch(
         URL_U_PA_UPDATE_PROFILE_IMG,
         obj,
         header(token)
@@ -115,7 +116,7 @@ export function editUserProfileImg(obj, token) {
 export function editUserName(obj, token) {
   return async function (dispatch) {
     try {
-      const response = await axios.post(
+      const response = await axios.patch(
         URL_U_PA_UPDATE_NAME,
         obj,
         header(token)
@@ -145,43 +146,47 @@ export function editUserName(obj, token) {
   };
 }
 
-export function editUserNameWithSwal() {
-  return async function () {
-    const accessToken = localStorage.getItem(accessToken);
-    Swal.fire({
-      title: "Enter your new username",
-      input: "text",
-      inputAttributes: {
-        autocapitalize: "off",
-      },
-      showCancelButton: true,
-      confirmButtonText: "Look up",
-      showLoaderOnConfirm: true,
-      preConfirm: async (login) => {
-        try {
-          const obj = { name: login };
-          const response = await axios.post(
-            URL_U_PA_UPDATE_NAME,
-            obj,
-            header(accessToken)
-          );
-          if (!response.status === 200) {
-            throw new Error(response?.error?.message);
+export function editUserNameWithSwal(token) {
+  console.log("en editusernamewithswal");
+  return async function (dispatch) {
+    try {
+      console.log("editUserNameWithSwal fired");
+      // mixins.editUserNameMX2
+      //   .fire({
+      //     preConfirm: async (input) => {
+      //       try {
+      //         const obj = { name: input };
+      //         const response = await axios.patch(
+      //           URL_U_PA_UPDATE_NAME,
+      //           obj,
+      //           header(token)
+      //         );
+      //         if (!response.status === 200) {
+      //           throw new Error(response?.error?.message);
+      //         }
+      //         console.log("RESPONSE = ", response);
+      //         dispatch(setUserProfile(response.data));
+      //         return response.data.name;
+      //       } catch (error) {
+      //         Swal.showValidationMessage(`Request failed: ${error}`);
+      //       }
+      //     },
+      //     allowOutsideClick: () => !Swal.isLoading(),
+      //   })
+      mixins
+        .editUserNameMX(dispatch, token)
+        .fire()
+        .then((result) => {
+          console.log("RESULT = ", result);
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: `${result.value} is your new user name.`,
+              icon: "success",
+            });
           }
-          return await response.data;
-        } catch (error) {
-          Swal.showValidationMessage(`Request failed: ${error}`);
-        }
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
-    }).then((result) => {
-      console.log("RESULT = ", result);
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: `${result.value.login} is your user name.`,
-          // imageUrl: result.value.avatar_url,
         });
-      }
-    });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 }
