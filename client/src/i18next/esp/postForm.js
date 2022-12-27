@@ -19,6 +19,10 @@ export const postForm = {
     "Información de contacto adicional a su email",
   subtitle: "Completá el formulario para publicar un aviso",
   submitButton: "Crear aviso",
+  //edit post form:
+  editTitle: "Editar publicación",
+  editSubtitle: "Modificá los campos que quieras editar",
+  editSubmitButton: "Guardar cambios",
   //errors:
   errorNameAndNumberFalsy:
     "Debe ingresar el nombre completo en el documento y/o el número en el documento.",
