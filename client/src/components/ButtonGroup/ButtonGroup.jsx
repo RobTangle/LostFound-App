@@ -1,4 +1,38 @@
-export function ButtonGroup({ id, handleEdit, handleDelete }) {
+import React from "react";
+import Modal from "react-modal";
+
+import { EditPostForm } from "../EditPostForm.jsx/EditPostForm";
+
+export function ButtonGroup({ post, id, handleDelete }) {
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+    },
+  };
+
+  // Modal.setAppElement("#yourAppElement");
+
+  // let subtitle;
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    // subtitle.style.color = "#f00";
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
   return (
     <span
       class="inline-flex divide-x overflow-hidden rounded-md border bg-white shadow-sm"
@@ -6,7 +40,7 @@ export function ButtonGroup({ id, handleEdit, handleDelete }) {
     >
       <button
         id={id}
-        onClick={handleEdit}
+        onClick={openModal}
         class="inline-block p-3 text-gray-700 hover:bg-gray-50 focus:relative"
         title="Edit Product"
       >
@@ -26,7 +60,15 @@ export function ButtonGroup({ id, handleEdit, handleDelete }) {
           />
         </svg>
       </button>
-
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <EditPostForm postToEdit={post} closeModal={closeModal} />
+      </Modal>
       <button
         id={id}
         class="inline-block p-3 text-gray-700 hover:bg-gray-50 focus:relative"
