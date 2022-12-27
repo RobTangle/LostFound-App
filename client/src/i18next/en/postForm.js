@@ -23,6 +23,7 @@ export const postForm = {
   editTitle: "Edit post",
   editSubtitle: "Edit the fields you want to change",
   editSubmitButton: "Save changes",
+  editCloseButton: "Close",
   // errors:
   errorNameAndNumberFalsy:
     "You must enter the full name on the document and/or the number on the document.",
