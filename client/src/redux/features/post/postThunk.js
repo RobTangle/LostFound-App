@@ -10,6 +10,7 @@ import {
   URL_P_G_POST_INFO,
   URL_P_G_SEARCH_BY_QUERY,
   URL_P_PO_NEW_POST,
+  URL_P_PA_UPDATE_POST,
 } from "../../../constants/url";
 import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
@@ -89,9 +90,10 @@ export function fetchPostDetail(post_id, token) {
 }
 
 export function updatePost(obj, post_id, token) {
+  console.log("Ejecutado updatePost");
   return async function (dispatch) {
     try {
-      let response = await axios.post(
+      let response = await axios.patch(
         URL_P_PA_UPDATE_POST + post_id,
         obj,
         header(token)
