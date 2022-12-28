@@ -10,4 +10,4 @@ export { About } from "./About";
 export { Services } from "./Services";
 export { Us } from "./Us";
 export { Contact } from "./Contact";
-
+export { Detail } from "./Detail";

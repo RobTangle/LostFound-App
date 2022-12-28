@@ -1,10 +1,12 @@
 import IDicon80 from "../../assets/IDicon80.png";
 import { parseDateWithNoHours } from "../../helpers/dateParsers";
+import React from "react";
+import { Link } from "react-router-dom";
 
 export function PostFoundCard({ post }) {
   return (
-    <a
-      href="#"
+    <Link
+      to={`/postdetail/${post._id}`}
       className="relative block overflow-hidden rounded-lg border-gray-100 p-8 my-5 mx-10 shadow-[15px_25px_60px_-5px_rgba(0,0,0,0.3)] hover:scale-105"
     >
       <span className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-emerald-400 via-emerald-600 to-indigo-700">
@@ -50,6 +52,6 @@ export function PostFoundCard({ post }) {
           </dd>
         </div>
       </dl>
-    </a>
+    </Link>
   );
 }

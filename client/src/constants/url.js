@@ -20,6 +20,7 @@ export const URL_P_G_SEARCH_BY_QUERY = URL + "post/search";
 export const URL_P_PA_UPDATE_POST = URL + "post/";
 export const URL_P_G_POST_INFO = URL + "post/";
 export const URL_P_D_DELETE_POST = URL + "post/";
+export const URL_P_PO_CONTACT_USER = URL + "post/contact/";
 
 //subscriptions
 export const URL_S_G_FINDALL_SUBS = URL + "subscription/findAll";
