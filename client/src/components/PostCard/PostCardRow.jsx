@@ -7,6 +7,8 @@ import { parseDateWithNoHours } from "../../helpers/dateParsers";
 import { deletePost } from "../../redux/features/post/postThunk";
 import { ButtonGroup } from "../ButtonGroup/ButtonGroup";
 
+import { visualizeImg } from "../../helpers/Swals/visualizeImg";
+
 export function PostCardRow({ post }) {
   const { getAccessTokenSilently } = useAuth0();
   const dispatch = useDispatch();
@@ -41,7 +43,12 @@ export function PostCardRow({ post }) {
         {post.user_posting.additional_contact_info}
       </td>
       <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-        <img src={post.blurred_imgs[0] || IDicon80} alt="Doc image" />
+        <img
+          src={post.blurred_imgs[0] || IDicon80}
+          alt="Doc image"
+          onClick={visualizeImg}
+          className="cursor-pointer"
+        />
       </td>
       <td className="whitespace-nowrap px-4 py-2 text-gray-700">
         <ButtonGroup
