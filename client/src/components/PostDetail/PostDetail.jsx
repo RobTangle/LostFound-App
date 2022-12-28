@@ -21,7 +21,7 @@ export function PostDetail({ post }) {
           <div className="grid items-start grid-cols-1 gap-8 md:grid-cols-2">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
               <img
-                alt="Les Paul"
+                alt="Document image"
                 src={
                   post?.blurred_imgs?.[0] ||
                   "https://thumbs.dreamstime.com/b/hand-holding-id-card-illustration-39652132.jpg"
@@ -51,18 +51,14 @@ export function PostDetail({ post }) {
 
               <div className="flex justify-between mt-8">
                 <div className="max-w-[35ch]">
-                  <h1 className="text-2xl font-bold">
-                    {post?.name_on_doc || "Juan perez con panc"}
-                  </h1>
+                  <h1 className="text-2xl font-bold">{post?.name_on_doc}</h1>
 
-                  <p className="mt-0.5 text-sm">
-                    {post?.number_on_doc || "330294855"}
-                  </p>
+                  <p className="mt-0.5 text-sm">{post?.number_on_doc}</p>
                 </div>
 
-                <p className="text-lg font-bold">
+                <p className="text-lg">
                   {t("postDetail.dateFound")}{" "}
-                  {parseDateWithNoHours(post?.date_found) || "04-12-2021"}
+                  {parseDateWithNoHours(post?.date_found)}
                 </p>
               </div>
               <div className="group relative mt-4">

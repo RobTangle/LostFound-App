@@ -207,7 +207,7 @@ export function contactPostOwnerWithSwal(post_id, token, t) {
       .then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
-            title: `Hecho! Chequea tu email!`,
+            title: t("postDetail.swalConfirmedTitle"),
             icon: "success",
             text: t("postDetail.swalConfirmedText"),
             // imageUrl: result.value.avatar_url,
