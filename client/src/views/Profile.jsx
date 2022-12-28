@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { getUserInfo } from "../redux/features/user/userThunk";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useSelector, useDispatch } from "react-redux";
-import SearchForm from "../components/SearchForm/SearchForm";
 import Navbar from "../components/NavBar/Navbar";
 import Footer from "../components/Footer/Footer";
 
@@ -17,6 +16,8 @@ import {
   editUserNameWithSwal,
   editUserProfileImgWithSwal,
 } from "../redux/features/user/userThunk";
+
+import { visualizeImg } from "../helpers/Swals/visualizeImg";
 
 export const Profile = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -81,7 +82,8 @@ export const Profile = () => {
               <img
                 src={userProfile?.profile_img}
                 alt="user image"
-                className="self-center flex-shrink-0 w-24 h-24 mb-4 bg-center bg-cover rounded-full bg-gray-500"
+                className="self-center flex-shrink-0 w-24 h-24 mb-4 bg-center bg-cover rounded-full bg-gray-500 cursor-pointer"
+                onClick={visualizeImg}
               />
               <p className="text-xl font-semibold leading-tight">
                 {userProfile?.name}
