@@ -92,7 +92,7 @@ export async function handleUpdateRequest(req: JWTRequest, res: Response) {
       user_id
     );
 
-    return res.status(updateResponse.status).send(updateResponse);
+    return res.status(updateResponse.status).send(updateResponse.userUpdated);
   } catch (error: any) {
     console.log(`Error en ruta PUT "/post/:_id. ${error.message}`);
     return res.status(400).send({ error: error.message });

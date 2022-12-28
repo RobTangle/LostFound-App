@@ -103,6 +103,7 @@ export async function handleUpdatePost(
     userPost: 0,
     postCollection: 0,
     total: 0,
+    userUpdated: {},
     msg: "",
     status: 200,
   };
@@ -131,9 +132,10 @@ export async function handleUpdatePost(
       userPost.comments = validatedData.comments;
       userPost.user_posting.additional_contact_info =
         validatedData.additional_contact_info;
-      await userInDB.save();
+      let userUpdated = await userInDB.save();
       response.userPost++;
       response.total++;
+      response.userUpdated = userUpdated;
     }
   } catch (error: any) {
     response.msg = error.message;
