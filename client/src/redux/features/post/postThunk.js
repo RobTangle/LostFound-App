@@ -1,7 +1,6 @@
 import {
   setSearchResults,
   setPostDetail,
-  setUpdatePost,
   setContactPostOwner,
 } from "./postSlice";
 import axios from "axios";
@@ -15,6 +14,7 @@ import {
 import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
 import { getUserInfo } from "../user/userThunk";
+import { setUserProfile } from "../user/userSlice";
 
 export function createPost(post, token, setPost, t) {
   return async function (dispatch) {
@@ -98,9 +98,24 @@ export function updatePost(obj, post_id, token) {
         obj,
         header(token)
       );
-      return dispatch(setUpdatePost(response.data));
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Post updated",
+          timer: 5000,
+          icon: "success",
+          showConfirmButton: true,
+          position: "center",
+        });
+      }
+      return dispatch(setUserProfile(response.data));
     } catch (error) {
-      return dispatch(setUpdatePost({ error: error.message }));
+      Swal.fire({
+        title: "Oops! Hubo un error:",
+        text: error.message,
+        icon: "error",
+        showConfirmButton: true,
+        position: "center",
+      });
     }
   };
 }
