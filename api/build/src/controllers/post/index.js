@@ -88,7 +88,7 @@ function handleUpdateRequest(req, res) {
                 throw new Error(`El id de la publicación y el id del usuario deben ser válidos.`);
             }
             const updateResponse = yield post_2.default.handleUpdatePost(post_id, req.body, user_id);
-            return res.status(updateResponse.status).send(updateResponse);
+            return res.status(updateResponse.status).send(updateResponse.userUpdated);
         }
         catch (error) {
             console.log(`Error en ruta PUT "/post/:_id. ${error.message}`);

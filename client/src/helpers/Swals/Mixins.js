@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   URL_U_PA_UPDATE_NAME,
   URL_U_PA_UPDATE_PROFILE_IMG,
+  URL_P_PO_CONTACT_USER,
 } from "../../constants/url";
 import { header } from "../../constants/header";
 import { setUserProfile } from "../../redux/features/user/userSlice";
@@ -95,10 +96,41 @@ const editUserProfileImgMX = (dispatch, token) => {
   });
 };
 
+const contactPostOwnerMX = (post_id, token, t) => {
+  return Swal.mixin({
+    title: t("postDetail.contactUser"),
+    inputAttributes: {
+      autocapitalize: "off",
+    },
+    text: t("postDetail.contactInfo"),
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonText: t("postDetail.contactButton"),
+    showLoaderOnConfirm: true,
+    preConfirm: async () => {
+      try {
+        let response = await axios.post(
+          URL_P_PO_CONTACT_USER + post_id,
+          {},
+          header(token)
+        );
+        if (response.status !== 202) {
+          throw new Error(t("postDetail.swalErrorMsg"));
+        }
+        return response?.data?.msg || "Request accepted. Check your email.";
+      } catch (error) {
+        Swal.showValidationMessage(`Request failed: ${error.message}`);
+      }
+    },
+    allowOutsideClick: () => !Swal.isLoading(),
+  });
+};
+
 const mixins = {
   editUserNameMX,
   editUserNameMX2,
   editUserProfileImgMX,
+  contactPostOwnerMX,
 };
 
 export default mixins;

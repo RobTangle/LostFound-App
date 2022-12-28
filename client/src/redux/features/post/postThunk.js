@@ -1,8 +1,4 @@
-import {
-  setSearchResults,
-  setPostDetail,
-  setContactPostOwner,
-} from "./postSlice";
+import { setSearchResults, setPostDetail } from "./postSlice";
 import axios from "axios";
 import {
   URL_P_D_DELETE_POST,
@@ -15,6 +11,7 @@ import { header } from "../../../constants/header";
 import Swal from "sweetalert2";
 import { getUserInfo } from "../user/userThunk";
 import { setUserProfile } from "../user/userSlice";
+import mixins from "../../../helpers/Swals/Mixins";
 
 export function createPost(post, token, setPost, t) {
   return async function (dispatch) {
@@ -84,6 +81,21 @@ export function fetchPostDetail(post_id, token) {
       );
       return dispatch(setPostDetail(response.data));
     } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: t("postDetail.swalErrorMsg"),
+        icon: "error",
+      });
+      return dispatch(setPostDetail({ error: error.message }));
+    }
+  };
+}
+
+export function resetPostDetail() {
+  return function (dispatch) {
+    try {
+      return dispatch(setPostDetail({ pure: true }));
+    } catch (error) {
       return dispatch(setPostDetail({ error: error.message }));
     }
   };
@@ -152,7 +164,7 @@ export function deletePost(post_id, token) {
 }
 
 export function contactPostOwner(post_id, token) {
-  return async function (dispatch) {
+  return async function () {
     try {
       let response = await axios.post(
         URL_P_PO_CONTACT + post_id,
@@ -164,8 +176,8 @@ export function contactPostOwner(post_id, token) {
             position: "center",
             icon: "success",
             title: "Processing request. Check your email inbox.",
-            showConfirmButton: false,
-            timer: 1500,
+            showConfirmButton: true,
+            timer: 5000,
           })
         : response.status >= 400 &&
           Swal.fire({
@@ -175,9 +187,32 @@ export function contactPostOwner(post_id, token) {
             showConfirmButton: false,
             timer: 1500,
           });
-      return dispatch(setContactPostOwner(response.data));
+      // return dispatch(setContactPostOwner(response.data));
     } catch (error) {
-      return dispatch(setContactPostOwner({ error: error.message }));
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `Ups! Something went wrong. ${error.message}`,
+        showConfirmButton: true,
+      });
     }
+  };
+}
+
+export function contactPostOwnerWithSwal(post_id, token, t) {
+  return async function () {
+    mixins
+      .contactPostOwnerMX(post_id, token, t)
+      .fire()
+      .then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: `Hecho! Chequea tu email!`,
+            icon: "success",
+            text: t("postDetail.swalConfirmedText"),
+            // imageUrl: result.value.avatar_url,
+          });
+        }
+      });
   };
 }

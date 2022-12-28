@@ -81,6 +81,7 @@ function handleUpdatePost(post_id, reqFromBody, user_id) {
             userPost: 0,
             postCollection: 0,
             total: 0,
+            userUpdated: {},
             msg: "",
             status: 200,
         };
@@ -108,9 +109,10 @@ function handleUpdatePost(post_id, reqFromBody, user_id) {
                 userPost.comments = validatedData.comments;
                 userPost.user_posting.additional_contact_info =
                     validatedData.additional_contact_info;
-                yield userInDB.save();
+                let userUpdated = yield userInDB.save();
                 response.userPost++;
                 response.total++;
+                response.userUpdated = userUpdated;
             }
         }
         catch (error) {
