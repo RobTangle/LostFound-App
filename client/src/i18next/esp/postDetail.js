@@ -12,4 +12,7 @@ export const postDetail = {
   swalConfirmedTitle: "¡Hecho! Chequea tu email",
   swalConfirmedText:
     "En los próximos minutos te llegará un email con los datos de contacto del usuario. Asegúrate de chequear tu casilla de spam.",
+  blurredImgNote:
+    "Hemos alterado la imágen a propósito para proteger la privacidad de los usuarios. La idea de la foto desenfocada es proveer una referencia al usuario que perdió su documento para que pueda chequear si la imágen se aproxima al documento que perdió.",
+  imageNotProvided: "El usuario no cargó una foto del documento.",
 };
