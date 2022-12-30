@@ -7,7 +7,7 @@ import { parseDateWithNoHours } from "../../helpers/dateParsers";
 import { deletePost } from "../../redux/features/post/postThunk";
 import { ButtonGroup } from "../ButtonGroup/ButtonGroup";
 
-import { visualizeImg } from "../../helpers/Swals/visualizeImg";
+import { openImage } from "../../helpers/Swals/visualizeImg";
 
 export function PostCardRow({ post }) {
   const { getAccessTokenSilently } = useAuth0();
@@ -22,7 +22,7 @@ export function PostCardRow({ post }) {
   }
 
   return (
-    <tr key={post._id}>
+    <tr key={Math.random()}>
       <td className="uppercase whitespace-nowrap px-4 py-2 font-medium text-gray-900">
         {post.name_on_doc}
       </td>
@@ -46,7 +46,7 @@ export function PostCardRow({ post }) {
         <img
           src={post.blurred_imgs[0] || IDicon80}
           alt="Doc image"
-          onClick={visualizeImg}
+          onClick={openImage}
           className="cursor-pointer"
         />
       </td>
@@ -55,6 +55,7 @@ export function PostCardRow({ post }) {
           post={post}
           id={post._id}
           handleDelete={handleDeletePost}
+          key={post._id}
         />
       </td>
     </tr>
