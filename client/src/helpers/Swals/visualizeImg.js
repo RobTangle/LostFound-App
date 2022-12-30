@@ -6,7 +6,8 @@ export function visualizeImg(e) {
     imageWidth: 300,
     imageHeight: 300,
     imageAlt: "Custom image",
-    showConfirmButton: false,
+    showConfirmButton: true,
     showCloseButton: true,
+    confirmButtonText: "Edit your profile image",
   });
 }
