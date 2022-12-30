@@ -11,3 +11,14 @@ export function visualizeImg(e) {
     confirmButtonText: "Edit your profile image",
   });
 }
+
+export function openImage(e) {
+  Swal.fire({
+    imageUrl: e.target.src,
+    imageWidth: 300,
+    imageHeight: 300,
+    imageAlt: "Custom image",
+    showCloseButton: true,
+    showConfirmButton: false,
+  });
+}

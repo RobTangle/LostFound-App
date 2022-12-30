@@ -7,7 +7,7 @@ import { parseDateWithNoHours } from "../../helpers/dateParsers";
 import { deletePost } from "../../redux/features/post/postThunk";
 import { ButtonGroup } from "../ButtonGroup/ButtonGroup";
 
-import { visualizeImg } from "../../helpers/Swals/visualizeImg";
+import { openImage } from "../../helpers/Swals/visualizeImg";
 
 export function PostCardRow({ post }) {
   const { getAccessTokenSilently } = useAuth0();
@@ -46,7 +46,7 @@ export function PostCardRow({ post }) {
         <img
           src={post.blurred_imgs[0] || IDicon80}
           alt="Doc image"
-          onClick={visualizeImg}
+          onClick={openImage}
           className="cursor-pointer"
         />
       </td>
