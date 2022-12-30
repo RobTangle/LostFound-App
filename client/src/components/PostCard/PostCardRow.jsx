@@ -22,7 +22,7 @@ export function PostCardRow({ post }) {
   }
 
   return (
-    <tr key={post._id}>
+    <tr key={Math.random()}>
       <td className="uppercase whitespace-nowrap px-4 py-2 font-medium text-gray-900">
         {post.name_on_doc}
       </td>
@@ -55,6 +55,7 @@ export function PostCardRow({ post }) {
           post={post}
           id={post._id}
           handleDelete={handleDeletePost}
+          key={post._id}
         />
       </td>
     </tr>
