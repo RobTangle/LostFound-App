@@ -63,6 +63,7 @@ const editUserProfileImgMX = (dispatch, token) => {
     showLoaderOnConfirm: true,
     preConfirm: async (input) => {
       try {
+        if (!input) throw new Error("You didn't select any file.");
         //cloudinary:
         const image = input;
         // console.log(typeof image);
@@ -126,11 +127,21 @@ const contactPostOwnerMX = (post_id, token, t) => {
   });
 };
 
+export const swalErrorMX = (errorMessage) => {
+  Swal.mixin({
+    title: t("swalMixins.swalErrorMXTitle"),
+    text: errorMessage,
+    icon: "error",
+    showConfirmButton: true,
+  });
+};
+
 const mixins = {
   editUserNameMX,
   editUserNameMX2,
   editUserProfileImgMX,
   contactPostOwnerMX,
+  swalErrorMX,
 };
 
 export default mixins;
