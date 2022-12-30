@@ -1,76 +1,95 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getUserInfo } from "../redux/features/user/userThunk";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useSelector, useDispatch } from "react-redux";
-import Navbar from "../components/NavBar/Navbar";
+import { useNavigate } from "react-router-dom";
+// components:
 import Footer from "../components/Footer/Footer";
-
-import accessTokenName from "../constants/accessToken";
+import Navbar from "../components/NavBar/Navbar";
 import SubscriptionForm from "../components/SubscriptionForm/SubscriptionForm";
 import { Subscriptions } from "../components/subscriptionCard/Subscriptions";
 import PostForm from "../components/PostForm/PostForm";
 import { UserPosts } from "../components/PostCard/UserPosts";
 import { SearchComp } from "../components/SearchComp/SearchComp";
+//reducer:
 import {
   editUserNameWithSwal,
   editUserProfileImgWithSwal,
 } from "../redux/features/user/userThunk";
-
-import { visualizeImg } from "../helpers/Swals/visualizeImg";
+import { getUserInfo } from "../redux/features/user/userThunk";
+//helpers:
+import { visualizeImgAndEditOptionWithSwal } from "../helpers/Swals/helperFunctionsWithSwal";
+import { swalErrorMX } from "../helpers/Swals/Mixins";
 
 export const Profile = () => {
-  const { user, getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, isLoading, isAuthenticated } = useAuth0();
   const userProfile = useSelector((state) => state.user.userProfile);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   const [tab, setTab] = useState({
     link1: true,
     link2: false,
     link3: false,
-    link4: false,
-    link5: false,
+    // link4: false,
+    // link5: false,
   });
 
   useEffect(() => {
-    async function getTokenAndDispatchGetUserInfo() {
-      let accessToken = localStorage.getItem(accessTokenName);
+    console.log("Use effect de Profile");
+
+    async function getToken() {
+      console.log("obteniendo getAccessTokenSilently....");
+      let accessToken = await getAccessTokenSilently();
+      console.log("accessToken... = ", accessToken);
       if (!accessToken) {
         console.log(
-          "AccessToken no encontrado en localStorage. Usando getAccessTokenSilently Hook..."
+          "El token no existe, adentro de getToken(). Navegando al landing..."
         );
-        accessToken = await getAccessTokenSilently();
+        return navigate("/");
+      } else {
+        console.log("existe el accessToken. Despachando getUserInfo.......");
+        dispatch(getUserInfo(accessToken));
       }
-      dispatch(getUserInfo(accessToken));
     }
-    if (!userProfile.email) {
-      console.log("!userProfile. Invocando getTokenAndDispatchGetUserInfo()");
-      getTokenAndDispatchGetUserInfo();
+
+    if (!isLoading && !isAuthenticated) {
+      console.log(
+        "No está cargando y no está autenticado. Redirigir a navigate('/'')"
+      );
+      return navigate("/");
     }
-    console.log("El userProfile existe...");
-  }, []);
+
+    if (!isLoading && isAuthenticated) {
+      console.log("No está cargando y SÍ ESTÁ AUTENTICADO. getToken()");
+      getToken();
+    }
+  }, [isLoading]);
+
+  async function handleVisualizeImgAndEditOption() {
+    try {
+      const accessToken = await getAccessTokenSilently();
+      const userImageURL = userProfile?.profile_img;
+      visualizeImgAndEditOptionWithSwal(
+        userImageURL,
+        dispatch,
+        editUserProfileImgWithSwal,
+        accessToken
+      );
+    } catch (error) {
+      swalErrorMX(error?.message);
+    }
+  }
 
   async function handleEditName() {
     try {
-      const accessToken = localStorage.getItem(accessTokenName);
+      // const accessToken = localStorage.getItem(accessTokenName);
+      const accessToken = await getAccessTokenSilently();
       dispatch(editUserNameWithSwal(accessToken));
     } catch (error) {
       console.log(error.message);
     }
   }
-
-  async function handleEditProfileImg() {
-    try {
-      const accessToken = localStorage.getItem(accessTokenName);
-      dispatch(editUserProfileImgWithSwal(accessToken));
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  console.log("user =", user);
-  console.log("userProfile = ", userProfile);
 
   return (
     <div>
@@ -83,12 +102,26 @@ export const Profile = () => {
                 src={userProfile?.profile_img}
                 alt="user image"
                 className="self-center flex-shrink-0 w-24 h-24 mb-4 bg-center bg-cover rounded-full bg-gray-500 cursor-pointer"
-                onClick={visualizeImg}
+                onClick={handleVisualizeImgAndEditOption}
               />
-              <p className="text-xl font-semibold leading-tight">
+              <p className="cursor-text text-xl font-semibold leading-tight">
                 {userProfile?.name}
               </p>
               <p className="text-gray-400">{userProfile?.email}</p>
+              <p>
+                <button
+                  className="ml-5 bg-gray-200 hover:bg-blue hover:text-white px-3 border-b-1 border-blue py-2 text-slate-400 transition-all duration-300"
+                  onClick={handleEditName}
+                >
+                  Change name
+                </button>
+                <button
+                  className="ml-5 bg-gray-200 hover:bg-blue hover:text-white px-3 border-b-1 border-blue py-2 text-slate-400 transition-all duration-300"
+                  onClick={handleVisualizeImgAndEditOption}
+                >
+                  Change picture
+                </button>
+              </p>
             </div>
           </div>
         </div>
@@ -97,9 +130,9 @@ export const Profile = () => {
             href="#1"
             id="1"
             className={
-              tab.link1
-                ? "-mb-px border-b border-current p-4 text-indigo-500"
-                : "-mb-px border-b border-transparent p-4 gover:text-indigo-500"
+              !tab.link1
+                ? "-mb-px border-b border-transparent p-4 hover:text-indigo-500"
+                : "-mb-px border-b border-current p-4 text-indigo-500"
             }
             onClick={() =>
               setTab({
@@ -107,8 +140,8 @@ export const Profile = () => {
                 link1: true,
                 link2: false,
                 link3: false,
-                link4: false,
-                link5: false,
+                // link4: false,
+                // link5: false,
               })
             }
           >
@@ -129,14 +162,13 @@ export const Profile = () => {
                 link1: false,
                 link2: true,
                 link3: false,
-                link4: false,
-                link5: false,
+                // link4: false,
+                // link5: false,
               })
             }
           >
             {t("profile.link2")}
           </a>
-
           <a
             href="#3"
             id="3"
@@ -151,79 +183,14 @@ export const Profile = () => {
                 link1: false,
                 link2: false,
                 link3: true,
-                link4: false,
-                link5: false,
+                // link4: false,
+                // link5: false,
               })
             }
           >
             {t("profile.link3")}
           </a>
-          <a
-            href="#4"
-            id="4"
-            className={
-              !tab.link4
-                ? "-mb-px border-b border-transparent p-4 hover:text-indigo-500"
-                : "-mb-px border-b border-current p-4 text-indigo-500"
-            }
-            onClick={() =>
-              setTab({
-                ...tab,
-                link1: false,
-                link2: false,
-                link3: false,
-                link4: true,
-                link5: false,
-              })
-            }
-          >
-            {t("profile.link4")}
-          </a>
-          <a
-            href="#5"
-            id="5"
-            className={
-              !tab.link5
-                ? "-mb-px border-b border-transparent p-4 hover:text-indigo-500"
-                : "-mb-px border-b border-current p-4 text-indigo-500"
-            }
-            onClick={() =>
-              setTab({
-                ...tab,
-                link1: false,
-                link2: false,
-                link3: false,
-                link4: false,
-                link5: true,
-              })
-            }
-          >
-            {t("profile.link5")}
-          </a>
         </nav>
-
-        <div hidden={!tab.link1} className="border border-indigo-200 mx-auto">
-          <h1>GENERAL</h1>
-          <div>
-            <h3>Editar profile name :</h3>
-            <div>
-              <button
-                className="bg-green w-fit text-white px-3 py-2 rounded-md"
-                onClick={handleEditName}
-              >
-                Edit name
-              </button>
-            </div>
-            <div>
-              <button
-                className="bg-green w-fit text-white px-3 py-2 rounded-md my-1"
-                onClick={handleEditProfileImg}
-              >
-                Edit profile image
-              </button>
-            </div>
-          </div>
-        </div>
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">
           <PostForm />
           <div>You have {userProfile?.posts?.length} posts</div>
@@ -231,13 +198,8 @@ export const Profile = () => {
         </div>
         <div hidden={!tab.link3} className="border border-indigo-200 mx-auto">
           <SearchComp />
-          {/* <SearchForm /> */}
         </div>
-        <div hidden={!tab.link4} className="border border-indigo-200 mx-auto">
-          <div>You have {userProfile?.posts?.length} posts</div>
-          <UserPosts />
-        </div>
-        <div hidden={!tab.link5} className="border border-indigo-200 mx-auto">
+        <div hidden={!tab.link1} className="border border-indigo-200 mx-auto">
           <SubscriptionForm />
           <div>
             You have {userProfile?.subscriptions?.length || 0} subscriptions
