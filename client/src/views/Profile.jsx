@@ -202,7 +202,10 @@ export const Profile = () => {
         <div hidden={!tab.link1} className="border border-indigo-200 mx-auto">
           <SubscriptionForm />
           <div>
-            You have {userProfile?.subscriptions?.length || 0} subscriptions
+            <h3 className=" text-black text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2">
+              {t("profile.yourSubscriptions")}
+            </h3>
+            {/* You have {userProfile?.subscriptions?.length || 0} subscriptions */}
           </div>
           <div>
             <Subscriptions />

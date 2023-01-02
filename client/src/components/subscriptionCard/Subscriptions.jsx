@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
 import { SubscriptionsCards } from "./SubscriptionsCards";
+import { useTranslation } from "react-i18next";
 
 export function Subscriptions() {
+  const { t } = useTranslation();
   const userSubscriptions = useSelector(
     (state) => state.user?.userProfile?.subscriptions
   );
@@ -10,7 +12,7 @@ export function Subscriptions() {
     <>
       {Array.isArray(userSubscriptions) && userSubscriptions.length === 0 ? (
         <div>
-          <h3>No tiene subscripciones</h3>
+          <h3>{t("profile.noSubscriptions")}</h3>
         </div>
       ) : null}
       {Array.isArray(userSubscriptions) && userSubscriptions.length > 0 ? (
