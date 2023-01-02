@@ -9,6 +9,7 @@ import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
 import Swal from "sweetalert2";
+import { swalFoundTipsMX } from "../../helpers/Swals/Mixins";
 
 const PostForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -78,6 +79,11 @@ const PostForm = () => {
     }
   };
 
+  function openModalWithFoundTips() {
+    swalFoundTipsMX(t);
+    // swal fire(t)
+  }
+
   useEffect(() => {
     !countries.length && dispatch(getCountries(currentLang));
   }, [dispatch]);
@@ -90,6 +96,12 @@ const PostForm = () => {
         </h1>
         <p className=" text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2">
           {t("postForm.subtitle")}
+        </p>
+        <p
+          onClick={openModalWithFoundTips}
+          className="cursor-pointer text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2"
+        >
+          {t("postForm.readTheTips")}
         </p>
       </div>
       <form

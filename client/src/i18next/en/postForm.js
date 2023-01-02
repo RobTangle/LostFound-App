@@ -10,6 +10,7 @@ export const postForm = {
   numberSubLabel: "of the document found",
   selectCountry: "Select a country",
   title: "Found some documents?",
+  readTheTips: "Make sure to read these tips before you create a new post!",
   commentsPlaceHolder: "Insert any relevant comments here",
   commentsLabel: "Comments",
   additional_contact_info_label: "ADDITIONAL CONTACT INFORMATION",

@@ -136,6 +136,34 @@ export const swalErrorMX = (errorMessage) => {
   });
 };
 
+export const swalFoundTipsMX = (t) => {
+  Swal.mixin({
+    title: "Tips",
+    html: `
+      <ul>
+      <li> - 
+      ${t("home.foundTips1")}
+      </li> 
+      <li> - 
+      ${t("home.foundTips2")}
+      </li> 
+      <li> - 
+      ${t("home.foundTips3")}
+      </li> 
+      <li> - 
+      ${t("home.foundTips4")}
+      </li> 
+      <li> - 
+      ${t("home.foundTips5")}
+      </li> 
+      </ul>
+      `,
+    showCloseButton: true,
+    showConfirmButton: true,
+    confirmButtonText: t("searchForm.confirmButtonTips"),
+  }).fire();
+};
+
 export const swalLostTipsMX = (t) => {
   Swal.mixin({
     title: "Tips",

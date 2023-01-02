@@ -3,7 +3,7 @@ export const searchForm = {
   dateLabel: "Date you lost them",
   nameLabel: "Complete Name",
   namePlaceholder: "John Adam Williams",
-  readTheTips: "Make sure to read these tips before you create a new post!",
+  readTheTips: "Make sure to read these tips before you search!",
   numberPlaceholder: "230.002.931 / AR-00391/221",
   numberLabel: "ID / Card number",
   title: "Lost your documents?",

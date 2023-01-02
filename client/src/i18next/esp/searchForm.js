@@ -3,7 +3,7 @@ export const searchForm = {
   namePlaceholder: "Juan Pérez",
   numberLabel: "DNI / Número de Tarjeta",
   numberPlaceholder: "Solo números son permitidos",
-  readTheTips: "Make sure to read this important tips before posting!",
+  readTheTips: "¡Asegúrate de leer estos tips antes de buscar!",
   countryLabel: "País donde los perdiste",
   dateLabel: "Fecha en que lo extravió",
   title: "Perdiste documentos importantes?",
