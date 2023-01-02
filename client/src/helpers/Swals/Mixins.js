@@ -137,7 +137,6 @@ export const swalErrorMX = (errorMessage) => {
 };
 
 export const swalLostTipsMX = (t) => {
-  console.log("Invocando swalLostTipsMX!!!!!!!");
   Swal.mixin({
     title: "Tips",
     html: `
