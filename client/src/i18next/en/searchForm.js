@@ -3,6 +3,7 @@ export const searchForm = {
   dateLabel: "Date you lost them",
   nameLabel: "Complete Name",
   namePlaceholder: "John Adam Williams",
+  readTheTips: "Make sure to read these tips before you search!",
   numberPlaceholder: "230.002.931 / AR-00391/221",
   numberLabel: "ID / Card number",
   title: "Lost your documents?",
@@ -12,4 +13,5 @@ export const searchForm = {
   errorNameInvalid: "Invalid name. Please, enter the name on the document.",
   errorNumberInvalid:
     "Invalid number on document. Please, enter the number on the document or leave the input empty.",
+  confirmButtonTips: "GOT IT!",
 };

@@ -10,6 +10,8 @@ export const postForm = {
   dateLabel: "Fecha en que lo encontró",
   selectCountry: "Seleccion un país",
   title: "Encontraste documentos?",
+  readTheTips:
+    "¡Asegúrate de leer estos tips antes de crear una nueva publicación!",
   commentsLabel: "Comentarios",
   commentsPlaceHolder: "Comentarios relevantes",
   additional_contact_info_label: "INFORMACIÓN DE CONTACTO ADICIONAL",

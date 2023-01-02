@@ -128,12 +128,68 @@ const contactPostOwnerMX = (post_id, token, t) => {
 };
 
 export const swalErrorMX = (errorMessage) => {
-  Swal.mixin({
+  return Swal.mixin({
     title: t("swalMixins.swalErrorMXTitle"),
     text: errorMessage,
     icon: "error",
     showConfirmButton: true,
   });
+};
+
+export const swalFoundTipsMX = (t) => {
+  Swal.mixin({
+    title: "Tips",
+    html: `
+      <ul>
+      <li> - 
+      ${t("home.foundTips1")}
+      </li> 
+      <li> - 
+      ${t("home.foundTips2")}
+      </li> 
+      <li> - 
+      ${t("home.foundTips3")}
+      </li> 
+      <li> - 
+      ${t("home.foundTips4")}
+      </li> 
+      <li> - 
+      ${t("home.foundTips5")}
+      </li> 
+      </ul>
+      `,
+    showCloseButton: true,
+    showConfirmButton: true,
+    confirmButtonText: t("searchForm.confirmButtonTips"),
+  }).fire();
+};
+
+export const swalLostTipsMX = (t) => {
+  Swal.mixin({
+    title: "Tips",
+    html: `
+      <ul>
+      <li> - 
+      ${t("home.lostTips1")}
+      </li> 
+      <li> - 
+      ${t("home.lostTips2")}
+      </li> 
+      <li> - 
+      ${t("home.lostTips3")}
+      </li> 
+      <li> - 
+      ${t("home.lostTips4")}
+      </li> 
+      <li> - 
+      ${t("home.lostTips5")}
+      </li> 
+      </ul>
+      `,
+    showCloseButton: true,
+    showConfirmButton: true,
+    confirmButtonText: t("searchForm.confirmButtonTips"),
+  }).fire();
 };
 
 const mixins = {
@@ -142,6 +198,7 @@ const mixins = {
   editUserProfileImgMX,
   contactPostOwnerMX,
   swalErrorMX,
+  swalLostTipsMX,
 };
 
 export default mixins;
