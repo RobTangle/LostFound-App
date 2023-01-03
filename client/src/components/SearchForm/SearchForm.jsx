@@ -77,7 +77,7 @@ const SearchForm = () => {
           onClick={openModalWithLostTips}
           className="cursor-pointer text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2"
         >
-          {t("searchForm.readTheTips")}
+          👉 {t("searchForm.readTheTips")}
         </p>
       </div>
       <form

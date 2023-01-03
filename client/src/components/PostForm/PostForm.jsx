@@ -101,7 +101,7 @@ const PostForm = () => {
           onClick={openModalWithFoundTips}
           className="cursor-pointer text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2"
         >
-          {t("postForm.readTheTips")}
+          👉 {t("postForm.readTheTips")}
         </p>
       </div>
       <form
