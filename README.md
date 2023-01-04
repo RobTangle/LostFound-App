@@ -5,6 +5,10 @@ Lost your ID or passport? Found a credit card or driver license? You can now pos
 
 <!--suggest you can post id you found or find your lost id -->
 
+## Swagger
+
+API documentation endpoint: "https://{backEndURL}/api-docs"
+
 ## Stack
 
 - [MongoDB](https://www.mongodb.com/es)
