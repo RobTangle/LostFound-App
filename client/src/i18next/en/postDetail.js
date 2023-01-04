@@ -16,4 +16,5 @@ export const postDetail = {
   blurredImgNote:
     "We purposely blurr the picture to protect user's privacy. This picture is meant to be a reference so user's can check if the document looks matches the one they lost.",
   imageNotProvided: "The user didn't provide a picture of the document.",
+  isUsersPostText: "💡 You can edit your post from your profile console.",
 };

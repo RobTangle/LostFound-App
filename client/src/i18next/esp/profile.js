@@ -5,4 +5,8 @@ export const profile = {
   searchResultsTitle: "Resultados de búsqueda ",
   searchMatches: "Publicaciones encontradas: ",
   nothingFound: "No se encontraron coincidencias.",
+  yourSubscriptions: "Tus suscripciones",
+  noSubscriptions: "No tienes suscripciones.",
+  yourPosts: "Tus publicaciones",
+  noPosts: "No tienes publicaciones",
 };

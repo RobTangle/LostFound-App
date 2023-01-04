@@ -7,4 +7,6 @@ export const profile = {
   nothingFound: "There are no matches.",
   noSubscriptions: "You don't have any subscriptions.",
   yourSubscriptions: "Your subscriptions",
+  yourPosts: "Your posts",
+  noPosts: "You don't have any posts",
 };

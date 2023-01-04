@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { parseDateWithNoHours } from "../../helpers/dateParsers";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { contactPostOwnerWithSwal } from "../../redux/features/post/postThunk";
 import accessTokenName from "../../constants/accessToken";
 
 export function PostDetail({ post }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const userProfileState = useSelector((state) => state.user.userProfile);
 
   function handleContactPostOwner(e) {
     e.preventDefault();
@@ -64,24 +65,32 @@ export function PostDetail({ post }) {
               <div className="group relative mt-4">
                 <p>{post?.comments || t("postDetail.commentsIfUndefined")}</p>
               </div>
-              <form className="mt-8" onSubmit={handleContactPostOwner}>
-                <fieldset>
-                  {/* <legend className="mb-1 text-sm font-medium">
+              {post?.user_posting?._id === userProfileState?._id ? (
+                <div className="pt-5">
+                  <span className=" p-3">
+                    {t("postDetail.isUsersPostText")}
+                  </span>
+                </div>
+              ) : (
+                <form className="mt-8" onSubmit={handleContactPostOwner}>
+                  <fieldset>
+                    {/* <legend className="mb-1 text-sm font-medium">
                     {t("postDetail.contactUser")}
                   </legend> */}
 
-                  <div className="flow-root">
-                    <div className="-m-0.5">
-                      <div>
-                        <p>{t("postDetail.contactUserText")}</p>
+                    <div className="flow-root">
+                      <div className="-m-0.5">
+                        <div>
+                          <p>{t("postDetail.contactUserText")}</p>
+                        </div>
+                        <button className="w-1/3 bg-gray-200 hover:bg-green hover:text-white px-3 border-b-2 border-green py-2 text-slate-500 transition-all duration-300">
+                          {t("postDetail.contactButton")}
+                        </button>
                       </div>
-                      <button className="w-1/3 bg-gray-200 hover:bg-green hover:text-white px-3 border-b-2 border-green py-2 text-slate-500 transition-all duration-300">
-                        {t("postDetail.contactButton")}
-                      </button>
                     </div>
-                  </div>
-                </fieldset>
-              </form>
+                  </fieldset>
+                </form>
+              )}
             </div>
           </div>
         </div>
