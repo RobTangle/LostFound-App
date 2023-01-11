@@ -1,6 +1,6 @@
 export const contact = {
     title: "CONTACT",
-    subtitle: "Under construction",
-    homeBtn: "Return Home Page",
+    subtitle: "UNDER CONSTRUCTION",
+    homeBtn: "Return to Home Page",
   };
   
