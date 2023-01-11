@@ -1,5 +1,5 @@
 export const us = {
-    title: "Why Us?",
-    subtitle: "Under Construction",
-    homeBtn: "Return home page",
+    title: "WHY US?",
+    subtitle: "UNDER CONSTRUCTION",
+    homeBtn: "Return to Home Page",
 };
