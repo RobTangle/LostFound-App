@@ -1,7 +1,12 @@
 export const profile = {
-  link1: "General",
-  link2: "Publicar",
+  link1: "Suscripciones",
+  link2: "Publicaciones",
   link3: "Buscar",
-  link4: "Tus Publicaciones",
-  link5: "Tus Suscripciones",
+  searchResultsTitle: "Resultados de búsqueda ",
+  searchMatches: "Publicaciones encontradas: ",
+  nothingFound: "No se encontraron coincidencias.",
+  yourSubscriptions: "Tus suscripciones",
+  noSubscriptions: "No tienes suscripciones.",
+  yourPosts: "Tus publicaciones",
+  noPosts: "No tienes publicaciones",
 };

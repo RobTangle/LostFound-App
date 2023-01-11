@@ -9,6 +9,7 @@ import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
 import { useAuth0 } from "@auth0/auth0-react";
 import Swal from "sweetalert2";
 import { validAttr } from "../../helpers/validAttributesObj";
+import { swalLostTipsMX } from "../../helpers/Swals/Mixins";
 
 const SearchForm = () => {
   const countries = useSelector((state) => state.user.countries);
@@ -33,6 +34,10 @@ const SearchForm = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  function openModalWithLostTips() {
+    swalLostTipsMX(t);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,6 +72,12 @@ const SearchForm = () => {
         </h1>
         <p className=" text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2">
           {t("searchForm.subtitle")}
+        </p>
+        <p
+          onClick={openModalWithLostTips}
+          className="cursor-pointer text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2"
+        >
+          👉 {t("searchForm.readTheTips")}
         </p>
       </div>
       <form

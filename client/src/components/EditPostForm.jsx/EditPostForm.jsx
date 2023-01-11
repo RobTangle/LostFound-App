@@ -3,30 +3,27 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
-import { createPost } from "../../redux/features/post/postThunk";
 import { postFormValidator } from "../../helpers/post-form-validator";
 import { validAttr } from "../../helpers/validAttributesObj";
 import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
-import { useAuth0 } from "@auth0/auth0-react";
 import Swal from "sweetalert2";
-import { swalFoundTipsMX } from "../../helpers/Swals/Mixins";
+import accessTokenName from "../../constants/accessToken";
+import { updatePost } from "../../redux/features/post/postThunk";
 
-const PostForm = () => {
+export const EditPostForm = ({ postToEdit, closeModal }) => {
   const countries = useSelector((state) => state.user.countries);
-  const results = useSelector((state) => state.post.searchResults);
-  const newPost = useSelector((state) => state.post.newPost);
   const dispatch = useDispatch();
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
-  const { getAccessTokenSilently } = useAuth0();
   const [post, setPost] = useState({
-    name_on_doc: "",
-    number_on_doc: "",
-    country_found: "",
-    date_found: "",
-    blurred_imgs: [],
-    comments: "",
-    additional_contact_info: "",
+    name_on_doc: postToEdit.name_on_doc,
+    number_on_doc: postToEdit.number_on_doc || "",
+    country_found: postToEdit.country_found || "",
+    date_found: postToEdit.date_found.split("T")[0] || "",
+    blurred_imgs: postToEdit.blurred_imgs || [],
+    comments: postToEdit.comments || "",
+    additional_contact_info:
+      postToEdit.user_posting.additional_contact_info || "",
   });
 
   const maxDateAllowed = parseDateToSetMaxDate();
@@ -41,7 +38,6 @@ const PostForm = () => {
   //CLOUDINARY-------------------------------------
   const handleImage = async (e) => {
     const image = e.target.files[0];
-    // console.log(typeof image);
     const data = new FormData();
     data.append("file", image);
     data.append("upload_preset", "ilrqfhcn");
@@ -61,6 +57,7 @@ const PostForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("POST TO VALIDATE =", post);
     const validation = postFormValidator(post, t);
     if (validation.error) {
       console.log(`Error en la validación: ${validation.error}`);
@@ -73,16 +70,12 @@ const PostForm = () => {
       });
     }
     if (validation === true) {
-      const accessToken = await getAccessTokenSilently();
+      let accessToken = localStorage.getItem(accessTokenName);
+      // const accessToken = await getAccessTokenSilently();
       console.log("Despachando createPost !", post);
-      dispatch(createPost(post, accessToken, setPost, t));
+      dispatch(updatePost(post, postToEdit._id, accessToken));
     }
   };
-
-  function openModalWithFoundTips() {
-    swalFoundTipsMX(t);
-    // swal fire(t)
-  }
 
   useEffect(() => {
     !countries.length && dispatch(getCountries(currentLang));
@@ -92,16 +85,10 @@ const PostForm = () => {
     <div className="grid md:flex font-sans">
       <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-blue">
         <h1 className="text-2xl text-white md:text-5xl md:mt-6 md:ml-8 w-full text-center md:text-start p-2 md:p-0 lg:w-3/4">
-          {t("postForm.title")}
+          {t("postForm.editTitle")}
         </h1>
         <p className=" text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2">
-          {t("postForm.subtitle")}
-        </p>
-        <p
-          onClick={openModalWithFoundTips}
-          className="cursor-pointer text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2"
-        >
-          👉 {t("postForm.readTheTips")}
+          {t("postForm.editSubtitle")}
         </p>
       </div>
       <form
@@ -167,11 +154,14 @@ const PostForm = () => {
               <select
                 className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-state"
+                value={post.country_found}
                 name="country_found"
                 required
                 onChange={handleChange}
               >
-                <option value="">{t("postForm.selectCountry")}</option>
+                <option value={post.country_found}>
+                  {t("postForm.selectCountry")}
+                </option>
                 {countries.length &&
                   countries.map((c) => (
                     <option value={c[0]} key={c[0]}>
@@ -203,6 +193,7 @@ const PostForm = () => {
               type="date"
               required
               min="1971-01-01"
+              value={post.date_found}
               max={maxDateAllowed}
               name="date_found"
               onChange={handleChange}
@@ -264,14 +255,18 @@ const PostForm = () => {
             onChange={handleChange}
           />
         </div>
-        <div className="w-full lg:w-1/2 px-3 mt-2">
-          <button className="w-full bg-gray-200 hover:bg-blue hover:text-white px-3 border-b-2 border-blue py-2 text-slate-500 transition-all duration-300">
-            {t("postForm.submitButton")}
+        <div className="flex w-full lg:w-1/2 px-3 mt-2">
+          <button className="w-1/2 bg-gray-200 hover:bg-blue hover:text-white px-3 border-b-2 border-blue py-2 text-slate-500 transition-all duration-300">
+            {t("postForm.editSubmitButton")}
+          </button>
+          <button
+            onClick={closeModal}
+            className="w-1/3 ml-5 bg-gray-200 hover:bg-blue hover:text-white px-3 border-b-2 border-blue py-2 text-slate-500 transition-all duration-300"
+          >
+            {t("postForm.editCloseButton")}
           </button>
         </div>
       </form>
     </div>
   );
 };
-
-export default PostForm;

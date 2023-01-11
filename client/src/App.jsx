@@ -1,5 +1,18 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Landing, Home, Register, Search, Found, Profile, Error404, About, Services, Us, Contact } from "./views";
+import {
+  Landing,
+  Home,
+  Register,
+  Search,
+  Found,
+  Profile,
+  Error404,
+  About,
+  Services,
+  Us,
+  Contact,
+  Detail,
+} from "./views";
 import SubscriptionForm from "./components/SubscriptionForm/SubscriptionForm";
 import ProxyProgressBar from './components/ProxyProgressBar/ProxyProgressBar';
 
@@ -19,6 +32,7 @@ function App() {
         <Route path="/us" element={<ProxyProgressBar componentToPassDown={<Us />}/>} />
         <Route path="/contact" element={<ProxyProgressBar componentToPassDown={<Contact />}/>} />
         <Route path="*" element={<ProxyProgressBar componentToPassDown={<Error404 />}/>} />
+        <Route path="/postdetail/:post_id" element={<ProxyProgressBar componentToPassDown={<Detail />}/>} />
       </Routes>
     </BrowserRouter>
   );

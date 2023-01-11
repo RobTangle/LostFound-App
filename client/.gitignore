@@ -25,3 +25,6 @@ dist-ssr
 
 # ignore package-lock.json
 package-lock.json
+
+# ignore .env
+.env

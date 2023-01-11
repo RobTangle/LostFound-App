@@ -10,6 +10,7 @@ export const postForm = {
   numberSubLabel: "of the document found",
   selectCountry: "Select a country",
   title: "Found some documents?",
+  readTheTips: "Make sure to read these tips before you create a new post!",
   commentsPlaceHolder: "Insert any relevant comments here",
   commentsLabel: "Comments",
   additional_contact_info_label: "ADDITIONAL CONTACT INFORMATION",
@@ -19,6 +20,11 @@ export const postForm = {
     "Contact information (beside your email)",
   subtitle: "Complete the fields to create an announcement",
   submitButton: "Submit",
+  //edit post form:
+  editTitle: "Edit post",
+  editSubtitle: "Edit the fields you want to change",
+  editSubmitButton: "Save changes",
+  editCloseButton: "Close",
   // errors:
   errorNameAndNumberFalsy:
     "You must enter the full name on the document and/or the number on the document.",

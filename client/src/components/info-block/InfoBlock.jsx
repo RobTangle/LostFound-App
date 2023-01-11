@@ -18,8 +18,8 @@ export default function InfoBlock({
     open: { rotate: 0 },
   };
   const containerGrowsVariants = {
-    unselected: { color:'#000' },
-    selected: { color:'#fff'  },
+    unselected: { color: "#000" },
+    selected: { color: "#fff" },
   };
   const { width } = useWindowDimensions();
 
@@ -30,7 +30,8 @@ export default function InfoBlock({
       initial="hidden"
       whileInView="visible"
       exit="hidden"
-      viewport={{ once: true, amount: 0.8 }}>
+      viewport={{ once: true, amount: 0.8 }}
+    >
       <div className="font-sans flex flex-col ">
         <div className="grid grid-cols-1  mt-8 md:mt-16 md:flex md:gap-12 mx-5 md:mx-0 ">
           <AccordionBlock
@@ -50,6 +51,8 @@ export default function InfoBlock({
               text1={t("home.lostTips1")}
               text2={t("home.lostTips2")}
               text3={t("home.lostTips3")}
+              text4={t("home.lostTips4")}
+              text5={t("home.lostTips5")}
             />
           )}
 
@@ -70,27 +73,33 @@ export default function InfoBlock({
               text1={t("home.foundTips1")}
               text2={t("home.foundTips2")}
               text3={t("home.foundTips3")}
+              text4={t("home.foundTips4")}
+              text5={t("home.foundTips5")}
             />
           )}
         </div>
-        {width > 640 && (!foundTip ? (<AccordionExpandedText
+        {width > 640 &&
+          (!foundTip ? (
+            <AccordionExpandedText
               hiddenProp={foundTip}
               mainColor="bg-blue"
               text1={t("home.foundTips1")}
               text2={t("home.foundTips2")}
               text3={t("home.foundTips3")}
-            />): (<AccordionExpandedText
+              text4={t("home.foundTips4")}
+              text5={t("home.foundTips5")}
+            />
+          ) : (
+            <AccordionExpandedText
               hiddenProp={lostTip}
               mainColor="bg-green"
               text1={t("home.lostTips1")}
               text2={t("home.lostTips2")}
               text3={t("home.lostTips3")}
-            />))}
-
-
-
-
-
+              text4={t("home.lostTips4")}
+              text5={t("home.lostTips5")}
+            />
+          ))}
       </div>
     </motion.section>
   );
