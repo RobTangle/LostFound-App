@@ -14,7 +14,7 @@ const ProxyProgressBar = ({ componentToPassDown }) => {
       className: "bar-of-progress",
       // How many milliseconds to wait before the progress bar
       // animation starts after calling .start().
-      delay: 0,
+      delay: 80,
   });
 
   progress.start();
