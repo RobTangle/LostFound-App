@@ -38,7 +38,6 @@ export const SubscriptionEditForm = ({ subscription }) => {
     e.preventDefault();
     const validation = subscriptionFormValidator(suscription, t);
     if (validation.error) {
-      console.log(`Error en la validación: ${validation.error}`);
       errorMessage = validation.error;
       // RENDER ERROR MESSAGE
       Swal.fire({
@@ -52,12 +51,8 @@ export const SubscriptionEditForm = ({ subscription }) => {
     if (validation === true) {
       let accessToken = localStorage.getItem(accessTokenName);
       if (!accessToken) {
-        console.log(
-          "AccessToken no encontrado en localStorage. Usando getAccessTokenSilently Hook..."
-        );
         accessToken = await getAccessTokenSilently();
       }
-      console.log("Despachando editSuscription !", suscription);
       dispatch(
         editSubscription(
           suscription,
@@ -67,18 +62,13 @@ export const SubscriptionEditForm = ({ subscription }) => {
           t
         )
       );
-      // setTimeout(() => {
-      //   dispatch(getUserInfo(accessToken));
-      // }, 700);
     }
   };
 
   useEffect(() => {
     !countries.lenght && dispatch(getCountries(currentLang));
-    console.log("Subscription = ", subscription);
   }, [dispatch]);
 
-  // console.log("ACAAA", countries);
   return (
     <div className="grid md:flex font-sans md:min-h-[80vh]">
       <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-goldenrod ">
