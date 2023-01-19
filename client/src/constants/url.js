@@ -1,4 +1,6 @@
-export const URL = "http://localhost:3001/";
+const URL_FROM_ENV = import.meta.env.VITE_URL_SERVER;
+console.log("URL_FROM_ENV", URL_FROM_ENV);
+export const URL = URL_FROM_ENV || "http://localhost:3001/";
 
 //users
 export const URL_EXISTS_IN_DB = URL + "user/existsInDB/";
