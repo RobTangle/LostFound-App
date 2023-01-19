@@ -11,6 +11,10 @@ export const subscriptionForm = {
   selectCountry: "Selecciona un país",
   dateLabel: "Fecha en que los perdiste",
   submitButton: "Crear subscripción",
+  editTitle: "Editar suscripción",
+  editSubtitle: "Modificá los campos que quieras editar",
+  editSubmitButton: "Guardar cambios",
+  editCloseButton: "Cerrar",
   //errors:
   errorNameAndNumberFalsy:
     "Debe ingresar el nombre completo en el documento y/o el número en el documento.",

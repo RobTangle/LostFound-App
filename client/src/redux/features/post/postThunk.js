@@ -101,7 +101,7 @@ export function resetPostDetail() {
   };
 }
 
-export function updatePost(obj, post_id, token) {
+export function updatePost(obj, post_id, token, t) {
   console.log("Ejecutado updatePost");
   return async function (dispatch) {
     try {
@@ -112,12 +112,25 @@ export function updatePost(obj, post_id, token) {
       );
       if (response.status === 200) {
         Swal.fire({
-          title: "Post updated",
-          timer: 5000,
+          toast: true,
+          title: t("swal.postUpdatedTitle"),
           icon: "success",
-          showConfirmButton: true,
-          position: "center",
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
         });
+        // Swal.fire({
+        //   title: "Post updated",
+        //   timer: 5000,
+        //   icon: "success",
+        //   showConfirmButton: true,
+        //   position: "center",
+        // });
       }
       return dispatch(setUserProfile(response.data));
     } catch (error) {
@@ -132,7 +145,7 @@ export function updatePost(obj, post_id, token) {
   };
 }
 
-export function deletePost(post_id, token) {
+export function deletePost(post_id, token, t) {
   return async function (dispatch) {
     try {
       let response = await axios.delete(
@@ -141,13 +154,26 @@ export function deletePost(post_id, token) {
       );
       if (response.status === 200) {
         Swal.fire({
-          position: "center",
+          toast: true,
+          title: t("swal.deletedPostTitle"),
           icon: "success",
-          title: "Publicación borrada",
-          text: `Total borrados: ${response.data.total}: UserPosts: ${response.data.userPosts}. postCollection: ${response.data.postCollection}.`,
-          showConfirmButton: true,
-          timer: 5000,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
         });
+        // Swal.fire({
+        //   position: "center",
+        //   icon: "success",
+        //   title: "Publicación borrada",
+        //   text: `Total borrados: ${response.data.total}: UserPosts: ${response.data.userPosts}. postCollection: ${response.data.postCollection}.`,
+        //   showConfirmButton: true,
+        //   timer: 5000,
+        // });
       }
       return dispatch(getUserInfo(token));
     } catch (error) {

@@ -3,46 +3,43 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { getCountries } from "../../redux/features/user/userThunk";
-import { searchPost } from "../../redux/features/post/postThunk";
-import { searchFormValidator } from "../../helpers/search-form-validation";
-import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
-import { useAuth0 } from "@auth0/auth0-react";
-import Swal from "sweetalert2";
+import { editSubscription } from "../../redux/features/subscription/subscriptionThunk";
+import { subscriptionFormValidator } from "../../helpers/subscriptionFormValidator";
 import { validAttr } from "../../helpers/validAttributesObj";
-import { swalLostTipsMX } from "../../helpers/Swals/Mixins";
+import { parseDateToSetMaxDate } from "../../helpers/dateParsers";
+import accessTokenName from "../../constants/accessToken";
+import Swal from "sweetalert2";
 
-const SearchForm = () => {
+export const SubscriptionEditForm = ({ subscription }) => {
   const countries = useSelector((state) => state.user.countries);
-  // const results = useSelector((state) => state.post.searchResults);
   const dispatch = useDispatch();
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
-  const { getAccessTokenSilently } = useAuth0();
 
-  const [search, setSearch] = useState({
-    name: "",
-    number: "",
-    country: "",
-    date_lost: "",
+  const [suscription, setSuscription] = useState({
+    name_on_doc: subscription?.name_on_doc || "",
+    number_on_doc: subscription?.number_on_doc || "",
+    country_lost: subscription?.country_lost || "",
+    date_lost: subscription?.date_lost?.split("T")[0] || "",
   });
 
   const maxDateAllowed = parseDateToSetMaxDate();
 
+  // MENSAJE DE ERROR AL SUBMITEAR :
+  let errorMessage = "";
   const handleChange = (e) => {
-    setSearch({
-      ...search,
+    setSuscription({
+      ...suscription,
       [e.target.name]: e.target.value,
     });
   };
 
-  function openModalWithLostTips() {
-    swalLostTipsMX(t);
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validation = searchFormValidator(search, t);
+    const validation = subscriptionFormValidator(suscription, t);
     if (validation.error) {
+      console.log(`Error en la validación: ${validation.error}`);
+      errorMessage = validation.error;
       // RENDER ERROR MESSAGE
       Swal.fire({
         title: "Error",
@@ -51,31 +48,45 @@ const SearchForm = () => {
         confirmButtonColor: "#2676fc",
         confirmButtonText: "OK",
       });
-    } else {
-      if (validation === true) {
-        const accessToken = await getAccessTokenSilently();
-        dispatch(searchPost(search, accessToken));
+    }
+    if (validation === true) {
+      let accessToken = localStorage.getItem(accessTokenName);
+      if (!accessToken) {
+        console.log(
+          "AccessToken no encontrado en localStorage. Usando getAccessTokenSilently Hook..."
+        );
+        accessToken = await getAccessTokenSilently();
       }
+      console.log("Despachando editSuscription !", suscription);
+      dispatch(
+        editSubscription(
+          suscription,
+          subscription._id,
+          accessToken,
+          setSuscription,
+          t
+        )
+      );
+      // setTimeout(() => {
+      //   dispatch(getUserInfo(accessToken));
+      // }, 700);
     }
   };
+
   useEffect(() => {
-    !countries.length && dispatch(getCountries(currentLang));
+    !countries.lenght && dispatch(getCountries(currentLang));
+    console.log("Subscription = ", subscription);
   }, [dispatch]);
 
+  // console.log("ACAAA", countries);
   return (
-    <div className="grid md:flex font-sans md:min-h-[50vh]">
-      <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-green ">
+    <div className="grid md:flex font-sans md:min-h-[80vh]">
+      <div className="grid px-5 py-5 mt-5 md:mt-0 md:flex flex-col justify-center items-center md:justify-start md:items-start md:gap-5 bg-goldenrod ">
         <h1 className="text-2xl text-white md:text-5xl md:mt-6 md:ml-8 w-full text-center md:text-start p-2 md:p-0 lg:w-3/4">
-          {t("searchForm.title")}
+          {t("subscriptionForm.editTitle")}
         </h1>
         <p className=" text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2">
-          {t("searchForm.subtitle")}
-        </p>
-        <p
-          onClick={openModalWithLostTips}
-          className="cursor-pointer text-white text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2"
-        >
-          👉 {t("searchForm.readTheTips")}
+          {t("subscriptionForm.editSubtitle")}
         </p>
       </div>
       <form
@@ -83,41 +94,39 @@ const SearchForm = () => {
         onSubmit={handleSubmit}
       >
         <div className="flex flex-wrap mb-2 gap-2 md:gap-6">
-          <div className="w-full  px-3">
+          <div className="w-full px-3">
             <label
-              className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
+              className="uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
               htmlFor="grid-last-name"
             >
-              {t("searchForm.nameLabel")}
+              {t("subscriptionForm.nameLabel")}
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="grid-last-name"
-              name="name"
-              value={search.name}
-              required
+              name="name_on_doc"
+              value={suscription.name_on_doc}
               maxLength={validAttr.name_on_doc.maxLength}
-              minLength={validAttr.name_on_doc.minLength}
               type="text"
-              placeholder={t("searchForm.namePlaceholder")}
+              placeholder={t("subscriptionForm.namePlaceholder")}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="w-full  px-3">
             <label
-              className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
+              className="uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
               htmlFor="grid-last-name"
             >
-              {t("searchForm.numberLabel")}
+              {t("subscriptionForm.numberLabel")}
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="grid-last-name"
               type="text"
-              name="number"
-              value={search.number}
+              name="number_on_doc"
               maxLength={validAttr.number_on_doc.maxLength}
-              minLength={validAttr.number_on_doc.minLength}
+              value={suscription?.number_on_doc}
               placeholder="10.111.213 | 4544-2222-2222-2222"
               onChange={handleChange}
             />
@@ -126,20 +135,21 @@ const SearchForm = () => {
         <div className="flex flex-wrap mb-2 gap-2 md:gap-6">
           <div className="w-full  px-3">
             <label
-              className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
+              className="uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
               htmlFor="grid-state"
             >
-              {t("searchForm.countryLabel")}
+              {t("subscriptionForm.countryLostLabel")}
             </label>
             <div className="relative">
               <select
                 className="block appearance-none w-full bg-gray-200 border  border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-state"
-                name="country"
+                name="country_lost"
+                value={suscription?.country_lost}
                 required
                 onChange={handleChange}
               >
-                <option value="">Select a country</option>
+                <option value="">{t("subscriptionForm.selectCountry")}</option>
                 {countries.length &&
                   countries.map((c) => (
                     <option value={c[0]} key={c[0]}>
@@ -160,10 +170,10 @@ const SearchForm = () => {
           </div>
           <div className="w-full  px-3">
             <label
-              className=" uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
+              className="uppercase tracking-wide text-gray-700 text-sm font-bold mt-2 mb-1 grid"
               htmlFor="grid-zip"
             >
-              {t("searchForm.dateLabel")}
+              {t("subscriptionForm.dateLabel")}
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -171,20 +181,20 @@ const SearchForm = () => {
               type="date"
               required
               min="1971-01-01"
+              value={suscription?.date_lost}
               max={maxDateAllowed}
               name="date_lost"
               onChange={handleChange}
             />
           </div>
         </div>
+
         <div className="w-full lg:w-1/2 px-3 mt-2">
-          <button className="w-full bg-gray-200 hover:bg-green hover:text-white px-3 border-b-2 border-green py-2 text-slate-500 transition-all duration-300">
-            {t("searchForm.submitButton")}
+          <button className="w-full bg-gray-200 hover:bg-goldenrod hover:text-white px-3 border-b-2 border-goldenrod py-2 text-slate-500 transition-all duration-300">
+            {t("subscriptionForm.editSubmitButton")}
           </button>
         </div>
       </form>
     </div>
   );
 };
-
-export default SearchForm;

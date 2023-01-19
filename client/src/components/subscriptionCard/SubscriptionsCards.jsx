@@ -28,7 +28,9 @@ export function SubscriptionsCards({ subscriptions }) {
 
           <tbody className="divide-y divide-gray-200">
             {Array.isArray(subscriptions)
-              ? subscriptions?.map((sub) => <SubCardRow subscription={sub} />)
+              ? subscriptions?.map((sub) => (
+                  <SubCardRow subscription={sub} key={Math.random()} />
+                ))
               : null}
           </tbody>
         </table>

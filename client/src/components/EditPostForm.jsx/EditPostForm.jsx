@@ -15,15 +15,16 @@ export const EditPostForm = ({ postToEdit, closeModal }) => {
   const dispatch = useDispatch();
   const currentLang = i18next.language.slice(0, 2);
   const { t } = useTranslation();
+
   const [post, setPost] = useState({
-    name_on_doc: postToEdit.name_on_doc,
-    number_on_doc: postToEdit.number_on_doc || "",
-    country_found: postToEdit.country_found || "",
-    date_found: postToEdit.date_found.split("T")[0] || "",
-    blurred_imgs: postToEdit.blurred_imgs || [],
-    comments: postToEdit.comments || "",
+    name_on_doc: postToEdit?.name_on_doc,
+    number_on_doc: postToEdit?.number_on_doc || "",
+    country_found: postToEdit?.country_found || "",
+    date_found: postToEdit?.date_found.split("T")[0] || "",
+    blurred_imgs: postToEdit?.blurred_imgs || [],
+    comments: postToEdit?.comments || "",
     additional_contact_info:
-      postToEdit.user_posting.additional_contact_info || "",
+      postToEdit?.user_posting?.additional_contact_info || "",
   });
 
   const maxDateAllowed = parseDateToSetMaxDate();
@@ -73,7 +74,7 @@ export const EditPostForm = ({ postToEdit, closeModal }) => {
       let accessToken = localStorage.getItem(accessTokenName);
       // const accessToken = await getAccessTokenSilently();
       console.log("Despachando createPost !", post);
-      dispatch(updatePost(post, postToEdit._id, accessToken));
+      dispatch(updatePost(post, postToEdit._id, accessToken, t));
     }
   };
 
