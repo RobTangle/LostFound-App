@@ -14,8 +14,6 @@ const subscription_1 = __importDefault(require("./routes/subscription"));
 const jwtMiddleware_1 = __importDefault(require("./config/jwtMiddleware"));
 const rateLimiter_1 = require("./config/rateLimiter");
 // Swagger
-const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
-const swagger_docs_json_1 = __importDefault(require("./utils/swagger-docs.json"));
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
 app.use(express_1.default.json());
@@ -28,7 +26,6 @@ app.use("/post", post_1.default);
 app.use("/countries", countries_1.default);
 app.use("/subscription", subscription_1.default);
 // swagger for documenting API:
-app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_docs_json_1.default));
 // for testing:
 app.get("/ping", (req, res) => {
     return res.send("PONG!");
