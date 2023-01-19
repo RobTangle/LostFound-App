@@ -22,6 +22,7 @@ export async function userExist(
           },
         }
       ).then((response) => response.json());
+      console.log("exist = ", exist);
       if (exist.msg) {
         navigate("/home");
       }
