@@ -28,7 +28,7 @@ app.use("/post", post_1.default);
 app.use("/countries", countries_1.default);
 app.use("/subscription", subscription_1.default);
 // swagger for documenting API:
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // for testing:
 app.get("/ping", (req, res) => {
     return res.send("PONG!");

@@ -30,7 +30,7 @@ app.use("/countries", countriesRouter);
 app.use("/subscription", subscriptionRouter);
 
 // swagger for documenting API:
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // for testing:
 app.get("/ping", (req: Request, res: Response) => {
