@@ -12,8 +12,8 @@ import jwtCheck from "./config/jwtMiddleware";
 import { limiter } from "./config/rateLimiter";
 
 // Swagger
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./utils/swagger-docs.json");
+// const swaggerUi = require("swagger-ui-express");
+// const swaggerDocument = require("./utils/swagger-docs.json");
 
 const app = express();
 
