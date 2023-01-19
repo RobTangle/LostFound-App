@@ -102,7 +102,6 @@ export function resetPostDetail() {
 }
 
 export function updatePost(obj, post_id, token, t) {
-  console.log("Ejecutado updatePost");
   return async function (dispatch) {
     try {
       let response = await axios.patch(
@@ -124,13 +123,6 @@ export function updatePost(obj, post_id, token, t) {
             toast.addEventListener("mouseleave", Swal.resumeTimer);
           },
         });
-        // Swal.fire({
-        //   title: "Post updated",
-        //   timer: 5000,
-        //   icon: "success",
-        //   showConfirmButton: true,
-        //   position: "center",
-        // });
       }
       return dispatch(setUserProfile(response.data));
     } catch (error) {
@@ -166,14 +158,6 @@ export function deletePost(post_id, token, t) {
             toast.addEventListener("mouseleave", Swal.resumeTimer);
           },
         });
-        // Swal.fire({
-        //   position: "center",
-        //   icon: "success",
-        //   title: "Publicación borrada",
-        //   text: `Total borrados: ${response.data.total}: UserPosts: ${response.data.userPosts}. postCollection: ${response.data.postCollection}.`,
-        //   showConfirmButton: true,
-        //   timer: 5000,
-        // });
       }
       return dispatch(getUserInfo(token));
     } catch (error) {
@@ -213,7 +197,6 @@ export function contactPostOwner(post_id, token) {
             showConfirmButton: false,
             timer: 1500,
           });
-      // return dispatch(setContactPostOwner(response.data));
     } catch (error) {
       Swal.fire({
         position: "center",
