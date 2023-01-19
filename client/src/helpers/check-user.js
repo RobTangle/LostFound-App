@@ -9,7 +9,7 @@ export async function userExist(
   getAccessTokenSilently
 ) {
   const claims = await getAccessTokenSilently();
-  console.log("Claims = ", claims);
+  // console.log("Claims = ", claims);
   localStorage.setItem(accessTokenName, claims);
   try {
     console.log("URL_EXISTS_IN_DB = ", URL_EXISTS_IN_DB);
@@ -22,7 +22,7 @@ export async function userExist(
           },
         }
       ).then((response) => response.json());
-      console.log("exist = ", exist);
+      // console.log("exist = ", exist);
       if (exist.msg) {
         navigate("/home");
       }
@@ -31,8 +31,8 @@ export async function userExist(
       }
     }
   } catch (error) {
-    console.log(`Error en el Login Button`);
-    console.log("error message = ", error.message);
+    // console.log(`Error en el Login Button`);
+    // console.log("error message = ", error.message);
     console.log(error);
   }
 }
