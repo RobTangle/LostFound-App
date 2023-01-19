@@ -36,32 +36,21 @@ export const Profile = () => {
   });
 
   useEffect(() => {
-    console.log("Use effect de Profile");
-
     async function getToken() {
-      console.log("obteniendo getAccessTokenSilently....");
       let accessToken = await getAccessTokenSilently();
-      console.log("accessToken... = ", accessToken);
+
       if (!accessToken) {
-        console.log(
-          "El token no existe, adentro de getToken(). Navegando al landing..."
-        );
         return navigate("/");
       } else {
-        console.log("existe el accessToken. Despachando getUserInfo.......");
         dispatch(getUserInfo(accessToken));
       }
     }
 
     if (!isLoading && !isAuthenticated) {
-      console.log(
-        "No está cargando y no está autenticado. Redirigir a navigate('/'')"
-      );
       return navigate("/");
     }
 
     if (!isLoading && isAuthenticated) {
-      console.log("No está cargando y SÍ ESTÁ AUTENTICADO. getToken()");
       getToken();
     }
   }, [isLoading]);
@@ -193,7 +182,10 @@ export const Profile = () => {
         </nav>
         <div hidden={!tab.link2} className="border border-indigo-200 mx-auto">
           <PostForm />
-          <div>You have {userProfile?.posts?.length} posts</div>
+          {/* <div>You have {userProfile?.posts?.length} posts</div> */}
+          <h3 className=" text-black text-medium md:text-xl md:ml-8 w-full text-center md:text-start lg:w-1/2">
+            {t("profile.yourPosts")}
+          </h3>
           <UserPosts />
         </div>
         <div hidden={!tab.link3} className="border border-indigo-200 mx-auto">

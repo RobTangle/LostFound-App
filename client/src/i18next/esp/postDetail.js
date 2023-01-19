@@ -16,4 +16,6 @@ export const postDetail = {
     "Hemos alterado la imágen a propósito para proteger la privacidad de los usuarios. La idea de la foto desenfocada es proveer una referencia al usuario que perdió su documento para que pueda chequear si la imágen se aproxima al documento que perdió.",
   imageNotProvided: "El usuario no cargó una foto del documento.",
   isUsersPostText: "💡 Puedes editar tu publicación desde tu perfíl de usuario",
+  noPosts: "No tienes ninguna publicación.",
+  yourPosts: "Tus publicaciones: ",
 };

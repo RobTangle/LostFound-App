@@ -46,7 +46,6 @@ export function getUserInfo(token) {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response);
       return dispatch(setUserProfile(response.data));
     } catch (error) {
       console.log(error);
@@ -147,37 +146,12 @@ export function editUserName(obj, token) {
 }
 
 export function editUserNameWithSwal(token) {
-  console.log("en editusernamewithswal");
   return async function (dispatch) {
     try {
-      console.log("editUserNameWithSwal fired");
-      // mixins.editUserNameMX2
-      //   .fire({
-      //     preConfirm: async (input) => {
-      //       try {
-      //         const obj = { name: input };
-      //         const response = await axios.patch(
-      //           URL_U_PA_UPDATE_NAME,
-      //           obj,
-      //           header(token)
-      //         );
-      //         if (!response.status === 200) {
-      //           throw new Error(response?.error?.message);
-      //         }
-      //         console.log("RESPONSE = ", response);
-      //         dispatch(setUserProfile(response.data));
-      //         return response.data.name;
-      //       } catch (error) {
-      //         Swal.showValidationMessage(`Request failed: ${error}`);
-      //       }
-      //     },
-      //     allowOutsideClick: () => !Swal.isLoading(),
-      //   })
       mixins
         .editUserNameMX(dispatch, token)
         .fire()
         .then((result) => {
-          console.log("RESULT = ", result);
           if (result.isConfirmed) {
             Swal.fire({
               title: `${result.value} is your new user name.`,
@@ -206,7 +180,6 @@ export function editUserProfileImgWithSwal(token) {
           }
         });
     } catch (error) {
-      console.log("Error en editUserProfileImgWithSwal: ");
       console.log(error.message);
     }
   };

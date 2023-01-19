@@ -101,8 +101,7 @@ export function resetPostDetail() {
   };
 }
 
-export function updatePost(obj, post_id, token) {
-  console.log("Ejecutado updatePost");
+export function updatePost(obj, post_id, token, t) {
   return async function (dispatch) {
     try {
       let response = await axios.patch(
@@ -112,11 +111,17 @@ export function updatePost(obj, post_id, token) {
       );
       if (response.status === 200) {
         Swal.fire({
-          title: "Post updated",
-          timer: 5000,
+          toast: true,
+          title: t("swal.postUpdatedTitle"),
           icon: "success",
-          showConfirmButton: true,
-          position: "center",
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
         });
       }
       return dispatch(setUserProfile(response.data));
@@ -132,7 +137,7 @@ export function updatePost(obj, post_id, token) {
   };
 }
 
-export function deletePost(post_id, token) {
+export function deletePost(post_id, token, t) {
   return async function (dispatch) {
     try {
       let response = await axios.delete(
@@ -141,12 +146,17 @@ export function deletePost(post_id, token) {
       );
       if (response.status === 200) {
         Swal.fire({
-          position: "center",
+          toast: true,
+          title: t("swal.deletedPostTitle"),
           icon: "success",
-          title: "Publicación borrada",
-          text: `Total borrados: ${response.data.total}: UserPosts: ${response.data.userPosts}. postCollection: ${response.data.postCollection}.`,
-          showConfirmButton: true,
-          timer: 5000,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
         });
       }
       return dispatch(getUserInfo(token));
@@ -187,7 +197,6 @@ export function contactPostOwner(post_id, token) {
             showConfirmButton: false,
             timer: 1500,
           });
-      // return dispatch(setContactPostOwner(response.data));
     } catch (error) {
       Swal.fire({
         position: "center",

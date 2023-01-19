@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDispatch } from "react-redux";
 import accessToken from "../../constants/accessToken";
-
+import { useTranslation } from "react-i18next";
 import IDicon80 from "../../assets/IDicon80.png";
 import { parseDateWithNoHours } from "../../helpers/dateParsers";
 import { deletePost } from "../../redux/features/post/postThunk";
@@ -12,13 +12,14 @@ import { openImage } from "../../helpers/Swals/visualizeImg";
 export function PostCardRow({ post }) {
   const { getAccessTokenSilently } = useAuth0();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   async function handleDeletePost(e) {
     let token = localStorage.getItem(accessToken);
     if (!token) {
       token = await getAccessTokenSilently();
     }
-    dispatch(deletePost(e.target.id, token));
+    dispatch(deletePost(e.target.id, token, t));
   }
 
   return (

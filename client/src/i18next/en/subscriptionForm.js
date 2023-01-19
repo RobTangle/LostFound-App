@@ -11,6 +11,10 @@ export const subscriptionForm = {
   countryLostLabel: "Country where you lost your documents",
   dateLabel: "Date you lost them",
   submitButton: "Create subscription",
+  editTitle: "Edit subscription",
+  editSubtitle: "Edit the fields you want to change",
+  editSubmitButton: "Save changes",
+  editCloseButton: "Close",
   // errors:
   errorNameAndNumberFalsy:
     "You must enter the full name on the document and/or the number on the document.",
