@@ -61,7 +61,7 @@ function Navbar() {
 
           {!isLoading && isAuthenticated ? (
             <>
-              <NavbarLink
+              {/* <NavbarLink
                 path="/about"
                 divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current "
                 text={t("navbar.about")}
@@ -85,7 +85,7 @@ function Navbar() {
                 path="/profile"
                 divStyle="hover:text-blue duration-300 transition-all block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current "
                 text={t("navbar.profile")}
-              />
+              /> */}
 
               <Logout style="hover:text-blue duration-300 transition-all" />
             </>
